@@ -9,6 +9,7 @@ extends Node2D
 @export var ball: PackedScene
 # NODES
 @onready var peggle_ball_shooter: Node2D = $PeggleBallShooter
+@onready var peggle_ball_barrel: Sprite2D = $PeggleBallShooter/PeggleBallBarrel
 @onready var peggle_ball_firing_point: Node2D = $PeggleBallShooter/PeggleBallBarrel/PeggleBallFiringPoint
 @onready var flash_cooldown: Timer = $PeggleBallShooter/FlashCooldown
 @onready var peggle_ball_animation_player: AnimationPlayer = $PeggleBallShooter/PeggleBallAnimationPlayer
@@ -37,7 +38,7 @@ func _input(event: InputEvent) -> void:
 		game_feel()
 
 func game_feel():
-	peggle_ball_shooter.modulate = Color(2, 2, 2)
+	peggle_ball_barrel.modulate = Color(2, 2, 2)
 	if peggle_ball_animation_player.is_playing():
 		peggle_ball_animation_player.play("RESET")
 	peggle_ball_animation_player.play("CANNON_FIRE")
@@ -63,5 +64,5 @@ func destroy_ball(body: Node2D) -> void:
 
 
 func _on_flash_cooldown_timeout() -> void:
-	peggle_ball_shooter.modulate = Color(1.0, 1.0, 1.0)
+	peggle_ball_barrel.modulate = Color(1.0, 1.0, 1.0)
 	peggle_ball_animation_player.play("RESET")
