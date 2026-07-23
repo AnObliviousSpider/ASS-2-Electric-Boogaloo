@@ -142,3 +142,7 @@ func _animate_button(
 func play_sfx(sound: AudioStream) -> void:
 	if sound != null:
 		SfxPlayer.play(sound)
+
+func rotate_cannon(degrees) -> void:
+	rotate_toward()
+	

@@ -4,7 +4,9 @@
 [ext_resource type="AudioStream" uid="uid://brlsii31k4pcw" path="res://Assets/Audio/SFX/UI/menu_click.wav" id="2_4pqbp"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_mrfpk"]
 [ext_resource type="AudioStream" uid="uid://dx08sm30svaqh" path="res://Assets/Audio/SFX/UI/new_game.wav" id="3_4pqbp"]
+[ext_resource type="Texture2D" uid="uid://blyqjy2v1o80x" path="res://Assets/Art/Game/PeggleBoard/Cannon rim.png" id="5_h5u6l"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_wtern"]
+[ext_resource type="Texture2D" uid="uid://dk4xq22h4saw1" path="res://Assets/Art/Game/PeggleBoard/Cannon barrel.png" id="6_gebk5"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h5u6l"]
 random_pitch = 1.0293022
@@ -31,9 +33,44 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o14dv")
+new_game_scene = null
+settings_scene = null
+credits_scene = null
+new_game_transition_duration = null
+settings_transition_duration = null
+credits_transition_duration = null
 click_sound = ExtResource("2_4pqbp")
 hover_sound = SubResource("AudioStreamRandomizer_h5u6l")
 new_game_sound = ExtResource("3_4pqbp")
+button_hover_scale = null
+button_down_scale = null
+button_up_scale = null
+button_hover_duration = null
+button_down_duration = null
+button_up_duration = null
+
+[node name="CenterContainer (cannon)" type="CenterContainer" parent="." unique_id=964060182]
+layout_mode = 0
+offset_left = 319.0
+offset_top = 10.0
+offset_right = 519.0
+offset_bottom = 260.0
+offset_transform_enabled = true
+offset_transform_scale = Vector2(0.6, 0.6)
+
+[node name="CannonRim" type="TextureRect" parent="CenterContainer (cannon)" unique_id=950630846]
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_scale = Vector2(0.95, 0.95)
+texture = ExtResource("5_h5u6l")
+
+[node name="CannonBarrel" type="TextureRect" parent="CenterContainer (cannon)" unique_id=1744416153]
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, -5)
+offset_transform_rotation = 1.5707964
+texture = ExtResource("6_gebk5")
+stretch_mode = 2
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=788947633]
 z_index = -100
