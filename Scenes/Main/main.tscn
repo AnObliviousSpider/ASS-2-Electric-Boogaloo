@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://buj73velq1icb" path="res://Scenes/PeggleBoard/peggle_board.tscn" id="2_qw60k"]
 [ext_resource type="PackedScene" uid="uid://7k7y3bw712vo" path="res://Scenes/UI/Dialogue/mood_dialogue_box.tscn" id="3_p6jpk"]
 [ext_resource type="PackedScene" uid="uid://d2yo3ypycjkqu" path="res://Scenes/UI/Dialogue/level_dialogue_boxes.tscn" id="4_2a143"]
-[ext_resource type="PackedScene" uid="uid://0v5yeo36exk8" path="res://Scenes/partner_character.tscn" id="4_p6jpk"]
+[ext_resource type="PackedScene" uid="uid://djt6fe3di5ucx" path="res://Scenes/Misc/LI.tscn" id="5_y3v7k"]
 
 [node name="main" type="Node" unique_id=1907013364]
 script = ExtResource("1_lixft")
@@ -16,16 +16,18 @@ script = ExtResource("1_lixft")
 script = ExtResource("2_2a143")
 
 [node name="Background" parent="World2D" unique_id=179009874 instance=ExtResource("2_5yls4")]
+z_index = -2
 
-[node name="PeggleBoard" parent="World2D/Background" unique_id=1037463456 instance=ExtResource("2_qw60k")]
-NEXT_LEVEL_SCENE_KEY = "main"
+[node name="PeggleBoard" parent="World2D" unique_id=1037463456 instance=ExtResource("2_qw60k")]
+unique_name_in_owner = true
 
-[node name="PartnerCharacter" parent="World2D" unique_id=1055636776 instance=ExtResource("4_p6jpk")]
+[node name="Li" parent="World2D" unique_id=476922062 instance=ExtResource("5_y3v7k")]
 position = Vector2(40, 0)
 
 [node name="UIlayer" type="CanvasLayer" parent="." unique_id=2058014531]
 
 [node name="MoodDialogueBox" parent="UIlayer" unique_id=1661028365 instance=ExtResource("3_p6jpk")]
+visible = false
 
 [node name="LevelDialogueBoxes" parent="UIlayer" unique_id=397841832 instance=ExtResource("4_2a143")]
 visible = false
