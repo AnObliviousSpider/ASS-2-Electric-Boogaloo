@@ -9,7 +9,7 @@ signal current_level_changed(current_level_scene: String)
 signal input_bindings_changed(input_bindings: Dictionary)
 signal settings_saved
 signal settings_loaded
-signal emotion_changed
+signal emotion_changed(emotion_index: int)
 
 signal ball_count_changed(
 	balls_remaining: int,
@@ -55,14 +55,17 @@ var ball_counter_initialized: bool = false
 
 # Emotion types.
 enum emotions {
-	Angry,
-	Sad
+	Happy, 
+	Dejected, 
+	Flirty, 
+	Angry
 }
 
 
 # Current character emotion.
 var current_emotion: int:
 	set(value):
+		print("set active emotion, ", value)
 		current_emotion = value
 		emotion_changed.emit(value)
 

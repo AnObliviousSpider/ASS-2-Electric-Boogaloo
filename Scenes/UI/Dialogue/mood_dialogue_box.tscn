@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://d03m5lh7mgvqx" path="res://Scripts/UI/Dialogue/mood_dialogue_box.gd" id="1_h43p2"]
 
 [node name="MoodDialogueBox" type="Control" unique_id=1661028365 node_paths=PackedStringArray("dialogue_box")]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

@@ -1,7 +1,7 @@
 extends Node
 
 signal dialogue_mood_triggered(
-	mood: String,
+	mood_index: int,
 	dialogue_level: int
 )
 
