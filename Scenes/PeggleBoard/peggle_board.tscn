@@ -110,9 +110,24 @@ shape = SubResource("RectangleShape2D_oy24c")
 
 [node name="Bins" type="Node2D" parent="." unique_id=1386732025]
 
-[node name="Bin" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
+[node name="Bin1" parent="Bins" unique_id=407736055 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(234, 191)
+position = Vector2(191, 191)
+
+[node name="Bin2" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
+unique_name_in_owner = true
+position = Vector2(226, 191)
+what_emotion_to_respond_with = 1
+
+[node name="Bin3" parent="Bins" unique_id=2044842428 instance=ExtResource("6_sxo5r")]
+unique_name_in_owner = true
+position = Vector2(261, 191)
+what_emotion_to_respond_with = 2
+
+[node name="Bin4" parent="Bins" unique_id=921239040 instance=ExtResource("6_sxo5r")]
+unique_name_in_owner = true
+position = Vector2(295, 191)
+what_emotion_to_respond_with = 3
 
 [node name="Endzone" type="Area2D" parent="." unique_id=157617057]
 position = Vector2(0, -83)
