@@ -4,6 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://brlsii31k4pcw" path="res://Assets/Audio/SFX/UI/menu_click.wav" id="2_4pqbp"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_mrfpk"]
 [ext_resource type="AudioStream" uid="uid://dx08sm30svaqh" path="res://Assets/Audio/SFX/UI/new_game.wav" id="3_4pqbp"]
+[ext_resource type="AudioStream" uid="uid://drv3jjtq1d13a" path="res://Assets/Audio/SFX/u_g0akwz8ml1-sonido-de-luz-de-neon-194458.mp3" id="5_jp6cc"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_wtern"]
 [ext_resource type="Script" uid="uid://dysgrw1rcoajh" path="res://Scripts/UI/Settings/snake.gd" id="6_1kc1o"]
 [ext_resource type="Texture2D" uid="uid://su82lcvygsc4" path="res://Assets/Art/Snake parts/Part1 (1).png" id="7_6asrm"]
@@ -17,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://ch8jnia88spfp" path="res://Assets/Art/Snake parts/Part9.png" id="14_k5fhq"]
 [ext_resource type="Texture2D" uid="uid://bdydriqtigct" path="res://Assets/Art/Game/PeggleBoard/Rock2.png" id="16_6asrm"]
 [ext_resource type="Texture2D" uid="uid://cg0fquntmsqb4" path="res://Assets/Art/Game/PeggleBoard/Building.png" id="17_lhp0w"]
+[ext_resource type="Texture2D" uid="uid://bne85p3j7etq0" path="res://Assets/Art/MainMenu/Logo.png" id="18_1kc1o"]
+[ext_resource type="Shader" uid="uid://c4jrkc6ip0ew1" path="res://Shaders/Background/VHS.gdshader" id="19_ocqal"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h5u6l"]
 random_pitch = 1.0293022
@@ -35,6 +38,26 @@ shader_parameter/star_colour_2 = Color(0.95686, 0.87451, 0.7451, 1)
 shader_parameter/star_colour_3 = Color(1, 0.5098, 0.74118, 1)
 shader_parameter/star_colour_4 = Color(0.7451, 0.79608, 0.92157, 1)
 
+[sub_resource type="Gradient" id="Gradient_1kc1o"]
+offsets = PackedFloat32Array(0.45783132, 0.7710843, 0.9939759)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 0.087500006, 0.087500006, 0.087500006, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_715ky"]
+gradient = SubResource("Gradient_1kc1o")
+width = 258
+height = 258
+fill = 1
+fill_from = Vector2(0.47826087, 0.42608696)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_715ky"]
+shader = ExtResource("19_ocqal")
+shader_parameter/grain_strength = 0.002000000095
+shader_parameter/scanline_strength = 0.00800000038
+shader_parameter/horizontal_wobble = 0.0
+shader_parameter/colour_separation = 0.0010000000475
+shader_parameter/grain_speed = 16.0
+shader_parameter/horizontal_lines = 480.0
+
 [node name="MainMenu" type="Control" unique_id=1266202951]
 layout_mode = 3
 anchors_preset = 15
@@ -46,6 +69,9 @@ script = ExtResource("1_o14dv")
 click_sound = ExtResource("2_4pqbp")
 hover_sound = SubResource("AudioStreamRandomizer_h5u6l")
 new_game_sound = ExtResource("3_4pqbp")
+neon_flicker_sound = ExtResource("5_jp6cc")
+neon_flicker_volume_db = -3.0
+neon_sound_tail_duration = 0.3
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=788947633]
 z_index = -100
@@ -164,18 +190,36 @@ position = Vector2(371, 205.00002)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("17_lhp0w")
 
-[node name="Label" type="Label" parent="." unique_id=328417273]
+[node name="Logo" type="Sprite2D" parent="." unique_id=1098353411]
+position = Vector2(243.5, 46)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("18_1kc1o")
+
+[node name="NeonLight" type="PointLight2D" parent="Logo" unique_id=1377408110]
+unique_name_in_owner = true
+position = Vector2(-75, -256.6667)
+color = Color(0.32941177, 0.80784315, 0.654902, 1)
+energy = 0.1
+texture = SubResource("GradientTexture2D_715ky")
+texture_scale = 8.01
+
+[node name="NeonLight2" type="PointLight2D" parent="Logo" unique_id=224733092]
+unique_name_in_owner = true
+position = Vector2(61.66667, 3.3333333)
+color = Color(1, 0.50980395, 0.7411765, 1)
+energy = 0.1
+texture = SubResource("GradientTexture2D_715ky")
+texture_scale = 9.88
+
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=483270843]
+material = SubResource("ShaderMaterial_715ky")
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -77.5
-offset_top = 31.0
-offset_right = 77.5
-offset_bottom = 45.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 31
-text = "our little apocalypse <3"
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/NewGameButton" to="." method="_on_new_game_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/CreditsButton" to="." method="_on_load_pressed"]
