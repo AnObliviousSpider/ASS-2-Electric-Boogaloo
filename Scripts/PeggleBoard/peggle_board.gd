@@ -13,6 +13,7 @@ const FULL_BAR_FRACTION: float = 0.75
 
 const WIN_SCENE_KEY: String = "win_screen"
 const LOSS_SCENE_KEY: String = "loss_screen"
+const TRY_AGAIN_SCENE_KEY: String = "try_again_screen"
 const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
 # COLLISION INFORMATION
@@ -456,7 +457,9 @@ func check_for_winner() -> void:
 				LOSS_SCENE_KEY
 			)
 		else:
-			restart_current_peg_level()
+			end_game(
+				TRY_AGAIN_SCENE_KEY
+			)
 
 
 func advance_to_next_peg_level() -> void:
@@ -544,7 +547,7 @@ func end_game(scene_key: String) -> void:
 		)
 	else:
 		SceneManager.go(
-			LOSS_SCENE_KEY,
+			scene_key,
 			END_SCREEN_TRANSITION_DURATION
 		)
 
