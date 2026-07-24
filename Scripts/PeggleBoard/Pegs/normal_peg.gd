@@ -76,12 +76,8 @@ func change_peg_colour(body: Node2D) -> void:
 	
 	if claimed_turn == 0:
 		create_tween().tween_property(self, "rotation_degrees", -90, 0.3).as_relative()	
-		create_tween().tween_property(peg_sprite, "modulate", Color(255, 85, 255), 0.3)
-		#create_tween().tween_property(self, "modulate", Color(255, 255, 255), 0.3)
 	else:
 		create_tween().tween_property(self, "rotation_degrees", 90, 0.3).as_relative()	
-		create_tween().tween_property(peg_sprite, "modulate", Color(85, 255, 255), 0.3)
-		#create_tween().tween_property(self, "modulate", Color(255, 255, 255), 0.3)
 	
 	claim_changed.emit()
 
