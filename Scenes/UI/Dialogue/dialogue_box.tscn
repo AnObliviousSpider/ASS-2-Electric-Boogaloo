@@ -73,6 +73,7 @@ animation_player = NodePath("AnimationPlayer")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1346305480]
 libraries/ = SubResource("AnimationLibrary_tq37n")
+speed_scale = 0.5
 
 [node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=1395181140]
 texture_filter = 1
