@@ -103,6 +103,12 @@ func _ready() -> void:
 	endzone.body_entered.connect(
 		destroy_ball
 	)
+	endzone.body_entered.connect(
+		missed_bin
+	)
+	GameData.ball_entered_bin.connect(
+		destroy_ball
+	)
 
 	for child: Node in bins.get_children():
 		if child.has_signal("ball_caught"):
@@ -688,6 +694,9 @@ func destroy_ball(
 		false
 	)
 
+func missed_bin(_body: Node2D) -> void:
+	# ball was destroyed by endzone instead of bin
+	GameData.current_emotion = 4
 
 func resolve_ball(
 	body: Node2D,

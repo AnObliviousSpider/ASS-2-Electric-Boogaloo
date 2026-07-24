@@ -28,7 +28,6 @@ func _ready() -> void:
 	light_vfx.visible = false
 
 func on_active_emotion_changed(emotion_index: int) -> void:
-	print("active emotion: ", emotion_index)
 	if emotion_index == what_emotion_to_respond_with:
 		bin_active = true
 		animated_sprite.visible = true
@@ -49,6 +48,9 @@ func _on_body_entered(body: Node2D) -> void:
 	ball_caught.emit(body, what_emotion_to_respond_with)
 	
 	GameData.current_emotion = what_emotion_to_respond_with
+	
+	GameData.ball_entered_bin.emit()
+	
 	if bin_active:
 		# give powerup
 		pass
