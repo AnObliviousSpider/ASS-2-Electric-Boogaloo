@@ -355,21 +355,21 @@ position = Vector2(0, 29)
 
 [node name="Bin1" parent="Bins" unique_id=407736055 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(197, 191)
+position = Vector2(197, 184)
 
 [node name="Bin2" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(227.00002, 191)
+position = Vector2(227.00002, 184)
 what_emotion_to_respond_with = 1
 
 [node name="Bin3" parent="Bins" unique_id=2044842428 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(260, 191)
+position = Vector2(260, 184)
 what_emotion_to_respond_with = 2
 
 [node name="Bin4" parent="Bins" unique_id=921239040 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(291, 191)
+position = Vector2(291, 184)
 what_emotion_to_respond_with = 3
 
 [node name="Endzone" type="Area2D" parent="." unique_id=157617057]
