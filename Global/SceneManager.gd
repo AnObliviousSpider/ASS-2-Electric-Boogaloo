@@ -62,7 +62,13 @@ var _active_loading_overlay: Node
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	await load_all_scenes()
+
+	load_all_scenes()
+
+	print(
+		"Registered scene keys: ",
+		get_scene_keys()
+	)
 
 
 ## Finds and registers every scene in the project.
@@ -71,41 +77,37 @@ func _ready() -> void:
 ## loading.tscn becomes "loading".
 ## main.tscn becomes "main".
 func load_all_scenes(path: String = "res://") -> void:
-	var directory := DirAccess.open(path)
+	var entries: PackedStringArray = (
+		ResourceLoader.list_directory(path)
+	)
 
-	if directory == null:
-		printerr("Given path does not exist: " + path)
-		return
-
-	directory.list_dir_begin()
-
-	var file_name := directory.get_next()
-
-	while file_name != "":
-		if directory.current_is_dir():
-			await load_all_scenes(
-				directory.get_current_dir() + "/" + file_name
+	for entry: String in entries:
+		if entry.ends_with("/"):
+			var directory_name: String = (
+				entry.trim_suffix("/")
 			)
-		elif file_name.ends_with(".tscn"):
-			var scene_key := file_name.left(-5)
-			var scene_path := (
-				directory.get_current_dir()
-				+ "/"
-				+ file_name
+
+			load_all_scenes(
+				path.path_join(directory_name)
+			)
+
+		elif entry.ends_with(".tscn"):
+			var scene_key: String = (
+				entry.trim_suffix(".tscn")
+			)
+
+			var scene_path: String = (
+				path.path_join(entry)
 			)
 
 			if scenes.has(scene_key):
 				printerr(
 					scene_key
-					+ " scene was overridden because duplicate filenames exist."
+					+ " scene was overridden because "
+					+ "duplicate filenames exist."
 				)
 
 			scenes[scene_key] = scene_path
-
-		file_name = directory.get_next()
-
-	directory.list_dir_end()
-
 
 ## Changes the entire scene.
 func go(
