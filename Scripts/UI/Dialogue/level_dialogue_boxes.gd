@@ -7,48 +7,7 @@ extends Control
 @export_subgroup("Child Nodes")
 @export var dialogue_boxes: Array[DialogueBox]
 
-
 var in_level_dialogue: bool = false
-
-
-var dialogue_levels: Dictionary = {
-	1: [
-		"SO: Lets make a deal then… This old machine is still here. You beat me five times. We delay the end one more day.",
-		"MC: And if you win?",
-		"SO: We play again. Each ball you lose, is another star I pluck from the sky.",
-		"MC: Until there are no more stars?",
-		"SO: You would still be here. For a few seconds.",
-	],
-	2: [
-		"MC: Dude I'm bored",
-		"SO: LEVEL TWOOOOO",
-		"MC: WHAT",
-		"SO: LEVEL TWOOOOO GRRRR",
-		"MC: WHAT",
-	],
-	3: [
-		"MC: Why did the chicken cross the road?",
-		"SO: ... Really?",
-		"MC: To... get... to...",
-		"MC: No, your not going to finish that joke",
-		"SO: O...K...",
-	],
-	4: [
-		"MC: Quack quack",
-		"SO: U're cringe >:(",
-		"MC: So?",
-		"SO: So what?",
-		"MC: So so so",
-	],
-	5: [
-		"SO: IMMA KILL YOU",
-		"MC: You already killed me to be honnest.",
-		"SO: With what?",
-		"MC: With your heart",
-		"SO: Idk if that's a rizz or not but ok",
-	],
-}
-
 
 func _ready() -> void:
 	self.visible = true
@@ -70,8 +29,17 @@ func _ready() -> void:
 func _on_dialogue_level_triggered(level: int) -> void:
 	if in_level_dialogue:
 		return
+	
+	if DialogueManager._dialogue_box_displayed:
+		DialogueManager.dialogue_closed.connect(
+			func() -> void: display_level_dialogue(level),
+			CONNECT_ONE_SHOT
+		)
+	else:
+		display_level_dialogue(level)
 
-	if not dialogue_levels.has(level):
+func display_level_dialogue(level: int) -> void:
+	if not DialogueManager.dialogue_levels.has(level):
 		push_error(
 			"No level dialogue exists for level %s." % level
 		)
@@ -82,7 +50,7 @@ func _on_dialogue_level_triggered(level: int) -> void:
 	in_level_dialogue = true
 	DialogueManager.open_level_dialogue()
 
-	var messages: Array = dialogue_levels[level]
+	var messages: Array = DialogueManager.dialogue_levels[level]
 
 	for index: int in range(messages.size()):
 		if index >= dialogue_boxes.size():
@@ -91,10 +59,13 @@ func _on_dialogue_level_triggered(level: int) -> void:
 			)
 			break
 
-		var message: String = messages[index]
-
-		dialogue_boxes[index].display_dialogue(message)
-
+		var message: Dictionary = messages[index]
+		if message.align == "left":
+			dialogue_boxes[index].size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		if message.align == "right":
+			dialogue_boxes[index].size_flags_horizontal = Control.SIZE_SHRINK_END
+		dialogue_boxes[index].display_dialogue(message["text"])
+		
 		await EventBus.dialogue_next
 
 	for dialogue_box: DialogueBox in dialogue_boxes:

@@ -23,7 +23,8 @@ func set_emotion() -> void:
 func _ready() -> void:
 	set_emotion()
 	body_entered.connect(_on_body_entered)
-	GameData.emotion_changed.connect(on_active_emotion_changed)
+	if GameData:
+		GameData.emotion_changed.connect(on_active_emotion_changed)
 	light_vfx.visible = false
 
 func on_active_emotion_changed(emotion_index: int) -> void:
