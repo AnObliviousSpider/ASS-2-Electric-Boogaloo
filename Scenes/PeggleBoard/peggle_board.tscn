@@ -6,16 +6,15 @@
 [ext_resource type="PackedScene" uid="uid://6u1m71svqmc6" path="res://Scenes/PeggleBoard/peggle_ball_shooter.tscn" id="3_s3sbd"]
 [ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="4_ryebi"]
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
-[ext_resource type="Texture2D" uid="uid://o5mb7wgte47e" path="res://Assets/Peggle_Frame_LessTentaclesTest.png" id="7_7po2y"]
-[ext_resource type="Texture2D" uid="uid://fhj60y2pt42v" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
-[ext_resource type="Texture2D" uid="uid://b0hts6i6a6m6v" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
-[ext_resource type="Texture2D" uid="uid://duasod8bujtfo" path="res://Assets/Art/Frame/Peggle_Frame_2.png" id="9_232so"]
-[ext_resource type="Texture2D" uid="uid://bso0g8kuwcl00" path="res://Assets/Art/Frame/Peggle_Frame_3.png" id="10_in8bm"]
-[ext_resource type="Texture2D" uid="uid://eve0r4lh8odb" path="res://Assets/Art/Frame/Peggle_Frame_4.png" id="11_4rndw"]
-[ext_resource type="Texture2D" uid="uid://bdabnfw8bmru5" path="res://Assets/Art/Frame/Peggle_Frame_5.png" id="12_p3c4q"]
-[ext_resource type="Texture2D" uid="uid://cupoq4enoqact" path="res://Assets/Art/Frame/Peggle_Frame_6.png" id="13_df1sm"]
-[ext_resource type="Texture2D" uid="uid://d3knhy6jp7ru0" path="res://Assets/Art/Frame/Peggle_Frame_7.png" id="14_1uqbv"]
-[ext_resource type="Texture2D" uid="uid://d48scklxule1" path="res://Assets/Art/Frame/Peggle_Frame_8.png" id="15_iotme"]
+[ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
+[ext_resource type="Texture2D" uid="uid://bl4qhbvyqfhvd" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
+[ext_resource type="Texture2D" uid="uid://sis7laba3os1" path="res://Assets/Art/Frame/Peggle_Frame_2.png" id="9_232so"]
+[ext_resource type="Texture2D" uid="uid://crcr85m8yq2w0" path="res://Assets/Art/Frame/Peggle_Frame_3.png" id="10_in8bm"]
+[ext_resource type="Texture2D" uid="uid://bfxc3yr0ccnl1" path="res://Assets/Art/Frame/Peggle_Frame_4.png" id="11_4rndw"]
+[ext_resource type="Texture2D" uid="uid://cif045ofkufr2" path="res://Assets/Art/Frame/Peggle_Frame_5.png" id="12_p3c4q"]
+[ext_resource type="Texture2D" uid="uid://h46khuqasu0q" path="res://Assets/Art/Frame/Peggle_Frame_6.png" id="13_df1sm"]
+[ext_resource type="Texture2D" uid="uid://cc7p1y3qt7ct7" path="res://Assets/Art/Frame/Peggle_Frame_7.png" id="14_1uqbv"]
+[ext_resource type="Texture2D" uid="uid://drwvu1865tv5e" path="res://Assets/Art/Frame/Peggle_Frame_8.png" id="15_iotme"]
 [ext_resource type="Texture2D" uid="uid://7yyyymigyqrc" path="res://Assets/Art/Cannon/Eye.png" id="17_p3c4q"]
 [ext_resource type="Texture2D" uid="uid://bxfuodh2hfv5v" path="res://Assets/Art/Cannon/Eye_closed.png" id="18_df1sm"]
 [ext_resource type="Texture2D" uid="uid://cju084w7bqsk3" path="res://Assets/Art/Cannon/EyePupil.png" id="19_1uqbv"]
@@ -43,43 +42,39 @@ bg_color = Color(1, 0.50980395, 0.7411765, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e02v7"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_232so"]
-atlas = ExtResource("7_7po2y")
-region = Rect2(0, 0, 400, 524)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pr6su"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_4rndw"]
 atlas = ExtResource("7_bnnyb")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_17hcw"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3c4q"]
 atlas = ExtResource("8_7po2y")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_at1d2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_df1sm"]
 atlas = ExtResource("9_232so")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_h4o7a"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_1uqbv"]
 atlas = ExtResource("10_in8bm")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_e0blb"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_iotme"]
 atlas = ExtResource("11_4rndw")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_w34gu"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pr6su"]
 atlas = ExtResource("12_p3c4q")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_rgciv"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_17hcw"]
 atlas = ExtResource("13_df1sm")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_7pgve"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_at1d2"]
 atlas = ExtResource("14_1uqbv")
 region = Rect2(0, 0, 400, 524)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_82xy0"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_h4o7a"]
 atlas = ExtResource("15_iotme")
 region = Rect2(0, 0, 400, 524)
 
@@ -87,7 +82,19 @@ region = Rect2(0, 0, 400, 524)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_232so")
+"texture": SubResource("AtlasTexture_4rndw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p3c4q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_df1sm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1uqbv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iotme")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pr6su")
@@ -100,25 +107,10 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_h4o7a")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_e0blb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_w34gu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rgciv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7pgve")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_82xy0")
 }],
 "loop": 1,
 "name": &"default",
-"speed": 5.0
+"speed": 2.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u7u7o"]
@@ -461,6 +453,8 @@ metadata/_edit_lock_ = true
 position = Vector2(247.99998, 131)
 scale = Vector2(0.7, 0.7)
 sprite_frames = SubResource("SpriteFrames_715ky")
+autoplay = "default"
+frame_progress = 0.059644017
 metadata/_edit_lock_ = true
 
 [node name="Eye" type="AnimatedSprite2D" parent="." unique_id=865351097]
