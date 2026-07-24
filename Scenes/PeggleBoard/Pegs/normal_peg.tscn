@@ -78,10 +78,12 @@ sprite_frames = SubResource("SpriteFrames_ec47r")
 animation = &"player"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2028409614]
+visible = false
 scale = Vector2(0.1, 0.1)
 shape = SubResource("CircleShape2D_ddted")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1906178565]
+visible = false
 collision_layer = 0
 collision_mask = 4
 

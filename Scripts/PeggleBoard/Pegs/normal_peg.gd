@@ -19,6 +19,8 @@ var claimed_turn: int = -1
 
 var tween = create_tween()
 
+var tween_rotation = create_tween()
+
 func _ready() -> void:
 	add_to_group("pegs")
 
@@ -31,7 +33,7 @@ func _ready() -> void:
 
 func change_peg_colour(body: Node2D) -> void:
 	
-	
+	peg_sprite.stop()
 	if body.get_meta(
 		"is_peggle_ball",
 		false
@@ -60,12 +62,27 @@ func change_peg_colour(body: Node2D) -> void:
 		)
 	)
 	
+	tween.kill()
+	tween = create_tween()
+	tween.tween_property(self, "scale", Vector2(0.9,0.9), 0.3).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	
-	
+	tween.tween_property(self, "scale", Vector2(0.6, 0.6), 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.set_parallel(true)
 	if claimed_turn == new_claimed_turn:
 		return
+	
 
 	claimed_turn = new_claimed_turn
+	
+	if claimed_turn == 0:
+		create_tween().tween_property(self, "rotation_degrees", -90, 0.3).as_relative()	
+		create_tween().tween_property(peg_sprite, "modulate", Color(255, 85, 255), 0.3)
+		#create_tween().tween_property(self, "modulate", Color(255, 255, 255), 0.3)
+	else:
+		create_tween().tween_property(self, "rotation_degrees", 90, 0.3).as_relative()	
+		create_tween().tween_property(peg_sprite, "modulate", Color(85, 255, 255), 0.3)
+		#create_tween().tween_property(self, "modulate", Color(255, 255, 255), 0.3)
+	
 	claim_changed.emit()
 
 
