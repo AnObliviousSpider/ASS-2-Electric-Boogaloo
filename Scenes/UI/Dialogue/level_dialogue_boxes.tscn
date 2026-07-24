@@ -16,6 +16,7 @@ script = ExtResource("1_wplp3")
 dialogue_boxes = [NodePath("DialogueVBox/DialogueBox1"), NodePath("DialogueVBox/DialogueBox2"), NodePath("DialogueVBox/DialogueBox3"), NodePath("DialogueVBox/DialogueBox4"), NodePath("DialogueVBox/DialogueBox5")]
 
 [node name="DialogueVBox" type="VBoxContainer" parent="." unique_id=1605336348]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -31,6 +32,7 @@ grow_vertical = 2
 
 [node name="DialogueBox1" parent="DialogueVBox" unique_id=1109237251 instance=ExtResource("2_rlpcs")]
 layout_mode = 2
+size_flags_horizontal = 8
 
 [node name="DialogueBox2" parent="DialogueVBox" unique_id=1795078119 instance=ExtResource("2_rlpcs")]
 layout_mode = 2
