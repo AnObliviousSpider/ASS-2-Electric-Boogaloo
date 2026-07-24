@@ -40,8 +40,10 @@ var input_bindings: Dictionary = {}
 
 #breaks naming convention for a reason
 enum emotions{
-	Angry,
-	Sad
+	Happy, 
+	Dejected, 
+	Flirty, 
+	Angry
 }
 
 #

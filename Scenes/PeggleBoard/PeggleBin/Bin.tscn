@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cyohg8tsod6lf"]
 
 [ext_resource type="Script" uid="uid://cme374au0hxno" path="res://Scripts/PeggleBoard/Bin/peggleballbin.gd" id="1_qvfqv"]
-[ext_resource type="Texture2D" uid="uid://eowantesoctg" path="res://Assets/Art/Game/BinSprites/AngryBin.png" id="2_jl7ri"]
+[ext_resource type="Texture2D" uid="uid://dqo2y22uqc44i" path="res://Assets/Art/Game/BinSprites/HappyBin.png" id="2_kmj5o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_715ky"]
 size = Vector2(25, 20)
@@ -16,4 +16,4 @@ position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_715ky")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=855845330]
-texture = ExtResource("2_jl7ri")
+texture = ExtResource("2_kmj5o")

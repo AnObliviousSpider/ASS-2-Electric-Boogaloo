@@ -1,9 +1,13 @@
+@tool
 class_name PeggleBallBin
 extends Area2D
 
 signal ball_caught(ball: Node2D, bin_emotion: int)
 
-@export_enum("Angry", "Sad") var what_emotion_to_resoond_to: int = 0
+@export_enum("Happy", "Dejected", "Flirty", "Angry") var what_emotion_to_resoond_to: int = 0 :
+	set(value):
+		what_emotion_to_resoond_to = value
+		$Sprite2D.texture = load("res://Assets/Art/Game/BinSprites/" + GameData.emotions.keys()[what_emotion_to_resoond_to] + "Bin.png")
 
 
 
