@@ -5,6 +5,8 @@ signal dialogue_mood_triggered(
 	dialogue_level: int
 )
 
+signal dialogue_mood_hide
+
 signal dialogue_level_triggered(level: int)
 signal dialogue_next
 

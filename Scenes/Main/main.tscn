@@ -20,6 +20,8 @@ z_index = -2
 
 [node name="PeggleBoard" parent="World2D" unique_id=1037463456 instance=ExtResource("2_qw60k")]
 unique_name_in_owner = true
+position = Vector2(0, 0)
+shoot_offset = Vector2(0, 0)
 
 [node name="Li" parent="World2D" unique_id=476922062 instance=ExtResource("5_y3v7k")]
 position = Vector2(40, 0)

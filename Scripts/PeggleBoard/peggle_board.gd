@@ -774,8 +774,10 @@ func finish_ball_resolution(
 		current_turn = Turn.AI
 		resolving_ball = false
 		start_ai_turn()
+		EventBus.dialogue_mood_triggered.emit(GameData.current_emotion, LevelManager.level)
 	else:
 		current_turn = Turn.PLAYER
+		EventBus.dialogue_mood_hide.emit()
 		resolving_ball = false
 
 
