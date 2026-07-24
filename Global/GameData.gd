@@ -10,6 +10,7 @@ signal input_bindings_changed(input_bindings: Dictionary)
 signal settings_saved
 signal settings_loaded
 signal emotion_changed(emotion_index: int)
+signal ball_entered_bin
 
 signal ball_count_changed(
 	balls_remaining: int,
@@ -58,14 +59,14 @@ enum emotions {
 	Happy, 
 	Dejected, 
 	Flirty, 
-	Angry
+	Angry,
+	Missed
 }
 
 
 # Current character emotion.
 var current_emotion: int:
 	set(value):
-		print("set active emotion, ", value)
 		current_emotion = value
 		emotion_changed.emit(value)
 
