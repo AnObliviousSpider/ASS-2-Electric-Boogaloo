@@ -10,7 +10,6 @@ class_name DialogueBox extends Control
 @export var dialogue_label: Label
 @export var animation_player: AnimationPlayer
 
-
 var placeholder_text = "placeholder text: if you see this something went wrong!"
 
 func display_dialogue(dialogue: String) -> void:

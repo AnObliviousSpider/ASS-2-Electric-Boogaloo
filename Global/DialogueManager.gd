@@ -4,7 +4,6 @@ extends Node
 signal dialogue_closed
 signal level_dialogue_closed
 
-
 var _dialogue_box_displayed: bool = false
 
 

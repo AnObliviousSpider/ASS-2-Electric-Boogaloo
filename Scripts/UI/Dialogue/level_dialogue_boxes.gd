@@ -29,7 +29,16 @@ func _ready() -> void:
 func _on_dialogue_level_triggered(level: int) -> void:
 	if in_level_dialogue:
 		return
+	
+	if DialogueManager._dialogue_box_displayed:
+		DialogueManager.dialogue_closed.connect(
+			func() -> void: display_level_dialogue(level),
+			CONNECT_ONE_SHOT
+		)
+	else:
+		display_level_dialogue(level)
 
+func display_level_dialogue(level: int) -> void:
 	if not DialogueManager.dialogue_levels.has(level):
 		push_error(
 			"No level dialogue exists for level %s." % level
