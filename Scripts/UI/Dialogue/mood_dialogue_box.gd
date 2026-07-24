@@ -41,9 +41,10 @@ func _ready() -> void:
 	if on_text_audio:
 		dialogue_box.on_text_audio = on_text_audio
 
-func _on_dialogue_mood_triggered(mood: String, level: int) -> void:
+func _on_dialogue_mood_triggered(mood_index: int, level: int) -> void:
 	DialogueManager.open_dialogue()
 	# Dialogue system for mood mode
+	var mood : String = GameData.emotions.keys()[mood_index]
 	if mood in dialogue_moods.keys():
 		var dialogue : String = dialogue_moods[mood].pick_random()
 		dialogue_box.display_dialogue(dialogue)

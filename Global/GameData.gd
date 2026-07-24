@@ -8,7 +8,7 @@ signal current_level_changed(current_level_scene: String)
 signal input_bindings_changed(input_bindings: Dictionary)
 signal settings_saved
 signal settings_loaded
-signal emotion_changed
+signal emotion_changed(emotion_index: int)
 
 const SAVE_PATH: String = "user://game_data.cfg"
 
@@ -49,6 +49,7 @@ enum emotions{
 #
 var current_emotion: int: 
 	set(value):
+		print("set active emotion, ", value)
 		emotion_changed.emit(value)
 		current_emotion = value
 		
