@@ -30,6 +30,8 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
 # AUDIO
 @export var cannon_fire_sfx: AudioStream
+@export var ai_win_sfx: AudioStream
+@export var meter_fill: AudioStream
 
 # CANNON NODES
 @onready var peggle_ball_shooter: Node2D = (
@@ -50,7 +52,6 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
 # BALL REMOVAL NODES
 @onready var endzone: Area2D = $Endzone
-@onready var ball_bin: PeggleBallBin = %Bin
 @onready var bins: Node2D = $Bins
 
 # INTERFACE NODES
@@ -295,7 +296,9 @@ func _collect_pegs(node: Node) -> void:
 		_collect_pegs(child)
 
 
+
 func reset_current_round() -> void:
+
 	# Stop an old progress animation.
 	if progress_tween != null:
 		progress_tween.kill()
@@ -321,6 +324,8 @@ func reset_current_round() -> void:
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
+	
+
 
 
 func get_progress_values() -> Vector2:
@@ -392,6 +397,8 @@ func animate_progress_bars() -> void:
 	).set_ease(
 		Tween.EASE_OUT
 	)
+	
+	SfxPlayer.play(meter_fill)
 
 	await progress_tween.finished
 
@@ -443,9 +450,17 @@ func check_for_winner() -> void:
 	elif (
 		ai_progress_bar.value
 		>= ai_progress_bar.max_value
+		
+		
 	):
 		# Zero balls always opens the loss screen.
+		
+		if ai_win_sfx != null:
+				SfxPlayer.play(ai_win_sfx)
+				
 		if GameData.balls_remaining <= 0:
+			
+				
 			end_game(
 				LOSS_SCENE_KEY
 			)

@@ -13,9 +13,11 @@ signal claim_changed
 @onready var peg_sprite: AnimatedSprite2D = $Sprite2D
 
 
+
 # -1 means the peg is unclaimed.
 var claimed_turn: int = -1
 
+var tween = create_tween()
 
 func _ready() -> void:
 	add_to_group("pegs")
@@ -28,6 +30,8 @@ func _ready() -> void:
 
 
 func change_peg_colour(body: Node2D) -> void:
+	
+	
 	if body.get_meta(
 		"is_peggle_ball",
 		false
@@ -55,7 +59,9 @@ func change_peg_colour(body: Node2D) -> void:
 			"default"
 		)
 	)
-
+	
+	
+	
 	if claimed_turn == new_claimed_turn:
 		return
 
