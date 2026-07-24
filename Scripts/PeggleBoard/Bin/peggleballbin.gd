@@ -3,6 +3,7 @@ class_name PeggleBallBin
 extends Area2D
 
 @export var animated_sprite : AnimatedSprite2D
+@export var light_vfx : Sprite2D
 
 signal ball_caught(ball: Node2D, bin_emotion: int)
 
@@ -23,6 +24,7 @@ func _ready() -> void:
 	set_emotion()
 	body_entered.connect(_on_body_entered)
 	GameData.emotion_changed.connect(on_active_emotion_changed)
+	light_vfx.visible = false
 
 func on_active_emotion_changed(emotion_index: int) -> void:
 	print("active emotion: ", emotion_index)
@@ -30,9 +32,11 @@ func on_active_emotion_changed(emotion_index: int) -> void:
 		bin_active = true
 		animated_sprite.visible = true
 		animated_sprite.play("default")
+		light_vfx.visible = true
 	else:
 		bin_active = false
 		animated_sprite.visible = false
+		light_vfx.visible = false
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.get_meta("is_peggle_ball", false) != true:

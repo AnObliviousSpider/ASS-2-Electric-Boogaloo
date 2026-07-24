@@ -1,26 +1,37 @@
 [gd_scene format=3 uid="uid://cyohg8tsod6lf"]
 
 [ext_resource type="Script" uid="uid://cme374au0hxno" path="res://Scripts/PeggleBoard/Bin/peggleballbin.gd" id="1_qvfqv"]
-[ext_resource type="Texture2D" uid="uid://be4x3raoapg1b" path="res://Assets/Art/Game/BinSprites/FlirtyBin.png" id="2_kmj5o"]
-[ext_resource type="SpriteFrames" uid="uid://cdlhb21pkx050" path="res://Resources/Art/Game/BinSpriteFrames/AngryBinSpin.tres" id="3_ntqqt"]
+[ext_resource type="Shader" uid="uid://bj3krlfwbgf11" path="res://Shaders/light_texture.gdshader" id="2_36tjo"]
+[ext_resource type="Texture2D" uid="uid://dqo2y22uqc44i" path="res://Assets/Art/Game/BinSprites/HappyBin.png" id="2_83aeu"]
+[ext_resource type="SpriteFrames" uid="uid://dqhf1ke0nh4ki" path="res://Resources/Art/Game/BinSpriteFrames/HappyBinSpin.tres" id="3_36tjo"]
+[ext_resource type="Texture2D" uid="uid://cx8gh2h5swcka" path="res://Assets/Art/Game/BinVisualFX/cone_c_blur.png" id="4_8wksc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6r8yq"]
+shader = ExtResource("2_36tjo")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_715ky"]
 size = Vector2(25, 20)
 
-[node name="Bin" type="Area2D" unique_id=212364139 node_paths=PackedStringArray("animated_sprite")]
+[node name="Bin" type="Area2D" unique_id=212364139 node_paths=PackedStringArray("animated_sprite", "light_vfx")]
 scale = Vector2(0.6, 0.6)
 collision_layer = 8
 collision_mask = 4
 script = ExtResource("1_qvfqv")
 animated_sprite = NodePath("AnimatedSprite2D")
+light_vfx = NodePath("LightVFX")
+
+[node name="LightVFX" type="Sprite2D" parent="." unique_id=1988481638]
+material = SubResource("ShaderMaterial_6r8yq")
+position = Vector2(0, -15.000005)
+scale = Vector2(0.09, 0.1)
+texture = ExtResource("4_8wksc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=303373192]
 position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_715ky")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=855845330]
-texture = ExtResource("2_kmj5o")
+texture = ExtResource("2_83aeu")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=798695772]
-sprite_frames = ExtResource("3_ntqqt")
-frame_progress = 0.7141405
+sprite_frames = ExtResource("3_36tjo")
