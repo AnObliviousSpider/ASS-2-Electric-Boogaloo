@@ -23,10 +23,11 @@ extends Node
 # Values can be AudioStreams or resource paths.
 #MAKE SURE THEY ARE MP3s!
 @export var scene_music: Dictionary = {
-	"main_menu": preload("res://Assets/Audio/OST/To No Avail.mp3"),
-	"main": preload("res://Assets/Audio/OST/Sous Les Donkehs (1).mp3"),
+	"main_menu": preload("res://Assets/Audio/OST/Idea.1.VaporWave.1.1.mp3"),
+	"main": preload("res://Assets/Audio/OST/To No Avail.mp3"),
 	"credits": preload("res://Assets/Audio/OST/something3.mp3"),
 }
+
 
 # Music that should start after the new scene has loaded.
 var prepared_music: AudioStream = null

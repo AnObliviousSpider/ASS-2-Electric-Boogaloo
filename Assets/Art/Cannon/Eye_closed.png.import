@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://crcr85m8yq2w0"
-path="res://.godot/imported/Peggle_Frame_3.png-5469929cd1f82757317aee6761b8260e.ctex"
+uid="uid://bxfuodh2hfv5v"
+path="res://.godot/imported/Eye_closed.png-06c59c0fef70492754ed69d892b6494e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Art/Frame/Peggle_Frame_3.png"
-dest_files=["res://.godot/imported/Peggle_Frame_3.png-5469929cd1f82757317aee6761b8260e.ctex"]
+source_file="res://Assets/Art/Cannon/Eye_closed.png"
+dest_files=["res://.godot/imported/Eye_closed.png-06c59c0fef70492754ed69d892b6494e.ctex"]
 
 [params]
 
