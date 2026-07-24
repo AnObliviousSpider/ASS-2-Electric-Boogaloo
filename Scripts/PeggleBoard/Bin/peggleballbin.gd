@@ -2,6 +2,8 @@
 class_name PeggleBallBin
 extends Area2D
 
+@export var animated_sprite : AnimatedSprite2D
+
 signal ball_caught(ball: Node2D, bin_emotion: int)
 
 var bin_active : bool
@@ -10,12 +12,15 @@ var bin_active : bool
 	set(value):
 		what_emotion_to_respond_with = value
 		if $Sprite2D and GameData.emotions.keys()[what_emotion_to_respond_with]:
-			$Sprite2D.texture = load("res://Assets/Art/Game/BinSprites/" + GameData.emotions.keys()[what_emotion_to_respond_with] + "Bin.png")
+			set_emotion()
 
 
+func set_emotion() -> void:
+	$Sprite2D.texture = load("res://Assets/Art/Game/BinSprites/" + GameData.emotions.keys()[what_emotion_to_respond_with] + "Bin.png")
+	animated_sprite.sprite_frames = load("res://Resources/Art/Game/BinSpriteFrames/" + GameData.emotions.keys()[what_emotion_to_respond_with] + "BinSpin.tres")
 
 func _ready() -> void:
-	$Sprite2D.texture = load("res://Assets/Art/Game/BinSprites/" + GameData.emotions.keys()[what_emotion_to_respond_with] + "Bin.png")
+	set_emotion()
 	body_entered.connect(_on_body_entered)
 	GameData.emotion_changed.connect(on_active_emotion_changed)
 
@@ -23,8 +28,11 @@ func on_active_emotion_changed(emotion_index: int) -> void:
 	print("active emotion: ", emotion_index)
 	if emotion_index == what_emotion_to_respond_with:
 		bin_active = true
+		animated_sprite.visible = true
+		animated_sprite.play("default")
 	else:
 		bin_active = false
+		animated_sprite.visible = false
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.get_meta("is_peggle_ball", false) != true:

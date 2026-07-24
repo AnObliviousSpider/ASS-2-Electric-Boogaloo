@@ -2,15 +2,17 @@
 
 [ext_resource type="Script" uid="uid://cme374au0hxno" path="res://Scripts/PeggleBoard/Bin/peggleballbin.gd" id="1_qvfqv"]
 [ext_resource type="Texture2D" uid="uid://be4x3raoapg1b" path="res://Assets/Art/Game/BinSprites/FlirtyBin.png" id="2_kmj5o"]
+[ext_resource type="SpriteFrames" uid="uid://cdlhb21pkx050" path="res://Resources/Art/Game/BinSpriteFrames/AngryBinSpin.tres" id="3_ntqqt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_715ky"]
 size = Vector2(25, 20)
 
-[node name="Bin" type="Area2D" unique_id=212364139]
+[node name="Bin" type="Area2D" unique_id=212364139 node_paths=PackedStringArray("animated_sprite")]
 scale = Vector2(0.6, 0.6)
 collision_layer = 8
 collision_mask = 4
 script = ExtResource("1_qvfqv")
+animated_sprite = NodePath("AnimatedSprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=303373192]
 position = Vector2(-0.5, 0)
@@ -18,3 +20,7 @@ shape = SubResource("RectangleShape2D_715ky")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=855845330]
 texture = ExtResource("2_kmj5o")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=798695772]
+sprite_frames = ExtResource("3_ntqqt")
+frame_progress = 0.7141405
