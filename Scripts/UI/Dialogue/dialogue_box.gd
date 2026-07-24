@@ -15,6 +15,8 @@ var placeholder_text = "placeholder text: if you see this something went wrong!"
 func display_dialogue(dialogue: String) -> void:
 	dialogue_label.text = dialogue
 	animation_player.play("RESET")
+	animation_player.speed_scale = 50.0 / float(len(dialogue))
+	print(len(dialogue), animation_player.speed_scale)
 	await _fade_in(fade_in_time)
 	SfxPlayer.play(on_text_audio)
 	animation_player.play("typing_anim")
