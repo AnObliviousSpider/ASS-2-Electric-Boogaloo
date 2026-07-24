@@ -39,6 +39,7 @@ func _on_dialogue_level_triggered(level: int) -> void:
 		display_level_dialogue(level)
 
 func display_level_dialogue(level: int) -> void:
+	EventBus.dialogue_mood_hide.emit()
 	if not DialogueManager.dialogue_levels.has(level):
 		push_error(
 			"No level dialogue exists for level %s." % level

@@ -47,7 +47,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	
 	ball_caught.emit(body, what_emotion_to_respond_with)
-	EventBus.dialogue_mood_triggered.emit(what_emotion_to_respond_with, LevelManager.level)
+	
 	GameData.current_emotion = what_emotion_to_respond_with
 	if bin_active:
 		# give powerup
