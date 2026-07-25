@@ -12,6 +12,7 @@
 
 [node name="main" type="Node" unique_id=1907013364]
 script = ExtResource("1_lixft")
+enable_debug_win = true
 
 [node name="World2D" type="Node2D" parent="." unique_id=1856865536]
 script = ExtResource("2_2a143")

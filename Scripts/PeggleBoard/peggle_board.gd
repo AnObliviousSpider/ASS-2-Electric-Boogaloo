@@ -784,9 +784,7 @@ func check_for_winner() -> void:
 		):
 			advance_to_next_peg_level()
 		else:
-			end_game(
-				WIN_SCENE_KEY
-			)
+			play_final_win_sequence()
 
 	elif (
 		ai_progress_bar.value
@@ -805,6 +803,39 @@ func check_for_winner() -> void:
 			end_game(
 				TRY_AGAIN_SCENE_KEY
 			)
+
+
+func play_final_win_sequence() -> void:
+	if game_ended:
+		return
+
+	game_ended = true
+	resolving_ball = true
+
+	# The cannon must remain disabled throughout
+	# the final conversation and transition.
+	cannon.lock_cannon()
+
+	# Remove any short emotion dialogue which may
+	# still be present from the completed turn.
+	EventBus.dialogue_mood_hide.emit()
+
+	DialogueManager.force_close_dialogue()
+
+	# Play the level 5 post-win dialogue.
+	await DialogueManager.play_post_win_dialogue(
+		LevelManager.level
+	)
+
+	# After the final line closes, fade the board
+	# out before moving to the win scene.
+	await fade_out_board()
+
+	SceneManager.go(
+		WIN_SCENE_KEY,
+		END_SCREEN_TRANSITION_DURATION,
+		true
+	)
 
 
 func advance_to_next_peg_level() -> void:
@@ -1263,6 +1294,8 @@ func finish_ball_resolution(
 
 	await animate_progress_bars()
 
+	# Winning may have started a level transition
+	# or the final post-win sequence.
 	if game_ended:
 		resolving_ball = false
 		return
@@ -1427,3 +1460,59 @@ func _on_ball_body_entered(
 			"ball",
 			current_ball
 		)
+
+
+func debug_win_current_level() -> void:
+	# Extra protection in case this method is
+	# accidentally called by another script.
+	if not OS.has_feature(
+		"editor"
+	):
+		return
+
+	if game_ended:
+		return
+
+	# Do not interrupt story dialogue or a level
+	# transition that already has the cannon locked.
+	if cannon.is_cannon_locked():
+		return
+
+	# Remove any balls currently on the board.
+	for active_ball: RigidBody2D in active_balls:
+		if is_instance_valid(
+			active_ball
+		):
+			active_ball.queue_free()
+
+	active_balls.clear()
+
+	ball_in_play = false
+	resolving_ball = false
+
+	# Remove any short emotion dialogue.
+	pending_dialogue_emotion = (
+		NO_PENDING_EMOTION
+	)
+
+	EventBus.dialogue_mood_hide.emit()
+
+	DialogueManager.force_close_dialogue()
+
+	# Visually fill the player's bar before
+	# starting the normal win flow.
+	player_progress_bar.value = (
+		player_progress_bar.max_value
+	)
+
+	if (
+		LevelManager.level
+		< LevelManager.MAX_LEVEL
+	):
+		# This increments the level and automatically
+		# starts both story-dialogue sets for it.
+		advance_to_next_peg_level()
+	else:
+		# On level 5, play the post-win conversation
+		# and then transition to the win screen.
+		play_final_win_sequence()
