@@ -1,42 +1,86 @@
 [gd_scene format=3 uid="uid://mch263sebn3u"]
 
 [ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="1_828qg"]
+[ext_resource type="Script" uid="uid://lidblx52ul6" path="res://Scripts/Tools/spline_wall.gd" id="2_17iyn"]
+[ext_resource type="PackedScene" uid="uid://4bxgldxkkafv" path="res://Scenes/PeggleBoard/Pegs/brick_peg.tscn" id="3_4fdr3"]
+
+[sub_resource type="Curve2D" id="Curve2D_5cn0y"]
+bake_interval = 10.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 171.7429, -10.451538, 0, 0, 0, 0, 156.84483, 5.2803345, 0, 0, 0, 0, 147.67679, 14.961487, 0, 0, 0, 0, 138.50873, 24.64264, 0, 0, 0, 0, 127.048676, 36.74408, 0, 0, 0, 0, 120.17264, 44.004944, 0, 0, 0, 0, 111.00458, 53.686096, 0, 0, 0, 0, 102.982544, 62.157104, 0, 0, 0, 0, 93.81448, 71.83823, 0, 0, 0, 0, 80.06242, 86.359955, 11.32062, -12.766558, -11.32062, 12.766558, 54.85028, 112.98312)
+}
+point_count = 11
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lacdf"]
+bounce = 1.0
 
 [node name="PegsLevel4" type="Node2D" unique_id=1803795440]
-visible = false
 
 [node name="PegglePeg" parent="." unique_id=1411103836 instance=ExtResource("1_828qg")]
-position = Vector2(192, 101)
+position = Vector2(194.41629, 91.40787)
 
 [node name="PegglePeg2" parent="." unique_id=1737862878 instance=ExtResource("1_828qg")]
-position = Vector2(258, 166)
+position = Vector2(260.4163, 156.40787)
 
 [node name="PegglePeg3" parent="." unique_id=284640423 instance=ExtResource("1_828qg")]
-position = Vector2(280, 167)
+position = Vector2(282.4163, 157.40787)
 
 [node name="PegglePeg4" parent="." unique_id=48907162 instance=ExtResource("1_828qg")]
-position = Vector2(216, 165)
+position = Vector2(218.41629, 155.40787)
+
+[node name="PegglePeg13" parent="." unique_id=154369854 instance=ExtResource("1_828qg")]
+position = Vector2(221, 84)
+
+[node name="PegglePeg14" parent="." unique_id=1017025294 instance=ExtResource("1_828qg")]
+position = Vector2(258, 83)
+
+[node name="PegglePeg15" parent="." unique_id=1040231087 instance=ExtResource("1_828qg")]
+position = Vector2(241, 135)
 
 [node name="PegglePeg5" parent="." unique_id=313532700 instance=ExtResource("1_828qg")]
-position = Vector2(282, 108)
+position = Vector2(284.4163, 98.40787)
 
 [node name="PegglePeg6" parent="." unique_id=438370775 instance=ExtResource("1_828qg")]
-position = Vector2(239, 166)
+position = Vector2(241.41629, 156.40787)
 
 [node name="PegglePeg7" parent="." unique_id=2072309454 instance=ExtResource("1_828qg")]
-position = Vector2(192, 140)
+position = Vector2(194.41629, 130.40787)
 
 [node name="PegglePeg8" parent="." unique_id=2109540603 instance=ExtResource("1_828qg")]
-position = Vector2(191, 120)
+position = Vector2(193.41629, 110.40787)
 
 [node name="PegglePeg9" parent="." unique_id=228459563 instance=ExtResource("1_828qg")]
-position = Vector2(192.00002, 162)
+position = Vector2(194.4163, 152.40787)
 
 [node name="PegglePeg10" parent="." unique_id=1674804988 instance=ExtResource("1_828qg")]
-position = Vector2(280, 147)
+position = Vector2(282.4163, 137.40787)
 
 [node name="PegglePeg11" parent="." unique_id=287821607 instance=ExtResource("1_828qg")]
-position = Vector2(282, 127)
+position = Vector2(284.4163, 117.40787)
 
 [node name="PegglePeg12" parent="." unique_id=1995817294 instance=ExtResource("1_828qg")]
-position = Vector2(239, 126)
+position = Vector2(241, 110)
+
+[node name="SplineWall" type="Path2D" parent="." unique_id=660085376]
+position = Vector2(137.41629, 145.40787)
+rotation = -0.75818354
+scale = Vector2(0.6, 0.6)
+curve = SubResource("Curve2D_5cn0y")
+script = ExtResource("2_17iyn")
+block_scene = ExtResource("3_4fdr3")
+wall_physics_material = SubResource("PhysicsMaterial_lacdf")
+block_spacing = 16.0
+default_block_size = Vector2(16, 6)
+bake_interval = 10.0
+
+[node name="SplineWall2" type="Path2D" parent="." unique_id=1504447392]
+position = Vector2(200.41629, 146.40787)
+rotation = -0.75818354
+scale = Vector2(0.6, 0.6)
+curve = SubResource("Curve2D_5cn0y")
+script = ExtResource("2_17iyn")
+block_scene = ExtResource("3_4fdr3")
+wall_physics_material = SubResource("PhysicsMaterial_lacdf")
+block_spacing = 16.0
+default_block_size = Vector2(16, 6)
+bake_interval = 10.0

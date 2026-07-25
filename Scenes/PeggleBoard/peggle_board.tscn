@@ -292,15 +292,19 @@ cannon_fire_sfx = null
 libraries/PEGGLE_CANNON = SubResource("AnimationLibrary_s3sbd")
 
 [node name="PegsLevel1" parent="." unique_id=1913113605 instance=ExtResource("9_h4o7a")]
+visible = false
 position = Vector2(6, 13)
 
 [node name="PegsLevel2" parent="." unique_id=1651858098 instance=ExtResource("10_e0blb")]
+visible = false
 position = Vector2(6, 13)
 
 [node name="PegsLevel3" parent="." unique_id=185881288 instance=ExtResource("11_w34gu")]
+visible = false
 position = Vector2(6, 13)
 
 [node name="PegsLevel4" parent="." unique_id=1803795440 instance=ExtResource("12_rgciv")]
+visible = false
 position = Vector2(6, 13)
 
 [node name="PegsLevel5" parent="." unique_id=1457922705 instance=ExtResource("13_7pgve")]
