@@ -5,6 +5,9 @@ extends RigidBody2D
 
 @export var ball_textures: Array[Texture2D] = []
 
+@export var ball_hit_wall_sound: AudioStream
+
+
 
 # NODES
 
@@ -24,6 +27,22 @@ func _ready() -> void:
 		)
 		return
 
+	sprite_2d.texture = ball_textures.pick_random()
+
+
+func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
+	for i in range(state.get_contact_count()):
+
+		if abs(state.get_contact_local_normal(i).y) < 0.1: 
+			SfxPlayer.play(ball_hit_wall_sound)
+			break
+
+
+
+func ghost_ball():
+	collision_mask=1+3
+	await get_tree().create_timer(1).timeout
+	collision_mask=1+2+3
 	# Choose the texture once when the ball spawns.
 	sprite_2d.texture = (
 		ball_textures.pick_random()
