@@ -223,7 +223,19 @@ func _on_body_entered(
 		
 	if bin_active:
 		# Give power-up.
-		PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[2])
+		if what_emotion_to_respond_with == 0:
+			#	"Happy",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[1]) # split ball
+		if what_emotion_to_respond_with == 1:
+			# 	"Dejected",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[0]) # ghost ball
+		if what_emotion_to_respond_with == 2:
+			# 	"Flirty",
+			pass
+		if what_emotion_to_respond_with == 3:
+			# 	"Angry"
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[2]) # blast ball
+		
 
 	# Tell the Peggle board which ball entered
 	# and which emotion this bin represents.
