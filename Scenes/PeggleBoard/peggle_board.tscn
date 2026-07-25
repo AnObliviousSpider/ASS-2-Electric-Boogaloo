@@ -12,8 +12,11 @@
 [ext_resource type="AudioStream" uid="uid://dmx3b2ht8gmgu" path="res://Assets/Audio/SFX/GAME/happy_bin.mp3" id="7_1uqbv"]
 [ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 [ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
+[ext_resource type="AudioStream" uid="uid://1oq8k6swtj6j" path="res://Assets/Audio/OST/Level_1_Normal.wav" id="7_iotme"]
+[ext_resource type="PackedScene" uid="uid://b05yad54fqqov" path="res://Scenes/PeggleBoard/Ball/ball_explosion.tscn" id="7_iotme"]
 [ext_resource type="Texture2D" uid="uid://bl4qhbvyqfhvd" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
 [ext_resource type="AudioStream" uid="uid://b6s4d0jw7rg6v" path="res://Assets/Audio/SFX/GAME/sad_bin.mp3" id="8_iotme"]
+[ext_resource type="AudioStream" uid="uid://ccfc1qt14pptq" path="res://Assets/Audio/OST/Level_2_Normal.wav" id="8_pr6su"]
 [ext_resource type="Texture2D" uid="uid://sis7laba3os1" path="res://Assets/Art/Frame/Peggle_Frame_2.png" id="9_232so"]
 [ext_resource type="AudioStream" uid="uid://o20hn1hs38f6" path="res://Assets/Audio/SFX/GAME/angry_bin.mp3" id="9_pr6su"]
 [ext_resource type="Texture2D" uid="uid://crcr85m8yq2w0" path="res://Assets/Art/Frame/Peggle_Frame_3.png" id="10_in8bm"]
@@ -147,11 +150,14 @@ peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLeve
 ai_win_sfx = ExtResource("4_iotme")
 peg_hit_sfx = ExtResource("4_pr6su")
 bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), null, ExtResource("6_pr6su")])
+background_music = Array[AudioStream]([ExtResource("7_iotme"), ExtResource("8_pr6su")])
+explosion_scene = ExtResource("7_iotme")
 
 [node name="PeggleBallShooter" parent="." unique_id=345197782 instance=ExtResource("3_s3sbd")]
 z_index = 1
 position = Vector2(248, 21)
 scale = Vector2(0.7, 0.7)
+cannon_fire_sfx = null
 
 [node name="PeggleBallAnimationPlayer" parent="PeggleBallShooter" index="1" unique_id=336605750]
 libraries/PEGGLE_CANNON = SubResource("AnimationLibrary_s3sbd")

@@ -22,6 +22,7 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 @export var STARTING_BALL_COUNT: int = 20
 
 
+
 # COLLISION INFORMATION
 # Layer 1: Walls
 # Layer 2: Pegs
@@ -60,6 +61,9 @@ var sfx_max_scale: float = 2.0
 
 @export var progress_bar_duration: float = 0.75
 
+
+@export_group("Scenes")
+@export var explosion_scene : PackedScene
 
 @export_group("")
 
@@ -138,6 +142,7 @@ var progress_tween: Tween
 
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
+var is_blast_ball: bool = false
 var is_bounce_once: bool = false
 
 # The number of upcoming AI balls that
@@ -159,6 +164,10 @@ func _ready() -> void:
 		EventBus.peg_hit_sound_update.connect(
 			play_peg_hit_sound
 		)
+	
+	PowerUpManager.trigger_power_up.connect(
+		_apply_power_up
+	)
 
 	for child: Node in bins.get_children():
 		if not child.has_signal(
@@ -182,7 +191,19 @@ func _ready() -> void:
 	)
 
 	reset_current_round()
+	
+	
 
+func _apply_power_up() -> void:
+	if PowerUpManager.active_power_up == PowerUpManager.power_ups.ghost_ball:
+		if current_turn == Turn.PLAYER:
+			is_ghost_ball = true
+	if PowerUpManager.active_power_up == PowerUpManager.power_ups.split_ball:
+		is_split_ball = true
+	if PowerUpManager.active_power_up == PowerUpManager.power_ups.blast_ball:
+		is_blast_ball = true
+	if PowerUpManager.active_power_up == PowerUpManager.power_ups.bounce_ball:
+		is_bounce_once = true
 
 func _process(
 	_delta: float
@@ -312,7 +333,10 @@ func show_peg_level(
 	active_peg_level = (
 		peg_levels[level_index]
 	)
+	
 
+	
+	
 	refresh_pegs()
 
 
@@ -1105,27 +1129,25 @@ func _on_ball_body_entered(
 	current_ball: RigidBody2D,
 	_body: Node
 ) -> void:
-	if not is_split_ball:
-		return
+	if is_split_ball and current_turn == Turn.PLAYER:
+		is_split_ball = false
 
-	is_split_ball = false
-
-	var turn_owner: int = int(
-		current_ball.get_meta(
-			"turn_owner",
-			current_turn
+		var turn_owner: int = int(
+			current_ball.get_meta(
+				"turn_owner",
+				current_turn
+			)
 		)
-	)
 
-	var spawned_split_ball: RigidBody2D = (
-		cannon.fire_extra_ball(
-			current_ball.global_position,
-			cannon.last_shoot_direction
+		var spawned_split_ball: RigidBody2D = (
+			cannon.fire_extra_ball(
+				current_ball.global_position,
+				cannon.last_shoot_direction
+			)
 		)
-	)
 
-	if spawned_split_ball == null:
-		return
+		if spawned_split_ball == null:
+			return
 
 	spawned_split_ball.contact_monitor = true
 	spawned_split_ball.max_contacts_reported = 4
@@ -1146,3 +1168,14 @@ func _on_ball_body_entered(
 	active_balls.append(
 		spawned_split_ball
 	)
+		configure_ball(
+			spawned_split_ball,
+			turn_owner
+		)
+	if is_blast_ball and current_turn == Turn.PLAYER:
+		is_blast_ball = false
+		
+		var explosion = explosion_scene.instantiate()
+		get_tree().root.add_child(explosion)
+		explosion.global_position = current_ball.global_position
+		explosion.ball = current_ball

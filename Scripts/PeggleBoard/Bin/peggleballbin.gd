@@ -207,6 +207,22 @@ func _on_body_entered(
 		) == true
 	):
 		return
+		
+	if bin_active:
+		# Give power-up.
+		if what_emotion_to_respond_with == 0:
+			#	"Happy",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[1]) # split ball
+		if what_emotion_to_respond_with == 1:
+			# 	"Dejected",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[0]) # ghost ball
+		if what_emotion_to_respond_with == 2:
+			# 	"Flirty",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[3]) # bounce ball
+		if what_emotion_to_respond_with == 3:
+			# 	"Angry"
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[2]) # blast ball
+		
 
 	# The board decides whether this hit should
 	# produce dialogue based on who fired the ball.
@@ -227,3 +243,7 @@ func _on_body_entered(
 	if bin_active:
 		# Give power-up here.
 		pass
+
+	GameData.current_emotion = (
+		what_emotion_to_respond_with
+	)

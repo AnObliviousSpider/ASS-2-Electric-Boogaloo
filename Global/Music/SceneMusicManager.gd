@@ -24,7 +24,7 @@ extends Node
 #MAKE SURE THEY ARE MP3s!
 @export var scene_music: Dictionary = {
 	"main_menu": preload("res://Assets/Audio/OST/Idea.1.VaporWave.1.1.mp3"),
-	"main": preload("res://Assets/Audio/OST/To No Avail.mp3"),
+	"main": preload("res://Assets/Audio/OST/Level_1_Normal.wav"), 
 	"credits": preload("res://Assets/Audio/OST/something3.mp3"),
 }
 
@@ -109,6 +109,8 @@ func get_music_for_scene(scene_key: String, scene_path: String = "") -> AudioStr
 
 		push_error("Scene music path is not an AudioStream: %s" % music_value)
 		return null
+	
+	
 
 	push_error("Scene music value must be an AudioStream or resource path.")
 	return null
