@@ -91,10 +91,6 @@ var sfx_max_scale: float = 2.0
 @onready var ai_progress_bar: ProgressBar = (
 	$ProgressBar2
 )
-@onready var ball_bar: ProgressBar = $BallBar
-@onready var counting_label: Label = $CountingLabel
-
-@onready var bounce_once: StaticBody2D = $BounceOnce
 
 @onready var ball_bar: ProgressBar = (
 	$BallBar
@@ -102,6 +98,13 @@ var sfx_max_scale: float = 2.0
 
 @onready var counting_label: Label = (
 	$CountingLabel
+)
+
+
+# POWER-UP NODES
+
+@onready var bounce_once: StaticBody2D = (
+	$BounceOnce
 )
 
 
@@ -120,7 +123,6 @@ var pending_dialogue_emotion: int = (
 # PEG DATA
 
 var active_peg_level: Node2D
-
 var all_pegs: Array[Node] = []
 
 var total_peg_count: int = 0
@@ -136,16 +138,13 @@ var progress_tween: Tween
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
 var is_bounce_once: bool = false
-var is_ai_ball_smol = 0
 
-# SPAWNED BALLS
-var new_ball: RigidBody2D
-var split_ball: RigidBody2D
+# The number of upcoming AI balls that
+# should be made smaller.
+var is_ai_ball_smol: int = 0
 
 
 func _ready() -> void:
-	# The endzone handles balls that missed
-	# every emotion bin.
 	if not endzone.body_entered.is_connected(
 		destroy_ball
 	):
@@ -160,7 +159,6 @@ func _ready() -> void:
 			play_peg_hit_sound
 		)
 
-	# Connect every emotion bin to this board.
 	for child: Node in bins.get_children():
 		if not child.has_signal(
 			"ball_caught"
@@ -365,10 +363,17 @@ func _collect_pegs(
 	for child: Node in node.get_children():
 		if child.is_in_group(
 			"pegs"
-		) and not child.dummy:
-			all_pegs.append(
-				child
+		):
+			var is_dummy: bool = (
+				child.get(
+					"dummy"
+				) == true
 			)
+
+			if not is_dummy:
+				all_pegs.append(
+					child
+				)
 
 		_collect_pegs(
 			child
@@ -452,7 +457,6 @@ func get_progress_values() -> Vector2:
 			"get_claimed_turn"
 		):
 			continue
-			
 
 		var claimed_turn: int = int(
 			peg.call(
@@ -698,7 +702,8 @@ func fire_ball() -> void:
 				body
 			)
 	)
-	
+
+	# Apply the ghost effect independently.
 	if is_ghost_ball:
 		is_ghost_ball = false
 
@@ -708,21 +713,32 @@ func fire_ball() -> void:
 			fired_ball.call(
 				"ghost_ball"
 			)
-		if is_ai_ball_smol == 2:
-			is_ai_ball_smol -= 1
 
-		elif is_ai_ball_smol == 1:
-			is_ai_ball_smol -= 1
-			new_ball.get_node("Sprite2D").scale = Vector2(0.1, 0.1)
-			new_ball.get_node("CollisionShape2D").shape.radius *= 0.5
+	# Apply the small-ball effect only to AI balls.
+	if (
+		current_turn == Turn.AI
+		and is_ai_ball_smol > 0
+	):
+		apply_small_ai_ball(
+			fired_ball
+		)
 
-		else:
-			new_ball.get_node("Sprite2D").scale = Vector2(0.2,0.2)
-			new_ball.get_node("CollisionShape2D").shape.radius =3
+		is_ai_ball_smol -= 1
 
+	# Activate the one-use bounce effect.
 	if is_bounce_once:
-		is_bounce_once=false
-		bounce_once.bounce_once()
+		is_bounce_once = false
+
+		if bounce_once.has_method(
+			"bounce_once"
+		):
+			bounce_once.call(
+				"bounce_once"
+			)
+		else:
+			push_warning(
+				"BounceOnce does not have a bounce_once method."
+			)
 
 	configure_ball(
 		fired_ball,
@@ -732,6 +748,55 @@ func fire_ball() -> void:
 	ball_in_play = true
 
 	use_ball()
+
+
+func apply_small_ai_ball(
+	fired_ball: RigidBody2D
+) -> void:
+	var ball_sprite: Sprite2D = (
+		fired_ball.get_node_or_null(
+			"Sprite2D"
+		) as Sprite2D
+	)
+
+	if ball_sprite != null:
+		if is_ai_ball_smol >= 2:
+			ball_sprite.scale = Vector2(
+				0.2,
+				0.2
+			)
+		else:
+			ball_sprite.scale = Vector2(
+				0.1,
+				0.1
+			)
+
+	var ball_collision: CollisionShape2D = (
+		fired_ball.get_node_or_null(
+			"CollisionShape2D"
+		) as CollisionShape2D
+	)
+
+	if (
+		ball_collision == null
+		or ball_collision.shape == null
+	):
+		return
+
+	# Do not resize the shared collision resource.
+	ball_collision.shape = (
+		ball_collision.shape.duplicate()
+	)
+
+	if ball_collision.shape is CircleShape2D:
+		var circle_shape: CircleShape2D = (
+			ball_collision.shape as CircleShape2D
+		)
+
+		if is_ai_ball_smol >= 2:
+			circle_shape.radius = 3.0
+		else:
+			circle_shape.radius = 1.5
 
 
 func configure_ball(
@@ -797,7 +862,7 @@ func catch_ball(
 		)
 	)
 
-	# Only a player's bin hit creates dialogue
+	# Only a player's bin hit stores dialogue
 	# for the following opponent turn.
 	if ball_owner == Turn.PLAYER:
 		pending_dialogue_emotion = (
@@ -833,8 +898,6 @@ func catch_ball(
 func destroy_ball(
 	body: Node2D
 ) -> void:
-	# The ball reached the endzone without
-	# entering an emotion bin.
 	resolve_ball(
 		body,
 		false
@@ -852,8 +915,6 @@ func play_pending_opponent_dialogue() -> void:
 		pending_dialogue_emotion
 	)
 
-	# Clear it before opening the dialogue so
-	# the same response cannot play twice.
 	pending_dialogue_emotion = (
 		NO_PENDING_EMOTION
 	)
@@ -867,14 +928,12 @@ func play_pending_opponent_dialogue() -> void:
 		LevelManager.level
 	)
 
-	# Keep the dialogue visible for the entire
-	# opponent turn.
 	DialogueManager.lock_dialogue()
 
 
 func finish_opponent_turn() -> void:
-	# Close dialogue before returning control
-	# to the player.
+	# Close the dialogue before giving control
+	# back to the player.
 	EventBus.dialogue_mood_hide.emit()
 	DialogueManager.force_close_dialogue()
 
@@ -902,8 +961,6 @@ func resolve_ball(
 	):
 		return
 
-	# Prevent another Area2D from resolving
-	# the same ball.
 	body.set_meta(
 		"ball_resolved",
 		true
@@ -970,11 +1027,9 @@ func finish_ball_resolution(
 	await cannon.play_turn_swap()
 
 	if finished_turn == Turn.PLAYER:
-		# The turn changes to AI first.
 		current_turn = Turn.AI
 		resolving_ball = false
 
-		# Then the stored dialogue opens and locks.
 		play_pending_opponent_dialogue()
 
 		if game_ended:
@@ -982,8 +1037,6 @@ func finish_ball_resolution(
 
 		start_ai_turn()
 	else:
-		# The AI ball has now resolved.
-		# Close dialogue before changing to player.
 		finish_opponent_turn()
 
 
