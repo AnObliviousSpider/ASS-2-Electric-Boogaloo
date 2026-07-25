@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://cqegkeg372r6k"]
+
+[ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="1_x61wl"]
+[ext_resource type="Script" uid="uid://lidblx52ul6" path="res://Scripts/Tools/spline_wall.gd" id="2_pnytk"]
+[ext_resource type="PackedScene" uid="uid://4bxgldxkkafv" path="res://Scenes/PeggleBoard/Pegs/brick_peg.tscn" id="3_egl8b"]
+
+[sub_resource type="Curve2D" id="Curve2D_3jus1"]
+bake_interval = 10.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 145, 132, 0, 0, 0, 0, 163, 130, 0, 0, 0, 0, 170, 123, 0, 0, 0, 0, 173, 105, 0, 0, 0, 0, 165, 92, 0, 0, 0, 0, 146, 87, 0, 0, 0, 0, 131, 87, -48.547768, -15.623463, 48.547768, 15.623463, 144, 133)
+}
+point_count = 8
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3jus1"]
+bounce = 1.0
+
+[sub_resource type="Curve2D" id="Curve2D_g4v7s"]
+bake_interval = 10.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 204, 115, 0, 0, 0, 0, 238, 115, 0, 0, 0, 0, 256, 86)
+}
+point_count = 3
+
+[sub_resource type="Curve2D" id="Curve2D_7pgve"]
+bake_interval = 4.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 205, 146, 0, 0, 0, 0, 153, 146, 0, 0, 0, 0, 139, 115)
+}
+point_count = 3
+
+[sub_resource type="Curve2D" id="Curve2D_82xy0"]
+bake_interval = 4.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 321, 179, 0, 0, 0, 0, 280, 178, 0, 0, 0, 0, 244, 155, 0, 0, 0, 0, 207, 178, 0, 0, 0, 0, 165, 177)
+}
+point_count = 5
+
+[node name="PegsLevel1" type="Node2D" unique_id=1913113605]
+
+[node name="PegglePeg" parent="." unique_id=1411103836 instance=ExtResource("1_x61wl")]
+position = Vector2(180, 81.00001)
+dummy = true
+
+[node name="PegglePeg2" parent="." unique_id=1100193929 instance=ExtResource("1_x61wl")]
+position = Vector2(151, 73)
+dummy = true
+
+[node name="PegglePeg3" parent="." unique_id=233022083 instance=ExtResource("1_x61wl")]
+position = Vector2(298, 78)
+dummy = true
+
+[node name="PegglePeg4" parent="." unique_id=682897559 instance=ExtResource("1_x61wl")]
+position = Vector2(326, 69)
+dummy = true
+
+[node name="PegglePeg5" parent="." unique_id=1125712921 instance=ExtResource("1_x61wl")]
+position = Vector2(320, 94)
+dummy = true
+
+[node name="PegglePeg6" parent="." unique_id=736501246 instance=ExtResource("1_x61wl")]
+position = Vector2(156, 93)
+dummy = true
+
+[node name="PegglePeg7" parent="." unique_id=128728029 instance=ExtResource("1_x61wl")]
+position = Vector2(244, 172)
+dummy = true
+
+[node name="PegglePeg8" parent="." unique_id=2052908257 instance=ExtResource("1_x61wl")]
+position = Vector2(325, 167)
+dummy = true
+
+[node name="PegglePeg9" parent="." unique_id=1017535290 instance=ExtResource("1_x61wl")]
+position = Vector2(151, 167)
+dummy = true
+
+[node name="PegglePeg10" parent="." unique_id=605204094 instance=ExtResource("1_x61wl")]
+position = Vector2(245, 111)
+
+[node name="PegglePeg11" parent="." unique_id=1819805179 instance=ExtResource("1_x61wl")]
+position = Vector2(183, 115)
+dummy = true
+
+[node name="PegglePeg12" parent="." unique_id=1620362636 instance=ExtResource("1_x61wl")]
+position = Vector2(294, 114)
+dummy = true
+
+[node name="SplineWall" type="Path2D" parent="." unique_id=1804614331]
+position = Vector2(97, 3)
+curve = SubResource("Curve2D_3jus1")
+script = ExtResource("2_pnytk")
+block_scene = ExtResource("3_egl8b")
+wall_physics_material = SubResource("PhysicsMaterial_3jus1")
+block_spacing = 16.0
+default_block_size = Vector2(16, 6)
+bake_interval = 10.0
+
+[node name="Blocks" type="Node2D" parent="SplineWall" unique_id=576727456]
+
+[node name="SplineWall2" type="Path2D" parent="." unique_id=1777197915]
+position = Vector2(79, 29)
+curve = SubResource("Curve2D_g4v7s")
+script = ExtResource("2_pnytk")
+block_scene = ExtResource("3_egl8b")
+wall_physics_material = SubResource("PhysicsMaterial_3jus1")
+block_spacing = 16.0
+default_block_size = Vector2(16, 6)
+bake_interval = 10.0
+
+[node name="Blocks" type="Node2D" parent="SplineWall2" unique_id=770405707]
+
+[node name="SplineWall3" type="Path2D" parent="." unique_id=1610429967]
+curve = SubResource("Curve2D_7pgve")
+script = ExtResource("2_pnytk")
+block_scene = ExtResource("3_egl8b")
+wall_physics_material = SubResource("PhysicsMaterial_3jus1")
+metadata/_custom_type_script = "uid://lidblx52ul6"
+
+[node name="Blocks" type="Node2D" parent="SplineWall3" unique_id=304269510]
+
+[node name="PegglePeg13" parent="." unique_id=465012254 instance=ExtResource("1_x61wl")]
+position = Vector2(142, 148)
+
+[node name="PegglePeg14" parent="." unique_id=712317548 instance=ExtResource("1_x61wl")]
+position = Vector2(334, 144)
+
+[node name="SplineWall4" type="Path2D" parent="." unique_id=1858740364]
+curve = SubResource("Curve2D_82xy0")
+script = ExtResource("2_pnytk")
+block_scene = ExtResource("3_egl8b")
+wall_physics_material = SubResource("PhysicsMaterial_3jus1")
+metadata/_custom_type_script = "uid://lidblx52ul6"
+
+[node name="Blocks" type="Node2D" parent="SplineWall4" unique_id=524991562]
+
+[node name="PegglePeg15" parent="." unique_id=908470242 instance=ExtResource("1_x61wl")]
+position = Vector2(186, 162)
+
+[node name="PegglePeg16" parent="." unique_id=1648122488 instance=ExtResource("1_x61wl")]
+position = Vector2(296, 160)
+
+[node name="PegglePeg17" parent="." unique_id=1039498716 instance=ExtResource("1_x61wl")]
+position = Vector2(205, 89)
+
+[node name="PegglePeg18" parent="." unique_id=716096365 instance=ExtResource("1_x61wl")]
+position = Vector2(272, 89)
