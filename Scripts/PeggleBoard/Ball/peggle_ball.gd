@@ -39,14 +39,6 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 
 
 
-func ghost_ball():
-	collision_mask=1+3
-	await get_tree().create_timer(1).timeout
-	collision_mask=1+2+3
-	# Choose the texture once when the ball spawns.
-	sprite_2d.texture = (
-		ball_textures.pick_random()
-	)
 
 
 func ghost_ball() -> void:
