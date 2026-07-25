@@ -37,6 +37,12 @@ size = Vector2(180, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36fd3"]
 size = Vector2(177, 25)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
+size = Vector2(180, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
+size = Vector2(180, 14)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42h65"]
 bg_color = Color(0.32941177, 0.80784315, 0.654902, 1)
 
@@ -338,28 +344,6 @@ position = Vector2(291, 105)
 [node name="PegglePeg12" parent="PegsLevel5" unique_id=865599054 instance=ExtResource("4_ryebi")]
 position = Vector2(271, 73)
 
-[node name="Bins" type="Node2D" parent="." unique_id=1386732025]
-position = Vector2(0, 29)
-
-[node name="Bin1" parent="Bins" unique_id=407736055 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(197, 184)
-
-[node name="Bin2" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(227.00002, 184)
-what_emotion_to_respond_with = 1
-
-[node name="Bin3" parent="Bins" unique_id=2044842428 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(260, 184)
-what_emotion_to_respond_with = 2
-
-[node name="Bin4" parent="Bins" unique_id=921239040 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(291, 184)
-what_emotion_to_respond_with = 3
-
 [node name="Walls" type="Node2D" parent="." unique_id=789008413]
 
 [node name="Wallleft" type="StaticBody2D" parent="Walls" unique_id=1340492936]
@@ -478,15 +462,6 @@ autoplay = "default"
 frame_progress = 0.059644017
 metadata/_edit_lock_ = true
 
-[node name="Eye" type="AnimatedSprite2D" parent="." unique_id=865351097]
-position = Vector2(248, 19.000002)
-scale = Vector2(0.7, 0.7)
-sprite_frames = SubResource("SpriteFrames_pr6su")
-
-[node name="EyePupil" type="Sprite2D" parent="Eye" unique_id=253238988]
-texture = ExtResource("19_1uqbv")
-script = ExtResource("20_iotme")
-
 [node name="BounceOnce" type="StaticBody2D" parent="." unique_id=249566150]
 position = Vector2(243, 206)
 collision_layer = 16
@@ -503,7 +478,6 @@ collision_mask = 4
 position = Vector2(5, -1)
 shape = SubResource("RectangleShape2D_1eppy")
 
-[connection signal="timeout" from="PeggleBallShooter/FlashCooldown" to="." method="_on_flash_cooldown_timeout"]
 [connection signal="body_entered" from="BounceOnce/Area2D" to="BounceOnce" method="_on_area_2d_body_entered"]
 
 [editable path="PeggleBallShooter"]
