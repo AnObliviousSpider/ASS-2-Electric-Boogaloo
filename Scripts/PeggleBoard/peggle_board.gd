@@ -35,31 +35,22 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
 
 # AUDIO
-@export var cannon_fire_sfx: AudioStream
-@export var ai_win_sfx: AudioStream
-@export var meter_fill: AudioStream
 
 @export_group("Audio")
 
-# Emotions:
-# 1. Happy
-# 2. Sad or dejected
-# 3. Flirty
-# 4. Angry
-
+@export var ai_win_sfx: AudioStream
+@export var meter_fill: AudioStream
 @export var peg_hit_sfx: AudioStream
 
 @export_range(1.0, 4.0, 0.1)
 var sfx_max_scale: float = 2.0
 
+# Emotion indexes:
+# 0: Happy
+# 1: Dejected
+# 2: Flirty
+# 3: Angry
 @export var bin_emotion_sfx: Array[AudioStream] = []
-
-
-# AI
-
-@export_group("AI")
-
-@export var ai_aim_time: float = 0.75
 
 
 # PROGRESS BARS
@@ -81,14 +72,14 @@ var sfx_max_scale: float = 2.0
 
 # BALL REMOVAL NODES
 
-@onready var ball_bin: PeggleBallBin = (
-	%Bin
+@onready var endzone: Area2D = (
+	$Endzone
 )
 
+@onready var bins: Node2D = (
+	$Bins
+)
 
-# BALL REMOVAL NODES
-@onready var endzone: Area2D = $Endzone
-@onready var bins: Node2D = $Bins
 
 # INTERFACE NODES
 
@@ -138,6 +129,8 @@ var is_split_ball: bool = false
 
 
 func _ready() -> void:
+	# A ball entering the endzone missed
+	# all of the emotion bins.
 	endzone.body_entered.connect(
 		destroy_ball
 	)
@@ -146,16 +139,16 @@ func _ready() -> void:
 		missed_bin
 	)
 
-	GameData.ball_entered_bin.connect(
-		destroy_ball
-	)
-
 	EventBus.peg_hit_sound_update.connect(
 		play_peg_hit_sound
 	)
 
+	# Connect every emotion bin directly
+	# to the Peggle board.
 	for child: Node in bins.get_children():
-		if child.has_signal("ball_caught"):
+		if child.has_signal(
+			"ball_caught"
+		):
 			child.ball_caught.connect(
 				catch_ball
 			)
@@ -169,7 +162,9 @@ func _ready() -> void:
 	reset_current_round()
 
 
-func _process(_delta: float) -> void:
+func _process(
+	_delta: float
+) -> void:
 	if game_ended:
 		return
 
@@ -180,7 +175,6 @@ func _process(_delta: float) -> void:
 		current_turn == Turn.PLAYER
 		and not ball_in_play
 	):
-		# Show the trajectory for the player.
 		cannon.aim_at(
 			get_global_mouse_position(),
 			true,
@@ -188,7 +182,9 @@ func _process(_delta: float) -> void:
 		)
 
 
-func _input(event: InputEvent) -> void:
+func _input(
+	event: InputEvent
+) -> void:
 	if game_ended:
 		return
 
@@ -205,9 +201,7 @@ func _input(event: InputEvent) -> void:
 		"action_primary"
 	):
 		if not DialogueManager._dialogue_box_displayed:
-			fire_ball(
-				get_global_mouse_position()
-			)
+			fire_ball()
 
 
 func setup_ball_counter() -> void:
@@ -341,9 +335,13 @@ func refresh_pegs() -> void:
 		)
 
 
-func _collect_pegs(node: Node) -> void:
+func _collect_pegs(
+	node: Node
+) -> void:
 	for child: Node in node.get_children():
-		if child.is_in_group("pegs"):
+		if child.is_in_group(
+			"pegs"
+		):
 			all_pegs.append(
 				child
 			)
@@ -382,10 +380,7 @@ func play_peg_hit_sound() -> void:
 	pegs_hit += 1
 
 
-
 func reset_current_round() -> void:
-
-	# Stop an old progress animation.
 	if progress_tween != null:
 		progress_tween.kill()
 		progress_tween = null
@@ -393,7 +388,9 @@ func reset_current_round() -> void:
 	refresh_pegs()
 
 	for peg: Node in all_pegs:
-		if peg.has_method("reset_peg"):
+		if peg.has_method(
+			"reset_peg"
+		):
 			peg.call(
 				"reset_peg"
 			)
@@ -409,8 +406,6 @@ func reset_current_round() -> void:
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
-	
-
 
 
 func get_progress_values() -> Vector2:
@@ -420,7 +415,9 @@ func get_progress_values() -> Vector2:
 	var ai_peg_count: int = 0
 
 	for peg: Node in all_pegs:
-		if not is_instance_valid(peg):
+		if not is_instance_valid(
+			peg
+		):
 			continue
 
 		if not peg.has_method(
@@ -488,8 +485,11 @@ func animate_progress_bars() -> void:
 	).set_ease(
 		Tween.EASE_OUT
 	)
-	
-	SfxPlayer.play(meter_fill)
+
+	if meter_fill != null:
+		SfxPlayer.play(
+			meter_fill
+		)
 
 	await progress_tween.finished
 
@@ -506,7 +506,7 @@ func get_progress_percentage(
 		int(
 			ceil(
 				float(total_peg_count)
-					* FULL_BAR_FRACTION
+				* FULL_BAR_FRACTION
 			)
 		),
 		1
@@ -542,17 +542,13 @@ func check_for_winner() -> void:
 	elif (
 		ai_progress_bar.value
 		>= ai_progress_bar.max_value
-		
-		
 	):
-		# Zero balls always opens the loss screen.
-		
 		if ai_win_sfx != null:
-				SfxPlayer.play(ai_win_sfx)
-				
+			SfxPlayer.play(
+				ai_win_sfx
+			)
+
 		if GameData.balls_remaining <= 0:
-			
-				
 			end_game(
 				LOSS_SCENE_KEY
 			)
@@ -622,7 +618,9 @@ func fade_out_board() -> void:
 		)
 
 
-func end_game(scene_key: String) -> void:
+func end_game(
+	scene_key: String
+) -> void:
 	if game_ended:
 		return
 
@@ -644,16 +642,7 @@ func end_game(scene_key: String) -> void:
 		)
 
 
-func aim_shooter_at(
-	target_position: Vector2
-) -> void:
-	var tween = create_tween()
-	tween.tween_property(peggle_ball_shooter, "rotation", clampf(peggle_ball_shooter.rotation + angle_difference(peggle_ball_shooter.rotation, peggle_ball_shooter.global_position.angle_to_point(target_position)), deg_to_rad(right_turn_limit), deg_to_rad(left_turn_limit)), 0.1).set_trans(Tween.TRANS_BOUNCE)
-
-
-func fire_ball(
-	target_position: Vector2
-) -> void:
+func fire_ball() -> void:
 	if game_ended:
 		return
 
@@ -667,9 +656,7 @@ func fire_ball(
 		return
 
 	var fired_ball: RigidBody2D = (
-		cannon.fire_at(
-			target_position
-		)
+		cannon.fire()
 	)
 
 	if fired_ball == null:
@@ -707,16 +694,20 @@ func configure_ball(
 	fired_ball: RigidBody2D,
 	turn_owner: int
 ) -> void:
+	# Identifies this body as a Peggle ball.
 	fired_ball.set_meta(
 		"is_peggle_ball",
 		true
 	)
 
+	# Prevents one ball from being handled twice.
 	fired_ball.set_meta(
 		"ball_resolved",
 		false
 	)
 
+	# Used by pegs to choose the correct
+	# player or AI animation.
 	fired_ball.set_meta(
 		"ball_owner",
 		get_ball_owner(
@@ -724,6 +715,7 @@ func configure_ball(
 		)
 	)
 
+	# Stores which turn fired this ball.
 	fired_ball.set_meta(
 		"turn_owner",
 		turn_owner
@@ -743,20 +735,22 @@ func catch_ball(
 	body: Node2D,
 	bin_emotion: int
 ) -> void:
+	# The ball entered a bin, so the spent
+	# ball should be refunded.
 	resolve_ball(
 		body,
 		true
 	)
 
-	# Emotion values use 1 through 4.
-	# Array indexes use 0 through 3.
+	# Emotion indexes use 0 through 3.
 	var sound_index: int = (
-		bin_emotion - 1
+		bin_emotion
 	)
 
 	if (
 		sound_index >= 0
-		and sound_index < bin_emotion_sfx.size()
+		and sound_index
+		< bin_emotion_sfx.size()
 	):
 		var emotion_sound: AudioStream = (
 			bin_emotion_sfx[sound_index]
@@ -768,14 +762,20 @@ func catch_ball(
 			)
 
 
-func destroy_ball(body: Node2D) -> void:
+func destroy_ball(
+	body: Node2D
+) -> void:
+	# The ball reached the endzone without
+	# entering a bin, so it is not refunded.
 	resolve_ball(
 		body,
 		false
 	)
 
 
-func missed_bin(body: Node2D) -> void:
+func missed_bin(
+	body: Node2D
+) -> void:
 	if (
 		body.get_meta(
 			"is_peggle_ball",
@@ -784,8 +784,6 @@ func missed_bin(body: Node2D) -> void:
 	):
 		return
 
-	# The ball reached the end zone
-	# without being caught by a bin.
 	GameData.current_emotion = 4
 
 
@@ -809,6 +807,8 @@ func resolve_ball(
 	):
 		return
 
+	# Mark it immediately so another Area2D
+	# cannot resolve the same ball again.
 	body.set_meta(
 		"ball_resolved",
 		true
@@ -873,9 +873,6 @@ func finish_ball_resolution(
 		)
 		return
 
-	# Make the swap obvious with the cannon's eye
-	# animation and a short pause before the
-	# next turn begins.
 	await cannon.play_turn_swap()
 
 	if finished_turn == Turn.PLAYER:
@@ -913,8 +910,6 @@ func start_ai_turn() -> void:
 		current_turn = Turn.PLAYER
 		return
 
-	# Let the cannon "think" for a moment, swinging
-	# back and forth, then settle onto the peg.
 	await cannon.think_and_aim_at(
 		target_peg.global_position
 	)
@@ -928,32 +923,13 @@ func start_ai_turn() -> void:
 	):
 		return
 
-	if not is_instance_valid(target_peg):
-		start_ai_turn()
-		return
-
-	# A short pause once locked onto the target,
-	# before actually firing.
-	await get_tree().create_timer(
-		ai_aim_time
-	).timeout
-
-	if game_ended:
-		return
-
-	if (
-		current_turn != Turn.AI
-		or ball_in_play
+	if not is_instance_valid(
+		target_peg
 	):
-		return
-
-	if not is_instance_valid(target_peg):
 		start_ai_turn()
 		return
 
-	fire_ball(
-		target_peg.global_position
-	)
+	fire_ball()
 
 
 func _on_ball_body_entered(
