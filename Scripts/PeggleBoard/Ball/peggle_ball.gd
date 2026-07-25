@@ -13,6 +13,7 @@ extends RigidBody2D
 
 # NODES
 
+<<<<<<< Updated upstream
 @onready var collision_shape_2d: CollisionShape2D = (
 	$CollisionShape2D
 )
@@ -23,6 +24,11 @@ extends RigidBody2D
 
 
 func _ready() -> void:
+=======
+func _process(delta: float) -> void:
+	
+	
+>>>>>>> Stashed changes
 	if ball_textures.is_empty():
 		push_warning(
 			"No ball textures have been assigned."
