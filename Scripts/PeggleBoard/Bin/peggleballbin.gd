@@ -12,6 +12,7 @@ signal ball_caught(ball: Node2D, bin_emotion: int)
 
 # CHILD NODES
 @onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 var bin_active : bool
 var light_vfx_tween : Tween
@@ -58,6 +59,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	
 	ball_caught.emit(body, what_emotion_to_respond_with)
+	animation_player.play("ball_caught")
 	
 	GameData.current_emotion = what_emotion_to_respond_with
 	
