@@ -136,10 +136,10 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
-size = Vector2(228, 10)
+size = Vector2(270, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
-size = Vector2(228, 14)
+size = Vector2(272, 14)
 
 [node name="PeggleBoard" type="Node2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels")]
 editor_description = "A prototype peggleboard (with placeholder art)"
@@ -234,7 +234,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1361472041 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1197493612 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(169.65826, 147.95561)
 collision_layer = 2
 collision_mask = 4
@@ -245,7 +245,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=41800665 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1298396541 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(157.05118, 158.54373)
 collision_layer = 2
 collision_mask = 4
@@ -256,7 +256,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1751854811 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=719079336 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(140.81625, 156.23747)
 collision_layer = 2
 collision_mask = 4
@@ -267,7 +267,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=431904673 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1266752769 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(125.44327, 149.76968)
 collision_layer = 2
 collision_mask = 4
@@ -555,14 +555,14 @@ collision_layer = 16
 script = ExtResource("7_42h65")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce" unique_id=147314452]
-position = Vector2(1, 0)
+position = Vector2(5, 0)
 shape = SubResource("RectangleShape2D_cvs26")
 
 [node name="Area2D" type="Area2D" parent="BounceOnce" unique_id=1568000702]
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce/Area2D" unique_id=2073638313]
-position = Vector2(1, -1)
+position = Vector2(4, -1)
 shape = SubResource("RectangleShape2D_1eppy")
 
 [connection signal="body_entered" from="BounceOnce/Area2D" to="BounceOnce" method="_on_area_2d_body_entered"]
