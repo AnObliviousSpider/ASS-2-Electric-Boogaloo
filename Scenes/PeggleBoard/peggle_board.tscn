@@ -1,16 +1,28 @@
 [gd_scene format=3 uid="uid://buj73velq1icb"]
 
 [ext_resource type="Script" uid="uid://bwgf3r1i0sr32" path="res://Scripts/PeggleBoard/peggle_board.gd" id="1_g8rvb"]
+[ext_resource type="PackedScene" uid="uid://hxtqjqdwxevl" path="res://Scenes/PeggleBoard/Ball/peggle_ball.tscn" id="2_8lsjk"]
+[ext_resource type="AudioStream" uid="uid://dctffdrinqwwl" path="res://Assets/Audio/SFX/GAME/cannon_fire.mp3" id="3_1uqbv"]
+[ext_resource type="PackedScene" uid="uid://6u1m71svqmc6" path="res://Scenes/PeggleBoard/peggle_ball_shooter.tscn" id="3_s3sbd"]
+[ext_resource type="AudioStream" uid="uid://x5gdl6ekxdv7" path="res://Assets/Audio/SFX/GAME/placeholder_eldritch_entity_win.mp3" id="4_iotme"]
+[ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="4_ryebi"]
+[ext_resource type="AudioStream" uid="uid://d3fd64tyebe5g" path="res://Assets/Audio/SFX/GAME/placeholder_orb_meter_fill.mp3" id="5_pr6su"]
 [ext_resource type="PackedScene" uid="uid://6u1m71svqmc6" path="res://Scenes/PeggleBoard/peggle_ball_shooter.tscn" id="3_s3sbd"]
 [ext_resource type="AudioStream" uid="uid://b4s4giggdafay" path="res://Assets/Audio/SFX/Happy Bin.mp3" id="4_1uqbv"]
 [ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="4_ryebi"]
 [ext_resource type="AudioStream" uid="uid://cmvatd14ckwn7" path="res://Assets/Audio/SFX/Sad Bin.mp3" id="5_iotme"]
 [ext_resource type="AudioStream" uid="uid://u0u03y0b1pjx" path="res://Assets/Audio/SFX/Angry Bin.mp3" id="6_pr6su"]
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
+[ext_resource type="AudioStream" uid="uid://dmx3b2ht8gmgu" path="res://Assets/Audio/SFX/GAME/happy_bin.mp3" id="7_1uqbv"]
 [ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
 [ext_resource type="Texture2D" uid="uid://bl4qhbvyqfhvd" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
+[ext_resource type="Script" uid="uid://lidblx52ul6" path="res://Scripts/Tools/spline_wall.gd" id="8_h4o7a"]
+[ext_resource type="AudioStream" uid="uid://b6s4d0jw7rg6v" path="res://Assets/Audio/SFX/GAME/sad_bin.mp3" id="8_iotme"]
 [ext_resource type="Texture2D" uid="uid://sis7laba3os1" path="res://Assets/Art/Frame/Peggle_Frame_2.png" id="9_232so"]
+[ext_resource type="Script" uid="uid://downuu7kdkevo" path="res://Scripts/PeggleBoard/Pegs/normal_peg.gd" id="9_e0blb"]
+[ext_resource type="AudioStream" uid="uid://o20hn1hs38f6" path="res://Assets/Audio/SFX/GAME/angry_bin.mp3" id="9_pr6su"]
 [ext_resource type="Texture2D" uid="uid://crcr85m8yq2w0" path="res://Assets/Art/Frame/Peggle_Frame_3.png" id="10_in8bm"]
+[ext_resource type="AudioStream" uid="uid://dvkheghnsgxsr" path="res://Assets/Audio/SFX/GAME/ball_hit_peg.mp3" id="10_w34gu"]
 [ext_resource type="Texture2D" uid="uid://bfxc3yr0ccnl1" path="res://Assets/Art/Frame/Peggle_Frame_4.png" id="11_4rndw"]
 [ext_resource type="Texture2D" uid="uid://cif045ofkufr2" path="res://Assets/Art/Frame/Peggle_Frame_5.png" id="12_p3c4q"]
 [ext_resource type="Texture2D" uid="uid://h46khuqasu0q" path="res://Assets/Art/Frame/Peggle_Frame_6.png" id="13_df1sm"]
@@ -18,6 +30,13 @@
 [ext_resource type="Texture2D" uid="uid://drwvu1865tv5e" path="res://Assets/Art/Frame/Peggle_Frame_8.png" id="15_iotme"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s3sbd"]
+
+[sub_resource type="Curve2D" id="Curve2D_57qmd"]
+bake_interval = 69.2
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 152, 135, 0, 0, 0, 0, 179, 117, 0, 0, 0, 0, 207, 180, 0, 0, 0, 0, 236, 118, 0, 0, 0, 0, 263, 135)
+}
+point_count = 5
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e02v7"]
 size = Vector2(19, 195)
@@ -114,10 +133,10 @@ animations = [{
 editor_description = "A prototype peggleboard (with placeholder art)"
 script = ExtResource("1_g8rvb")
 peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLevel3"), NodePath("PegsLevel4"), NodePath("PegsLevel5")]
-peg_hit_sfx = ExtResource("3_42h65")
-cannon_fire_sfx = ExtResource("3_42h65")
-sfx_max_scale = 2.0
-bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), ExtResource("3_42h65"), ExtResource("6_pr6su")])
+cannon_fire_sfx = ExtResource("3_1uqbv")
+ai_win_sfx = ExtResource("4_iotme")
+meter_fill = ExtResource("5_pr6su")
+bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), null, ExtResource("6_pr6su")])
 
 [node name="PeggleBallShooter" parent="." unique_id=345197782 instance=ExtResource("3_s3sbd")]
 z_index = 1
@@ -130,44 +149,126 @@ rare_fire_pitch = 0.30000000000000004
 libraries/PEGGLE_CANNON = SubResource("AnimationLibrary_s3sbd")
 
 [node name="PegsLevel1" type="Node2D" parent="." unique_id=200026943]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel1" unique_id=1411103836 instance=ExtResource("4_ryebi")]
-position = Vector2(214, 104)
+position = Vector2(238, 105.00001)
 
 [node name="PegglePeg2" parent="PegsLevel1" unique_id=494578711 instance=ExtResource("4_ryebi")]
-position = Vector2(247, 125)
+position = Vector2(216, 80)
 
 [node name="PegglePeg3" parent="PegsLevel1" unique_id=178260736 instance=ExtResource("4_ryebi")]
-position = Vector2(280, 176)
+position = Vector2(260, 80)
 
 [node name="PegglePeg4" parent="PegsLevel1" unique_id=875669569 instance=ExtResource("4_ryebi")]
-position = Vector2(216, 165)
+position = Vector2(200, 95)
 
 [node name="PegglePeg5" parent="PegsLevel1" unique_id=1539789439 instance=ExtResource("4_ryebi")]
-position = Vector2(290, 124)
+position = Vector2(276, 95)
 
 [node name="PegglePeg6" parent="PegsLevel1" unique_id=1348138800 instance=ExtResource("4_ryebi")]
-position = Vector2(252, 162)
+position = Vector2(200, 168)
 
 [node name="PegglePeg7" parent="PegsLevel1" unique_id=2110922431 instance=ExtResource("4_ryebi")]
-position = Vector2(194, 153)
+position = Vector2(280, 170)
 
 [node name="PegglePeg8" parent="PegsLevel1" unique_id=1446963668 instance=ExtResource("4_ryebi")]
-position = Vector2(191, 116)
+position = Vector2(299, 150)
 
 [node name="PegglePeg9" parent="PegsLevel1" unique_id=1802255788 instance=ExtResource("4_ryebi")]
-position = Vector2(222, 134)
+position = Vector2(184, 148)
 
 [node name="PegglePeg10" parent="PegsLevel1" unique_id=2006107150 instance=ExtResource("4_ryebi")]
-position = Vector2(288, 156)
+position = Vector2(244, 132)
 
 [node name="PegglePeg11" parent="PegsLevel1" unique_id=393130168 instance=ExtResource("4_ryebi")]
-position = Vector2(269, 138)
+position = Vector2(183, 115)
 
 [node name="PegglePeg12" parent="PegsLevel1" unique_id=1163546502 instance=ExtResource("4_ryebi")]
-position = Vector2(271, 110)
+position = Vector2(294, 114)
+
+[node name="SplineWall" type="Path2D" parent="PegsLevel1" unique_id=1420181371]
+position = Vector2(37, 3)
+curve = SubResource("Curve2D_57qmd")
+script = ExtResource("8_h4o7a")
+block_scene = ExtResource("4_ryebi")
+block_types = Array[int]([0, 0, 0, 0, 0, 0, 0, 0])
+closed_loop = true
+metadata/_custom_type_script = "uid://lidblx52ul6"
+
+[node name="Blocks" type="Node2D" parent="PegsLevel1/SplineWall" unique_id=568705964]
+
+[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=68126930 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(162.49138, 128.00575)
+rotation = -0.5880028
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
+
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=780292959 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(181.18391, 121.913795)
+rotation = 0.7505515
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
+
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1047441265 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(191.42596, 144.95842)
+rotation = 1.1525718
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
+
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=774474481 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(201.66803, 168.00305)
+rotation = 1.1525718
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
+
+[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=316121198 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(212.12221, 169.04906)
+rotation = -1.1171881
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
+
+[node name="Block_5" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=40017528 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(222.80676, 146.20622)
+rotation = -1.1332865
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
+
+[node name="Block_6" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1374404294 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(233.49132, 123.36339)
+rotation = -0.7745815
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
+
+[node name="Block_7" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1047613571 groups=["pegs"] instance=ExtResource("4_ryebi")]
+position = Vector2(252.32979, 128.28172)
+rotation = 2.9928377
+scale = Vector2(0.6, 0.6)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("9_e0blb")
+peg_hit_sfx = ExtResource("10_w34gu")
 
 [node name="PegsLevel2" type="Node2D" parent="." unique_id=752156241]
 visible = false
@@ -361,10 +462,12 @@ position = Vector2(0, 29)
 [node name="Bin1" parent="Bins" unique_id=407736055 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
 position = Vector2(197, 184)
+emotion_sound = ExtResource("7_1uqbv")
 
 [node name="Bin2" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
 position = Vector2(227.00002, 184)
+emotion_sound = ExtResource("8_iotme")
 what_emotion_to_respond_with = 1
 
 [node name="Bin3" parent="Bins" unique_id=2044842428 instance=ExtResource("6_sxo5r")]
@@ -375,6 +478,7 @@ what_emotion_to_respond_with = 2
 [node name="Bin4" parent="Bins" unique_id=921239040 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
 position = Vector2(291, 184)
+emotion_sound = ExtResource("9_pr6su")
 what_emotion_to_respond_with = 3
 
 [node name="Endzone" type="Area2D" parent="." unique_id=157617057]

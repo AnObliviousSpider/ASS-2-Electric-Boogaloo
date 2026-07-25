@@ -9,12 +9,16 @@ enum Turn {
 
 const FULL_BAR_FRACTION: float = 0.75
 
-@export var STARTING_BALL_COUNT: int = 20
-
 const WIN_SCENE_KEY: String = "win_screen"
 const LOSS_SCENE_KEY: String = "loss_screen"
 const TRY_AGAIN_SCENE_KEY: String = "try_again_screen"
+
 const END_SCREEN_TRANSITION_DURATION: float = 0.2
+
+
+# GAME
+
+@export var STARTING_BALL_COUNT: int = 20
 
 
 # COLLISION INFORMATION
@@ -31,31 +35,67 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
 
 # AUDIO
+@export var cannon_fire_sfx: AudioStream
+@export var ai_win_sfx: AudioStream
+@export var meter_fill: AudioStream
+
 @export_group("Audio")
 
-# Emotions Int
+# Emotions:
 # 1. Happy
-# 2. Sad/Dejected
-# 3. Flirty - ADD THIS PLEASE!!
+# 2. Sad or dejected
+# 3. Flirty
 # 4. Angry
+
 @export var peg_hit_sfx: AudioStream
-@export var cannon_fire_sfx: AudioStream
-@export var sfx_max_scale: float
-@export var bin_emotion_sfx: Array[AudioStream]
 
-# CANNON NODES
+@export_range(1.0, 4.0, 0.1)
+var sfx_max_scale: float = 2.0
 
-@onready var peggle_ball_shooter: Node2D = (
+@export var bin_emotion_sfx: Array[AudioStream] = []
+
+
+# AI
+
+@export_group("AI")
+
+@export var ai_aim_time: float = 0.75
+
+
+# PROGRESS BARS
+
+@export_group("Progress Bars")
+
+@export var progress_bar_duration: float = 0.75
+
+
+@export_group("")
+
+
+# CANNON
+
+@onready var cannon: PeggleCannon = (
 	$PeggleBallShooter
 )
 
 
 # BALL REMOVAL NODES
 
-@onready var endzone: Area2D = $Endzone
-@onready var ball_bin: PeggleBallBin = %Bin
-@onready var bins: Node2D = $Bins
+@onready var endzone: Area2D = (
+	$Endzone
+)
 
+@onready var ball_bin: PeggleBallBin = (
+	%Bin
+)
+
+@onready var bins: Node2D = (
+	$Bins
+)
+
+# BALL REMOVAL NODES
+@onready var endzone: Area2D = $Endzone
+@onready var bins: Node2D = $Bins
 
 # INTERFACE NODES
 
@@ -67,24 +107,13 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 	$ProgressBar2
 )
 
-# SHOOTING
-@export_group("Shooting") # to break out of audio group
-@export var shoot_offset: Vector2 = Vector2.ZERO
-@export var shoot_strength: float = 100.0
-@export_range(0, 180, 1) var left_turn_limit: int = 165
-@export_range(0, 180, 1) var right_turn_limit: int = 15
+@onready var ball_bar: ProgressBar = (
+	$BallBar
+)
 
-
-@export_group("") # to break out of group
-
-# AI
-
-@export var ai_aim_time: float = 0.75
-
-
-# PROGRESS BARS
-
-@export var progress_bar_duration: float = 0.75
+@onready var counting_label: Label = (
+	$CountingLabel
+)
 
 
 # ROUND STATE
@@ -98,12 +127,13 @@ var game_ended: bool = false
 # PEG DATA
 
 var active_peg_level: Node2D
-var all_pegs: Array[Node] = []
-var total_peg_count: int = 0
-var peg_hit_count: int = 0
 
+var all_pegs: Array[Node] = []
+
+var total_peg_count: int = 0
 var pegs_hit: int = 0
-var peg_hit_volume: float # decibels
+
+var peg_hit_volume: float = 0.0
 
 var progress_tween: Tween
 
@@ -118,13 +148,18 @@ func _ready() -> void:
 	endzone.body_entered.connect(
 		destroy_ball
 	)
+
 	endzone.body_entered.connect(
 		missed_bin
 	)
+
 	GameData.ball_entered_bin.connect(
 		destroy_ball
 	)
-	EventBus.peg_hit_sound_update.connect(play_peg_hit_sound)
+
+	EventBus.peg_hit_sound_update.connect(
+		play_peg_hit_sound
+	)
 
 	for child: Node in bins.get_children():
 		if child.has_signal("ball_caught"):
@@ -152,8 +187,7 @@ func _process(_delta: float) -> void:
 		current_turn == Turn.PLAYER
 		and not ball_in_play
 	):
-		# Show the trajectory while the
-		# player aims with the mouse.
+		# Show the trajectory for the player.
 		cannon.aim_at(
 			get_global_mouse_position(),
 			true
@@ -270,26 +304,6 @@ func show_peg_level(
 
 	refresh_pegs()
 
-func play_peg_hit_sound() -> void:
-	if peg_hit_sfx != null:
-		var sfx_pitch_scale = 1 + pegs_hit*0.1
-		if sfx_pitch_scale > sfx_max_scale:
-			sfx_pitch_scale = sfx_max_scale
-		
-		SfxPlayer.play(
-			peg_hit_sfx,
-			false,
-			false,
-			0.0,
-			false,
-			peg_hit_volume,
-			0.0,
-			false,
-			null,
-			sfx_pitch_scale
-		)
-
-	pegs_hit += 1
 
 func _set_level_collisions_enabled(
 	node: Node,
@@ -345,7 +359,39 @@ func _collect_pegs(node: Node) -> void:
 		)
 
 
+func play_peg_hit_sound() -> void:
+	if peg_hit_sfx == null:
+		return
+
+	var sfx_pitch_scale: float = (
+		1.0 + float(pegs_hit) * 0.1
+	)
+
+	sfx_pitch_scale = minf(
+		sfx_pitch_scale,
+		sfx_max_scale
+	)
+
+	SfxPlayer.play(
+		peg_hit_sfx,
+		false,
+		false,
+		0.0,
+		false,
+		peg_hit_volume,
+		0.0,
+		false,
+		null,
+		sfx_pitch_scale
+	)
+
+	pegs_hit += 1
+
+
+
 func reset_current_round() -> void:
+
+	# Stop an old progress animation.
 	if progress_tween != null:
 		progress_tween.kill()
 		progress_tween = null
@@ -369,6 +415,8 @@ func reset_current_round() -> void:
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
+	
+
 
 
 func get_progress_values() -> Vector2:
@@ -420,6 +468,7 @@ func animate_progress_bars() -> void:
 		progress_tween.kill()
 
 	progress_tween = create_tween()
+
 	progress_tween.set_parallel(
 		true
 	)
@@ -445,6 +494,8 @@ func animate_progress_bars() -> void:
 	).set_ease(
 		Tween.EASE_OUT
 	)
+	
+	SfxPlayer.play(meter_fill)
 
 	await progress_tween.finished
 
@@ -497,8 +548,17 @@ func check_for_winner() -> void:
 	elif (
 		ai_progress_bar.value
 		>= ai_progress_bar.max_value
+		
+		
 	):
+		# Zero balls always opens the loss screen.
+		
+		if ai_win_sfx != null:
+				SfxPlayer.play(ai_win_sfx)
+				
 		if GameData.balls_remaining <= 0:
+			
+				
 			end_game(
 				LOSS_SCENE_KEY
 			)
@@ -588,6 +648,13 @@ func end_game(scene_key: String) -> void:
 			scene_key,
 			END_SCREEN_TRANSITION_DURATION
 		)
+
+
+func aim_shooter_at(
+	target_position: Vector2
+) -> void:
+	var tween = create_tween()
+	tween.tween_property(peggle_ball_shooter, "rotation", clampf(peggle_ball_shooter.rotation + angle_difference(peggle_ball_shooter.rotation, peggle_ball_shooter.global_position.angle_to_point(target_position)), deg_to_rad(right_turn_limit), deg_to_rad(left_turn_limit)), 0.1).set_trans(Tween.TRANS_BOUNCE)
 
 
 func fire_ball(
@@ -686,21 +753,47 @@ func catch_ball(
 		body,
 		true
 	)
-	
-	# SFX
-	SfxPlayer.play(bin_emotion_sfx[bin_emotion])
 
-func destroy_ball(
-	body: Node2D
-) -> void:
+	# Emotion values use 1 through 4.
+	# Array indexes use 0 through 3.
+	var sound_index: int = (
+		bin_emotion - 1
+	)
+
+	if (
+		sound_index >= 0
+		and sound_index < bin_emotion_sfx.size()
+	):
+		var emotion_sound: AudioStream = (
+			bin_emotion_sfx[sound_index]
+		)
+
+		if emotion_sound != null:
+			SfxPlayer.play(
+				emotion_sound
+			)
+
+
+func destroy_ball(body: Node2D) -> void:
 	resolve_ball(
 		body,
 		false
 	)
 
-func missed_bin(_body: Node2D) -> void:
-	# ball was destroyed by endzone instead of bin
+
+func missed_bin(body: Node2D) -> void:
+	if (
+		body.get_meta(
+			"is_peggle_ball",
+			false
+		) != true
+	):
+		return
+
+	# The ball reached the end zone
+	# without being caught by a bin.
 	GameData.current_emotion = 4
+
 
 func resolve_ball(
 	body: Node2D,
@@ -733,8 +826,9 @@ func resolve_ball(
 			current_turn
 		)
 	)
-	
-	pegs_hit = 0 # reset peg sound
+
+	pegs_hit = 0
+
 	body.queue_free()
 
 	ball_in_play = false
@@ -793,7 +887,9 @@ func finish_ball_resolution(
 
 	else:
 		current_turn = Turn.PLAYER
+
 		EventBus.dialogue_mood_hide.emit()
+
 		resolving_ball = false
 
 
@@ -818,7 +914,7 @@ func start_ai_turn() -> void:
 		current_turn = Turn.PLAYER
 		return
 
-	# Aim without showing the trajectory line.
+	# Aim without showing the trajectory.
 	cannon.aim_at(
 		target_peg.global_position,
 		false

@@ -4,6 +4,7 @@ extends Area2D
 
 @export var animated_sprite : AnimatedSprite2D
 @export var light_vfx : Sprite2D
+@export var emotion_sound: AudioStream
 
 @export var fade_in_duration : float = 1
 @export var fade_out_duration : float = 0.5
@@ -59,6 +60,8 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	
 	ball_caught.emit(body, what_emotion_to_respond_with)
+	SfxPlayer.play(emotion_sound)
+	EventBus.dialogue_mood_triggered.emit(what_emotion_to_respond_with, LevelManager.level)
 	animation_player.play("ball_caught")
 	
 	GameData.current_emotion = what_emotion_to_respond_with
