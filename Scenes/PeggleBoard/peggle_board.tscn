@@ -9,8 +9,8 @@
 [ext_resource type="AudioStream" uid="uid://cmvatd14ckwn7" path="res://Assets/Audio/SFX/Sad Bin.mp3" id="5_iotme"]
 [ext_resource type="AudioStream" uid="uid://u0u03y0b1pjx" path="res://Assets/Audio/SFX/Angry Bin.mp3" id="6_pr6su"]
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
-[ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 [ext_resource type="AudioStream" uid="uid://dmx3b2ht8gmgu" path="res://Assets/Audio/SFX/GAME/happy_bin.mp3" id="7_1uqbv"]
+[ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 [ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
 [ext_resource type="Texture2D" uid="uid://bl4qhbvyqfhvd" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
 [ext_resource type="AudioStream" uid="uid://b6s4d0jw7rg6v" path="res://Assets/Audio/SFX/GAME/sad_bin.mp3" id="8_iotme"]
@@ -54,12 +54,6 @@ size = Vector2(180, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36fd3"]
 size = Vector2(177, 25)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
-size = Vector2(180, 10)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
-size = Vector2(180, 14)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42h65"]
 bg_color = Color(0.32941177, 0.80784315, 0.654902, 1)
@@ -139,6 +133,12 @@ animations = [{
 "name": &"default",
 "speed": 2.0
 }]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
+size = Vector2(180, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
+size = Vector2(180, 14)
 
 [node name="PeggleBoard" type="Node2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels")]
 editor_description = "A prototype peggleboard (with placeholder art)"
@@ -229,7 +229,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1811131474 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=324925249 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(169.65826, 147.95561)
 collision_layer = 2
 collision_mask = 4
@@ -240,7 +240,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=316926018 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1027622160 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(157.05118, 158.54373)
 collision_layer = 2
 collision_mask = 4
@@ -251,7 +251,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=559435518 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=963508736 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(140.81625, 156.23747)
 collision_layer = 2
 collision_mask = 4
@@ -262,7 +262,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1968294731 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1548365975 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(125.44327, 149.76968)
 collision_layer = 2
 collision_mask = 4

@@ -19,6 +19,8 @@ signal claim_changed
 
 var claimed_turn: int = -1
 var claimed_owner: String = "unclaimed"
+var hit_count: int = 0
+var is_vanished: bool = false
 var _hit_token: int = 0
 
 
@@ -40,24 +42,41 @@ func set_polygon(points: PackedVector2Array) -> void:
 
 
 func _update_uvs() -> void:
-	if visual_polygon == null or visual_polygon.polygon.size() != 4:
+	if visual_polygon == null or visual_polygon.polygon.is_empty():
 		return
 
-	var tex_size: Vector2 = Vector2.ONE
-	if visual_polygon.texture != null:
-		tex_size = visual_polygon.texture.get_size()
+	var tex: Texture2D = visual_polygon.texture
+	if tex == null:
+		return
 
-	var uvs: PackedVector2Array = PackedVector2Array([
-		Vector2(0.0, 0.0),
-		Vector2(tex_size.x, 0.0),
-		Vector2(tex_size.x, tex_size.y),
-		Vector2(0.0, tex_size.y)
-	])
+	var tex_size: Vector2 = tex.get_size()
+	var points: PackedVector2Array = visual_polygon.polygon
+
+	var min_p: Vector2 = points[0]
+	var max_p: Vector2 = points[0]
+	for p: Vector2 in points:
+		min_p = min_p.min(p)
+		max_p = max_p.max(p)
+
+	var bounds_size: Vector2 = max_p - min_p
+	if bounds_size.x == 0.0 or bounds_size.y == 0.0:
+		return
+
+	var uvs: PackedVector2Array = PackedVector2Array()
+	uvs.resize(points.size())
+
+	for i: int in points.size():
+		var norm: Vector2 = (points[i] - min_p) / bounds_size
+		uvs[i] = norm * tex_size
+
 	visual_polygon.uv = uvs
 
 
 func change_peg_colour(body: Node2D) -> void:
-	if body.get_meta("is_peggle_ball", false) != true:
+	if is_vanished:
+		return
+
+	if not body.get_meta("is_peggle_ball", false):
 		return
 
 	EventBus.peg_hit_sound_update.emit()
@@ -67,14 +86,23 @@ func change_peg_colour(body: Node2D) -> void:
 		return
 
 	var ball_owner: String = String(body.get_meta("ball_owner", "default"))
-	claimed_owner = ball_owner
-
-	_play_hit_feedback(ball_owner)
 
 	if claimed_turn == new_claimed_turn:
+		hit_count += 1
+		is_vanished = true
+		hit_area.set_deferred("monitoring", false)
+		collision_polygon.set_deferred("disabled", true)
+
+		await _play_hit_feedback(ball_owner)
+		visible = false
+		claim_changed.emit()
 		return
 
 	claimed_turn = new_claimed_turn
+	claimed_owner = ball_owner
+	hit_count = 1
+
+	_play_hit_feedback(ball_owner)
 	claim_changed.emit()
 
 
@@ -89,7 +117,11 @@ func _play_hit_feedback(ball_owner: String) -> void:
 
 	_update_uvs()
 
-	await get_tree().create_timer(hit_frame_duration).timeout
+	var timer: SceneTreeTimer = get_tree().create_timer(hit_frame_duration)
+	await timer.timeout
+
+	if not is_inside_tree():
+		return
 
 	if _hit_token == current_token:
 		_update_texture()
@@ -111,8 +143,13 @@ func _update_texture() -> void:
 
 
 func reset_peg() -> void:
+	is_vanished = false
+	visible = true
+	collision_polygon.disabled = false
+	hit_area.monitoring = true
 	claimed_turn = -1
 	claimed_owner = "unclaimed"
+	hit_count = 0
 	_update_texture()
 
 
