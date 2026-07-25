@@ -45,6 +45,7 @@ point_count = 8
 bounce = 1.0
 
 [sub_resource type="Curve2D" id="Curve2D_g4v7s"]
+bake_interval = 10.0
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 204, 115, 0, 0, 0, 0, 238, 115, 0, 0, 0, 0, 256, 86)
 }
@@ -239,6 +240,118 @@ block_spacing = 16.0
 default_block_size = Vector2(16, 6)
 bake_interval = 10.0
 
+[node name="Blocks" type="Node2D" parent="PegsLevel1/SplineWall" unique_id=972123248]
+
+[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=564660912 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(152.93163, 131.11871)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1859584096 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(167.12282, 125.87718)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=311788787 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(171.95502, 111.26988)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=761904151 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(167.9663, 96.82024)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=173914463 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(155.03812, 89.37845)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_5" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=108568484 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(139.38495, 87)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_6" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1408591871 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(125.823555, 92.52304)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_7" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=672311188 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(119.03945, 106.697655)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_8" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=125058967 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(123.38297, 121.37454)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
+[node name="Block_9" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1461517674 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+position = Vector2(136.53868, 130.16872)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("12_82xy0")
+texture_unclaimed = ExtResource("13_7btb8")
+texture_player = ExtResource("14_np4uh")
+texture_player_hit = ExtResource("15_43oao")
+texture_ai = ExtResource("16_yni01")
+texture_ai_hit = ExtResource("17_gaglx")
+
 [node name="SplineWall2" type="Path2D" parent="PegsLevel1" unique_id=2064054061]
 position = Vector2(79, 29)
 curve = SubResource("Curve2D_g4v7s")
@@ -251,7 +364,7 @@ bake_interval = 10.0
 
 [node name="Blocks" type="Node2D" parent="PegsLevel1/SplineWall2" unique_id=60533159]
 
-[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=564660912 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=1476593359 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(212.51651, 115)
 collision_layer = 2
 collision_mask = 4
@@ -262,7 +375,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=1576224139 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=1619743282 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(229.54953, 115)
 collision_layer = 2
 collision_mask = 4
@@ -273,7 +386,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=534853183 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=84034576 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(242.52612, 107.70792)
 collision_layer = 2
 collision_mask = 4
@@ -284,7 +397,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=2090829414 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall2/Blocks" unique_id=1722180617 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(251.50871, 93.23597)
 collision_layer = 2
 collision_mask = 4
@@ -304,7 +417,7 @@ metadata/_custom_type_script = "uid://lidblx52ul6"
 
 [node name="Blocks" type="Node2D" parent="PegsLevel1/SplineWall3" unique_id=315891849]
 
-[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=690958459 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=1696243743 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(194.24815, 146)
 collision_layer = 2
 collision_mask = 4
@@ -315,7 +428,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=1312070413 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=1085701363 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(172.74448, 146)
 collision_layer = 2
 collision_mask = 4
@@ -326,7 +439,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=539834091 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=397780328 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(152.27594, 144.39671)
 collision_layer = 2
 collision_mask = 4
@@ -337,7 +450,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=1995549752 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall3/Blocks" unique_id=468721915 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(143.42531, 124.798904)
 collision_layer = 2
 collision_mask = 4
@@ -363,7 +476,7 @@ metadata/_custom_type_script = "uid://lidblx52ul6"
 
 [node name="Blocks" type="Node2D" parent="PegsLevel1/SplineWall4" unique_id=786704614]
 
-[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1542920088 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_0" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=849105058 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(308.91, 178.70512)
 collision_layer = 2
 collision_mask = 4
@@ -374,7 +487,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=815683189 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=855076591 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(284.73004, 178.11537)
 collision_layer = 2
 collision_mask = 4
@@ -385,7 +498,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1892147633 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1109538149 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(263.60474, 167.52525)
 collision_layer = 2
 collision_mask = 4
@@ -396,7 +509,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=490952779 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1923266017 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(243.21622, 155.48721)
 collision_layer = 2
 collision_mask = 4
@@ -407,7 +520,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1834703201 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1182202948 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(222.67442, 168.25644)
 collision_layer = 2
 collision_mask = 4
@@ -418,7 +531,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_5" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=271252832 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_5" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=307895588 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(201.27048, 177.86359)
 collision_layer = 2
 collision_mask = 4
@@ -429,7 +542,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_6" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1501109005 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_6" type="StaticBody2D" parent="PegsLevel1/SplineWall4/Blocks" unique_id=1037012183 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(177.09015, 177.28786)
 collision_layer = 2
 collision_mask = 4

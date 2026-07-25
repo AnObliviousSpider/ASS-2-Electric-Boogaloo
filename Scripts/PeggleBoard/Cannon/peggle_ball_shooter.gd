@@ -166,6 +166,13 @@ var barrel_fade_in_duration: float = 0.3
 )
 
 
+# INPUT LOCK
+
+# When true, the cannon cannot aim, calculate
+# trajectories, think for the AI or fire.
+var cannon_locked: bool = false
+
+
 # SHOT DATA
 
 var last_shoot_direction: Vector2 = Vector2.DOWN
@@ -198,6 +205,24 @@ func _ready() -> void:
 	)
 
 	queue_redraw()
+
+
+func lock_cannon() -> void:
+	cannon_locked = true
+
+	# Immediately remove the aiming guide.
+	trajectory_visible = false
+	trajectory_points.clear()
+
+	queue_redraw()
+
+
+func unlock_cannon() -> void:
+	cannon_locked = false
+
+
+func is_cannon_locked() -> bool:
+	return cannon_locked
 
 
 func _draw() -> void:
@@ -267,6 +292,9 @@ func aim_at(
 	show_trajectory: bool = true,
 	is_player_turn: bool = true
 ) -> void:
+	if cannon_locked:
+		return
+
 	var target_angle: float = (
 		get_clamped_aim_angle(
 			target_position
@@ -307,6 +335,9 @@ func _apply_aim_angle(
 	show_trajectory: bool,
 	is_player_turn: bool
 ) -> void:
+	if cannon_locked:
+		return
+
 	trajectory_dot_colour = (
 		player_trajectory_dot_colour
 		if is_player_turn
@@ -321,7 +352,6 @@ func _apply_aim_angle(
 
 	if show_trajectory:
 		update_trajectory_points()
-
 	else:
 		trajectory_points.clear()
 		queue_redraw()
@@ -386,6 +416,12 @@ func get_shoot_direction() -> Vector2:
 
 
 func update_trajectory_points() -> void:
+	if cannon_locked:
+		trajectory_points.clear()
+		trajectory_visible = false
+		queue_redraw()
+		return
+
 	trajectory_points.clear()
 
 	var start_position: Vector2 = (
@@ -585,6 +621,9 @@ func play_turn_swap() -> void:
 func think_and_aim_at(
 	target_position: Vector2
 ) -> void:
+	if cannon_locked:
+		return
+
 	var target_angle: float = (
 		get_clamped_aim_angle(
 			target_position
@@ -612,6 +651,9 @@ func think_and_aim_at(
 	var elapsed_time: float = 0.0
 
 	while elapsed_time < ai_thinking_duration:
+		if cannon_locked:
+			return
+
 		var frame_delta: float = (
 			get_process_delta_time()
 		)
@@ -645,6 +687,9 @@ func think_and_aim_at(
 	var settle_elapsed: float = 0.0
 
 	while settle_elapsed < safe_settle_duration:
+		if cannon_locked:
+			return
+
 		var frame_delta: float = (
 			get_process_delta_time()
 		)
@@ -677,6 +722,9 @@ func think_and_aim_at(
 
 		await get_tree().process_frame
 
+	if cannon_locked:
+		return
+
 	_apply_aim_angle(
 		target_angle,
 		true,
@@ -685,6 +733,9 @@ func think_and_aim_at(
 
 
 func fire() -> RigidBody2D:
+	if cannon_locked:
+		return null
+
 	if ball_scene == null:
 		push_error(
 			"No ball scene was assigned to the cannon."
@@ -719,6 +770,9 @@ func fire_extra_ball(
 	spawn_position: Vector2,
 	direction: Vector2
 ) -> RigidBody2D:
+	if cannon_locked:
+		return null
+
 	return _spawn_ball(
 		spawn_position + shoot_offset,
 		direction
@@ -729,6 +783,9 @@ func _spawn_ball(
 	spawn_position: Vector2,
 	direction: Vector2
 ) -> RigidBody2D:
+	if cannon_locked:
+		return null
+
 	if ball_scene == null:
 		push_error(
 			"No ball scene was assigned to the cannon."
@@ -882,7 +939,9 @@ func fade_barrel_out() -> void:
 		barrel_fade_tween = null
 
 	barrel_fade_tween = create_tween()
-	barrel_fade_tween.set_parallel(true)
+	barrel_fade_tween.set_parallel(
+		true
+	)
 
 	barrel_fade_tween.tween_property(
 		barrel,
@@ -915,7 +974,9 @@ func fade_barrel_in() -> void:
 		barrel_fade_tween = null
 
 	barrel_fade_tween = create_tween()
-	barrel_fade_tween.set_parallel(true)
+	barrel_fade_tween.set_parallel(
+		true
+	)
 
 	barrel_fade_tween.tween_property(
 		barrel,

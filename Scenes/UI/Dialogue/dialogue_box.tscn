@@ -4,6 +4,9 @@
 [ext_resource type="AudioStream" uid="uid://lwyl1nv45hvw" path="res://Placeholders/Audio/beep.mp3" id="2_tq37n"]
 [ext_resource type="AudioStream" uid="uid://bxn6t0fecbycr" path="res://Placeholders/Audio/alien_babble.mp3" id="3_ercv4"]
 [ext_resource type="Texture2D" uid="uid://cms8fnmfby305" path="res://Assets/Art/UI/ASS_nine_slice_text_box_alternative_colour.png" id="4_ercv4"]
+[ext_resource type="Texture2D" uid="uid://byd3htnnpnylu" path="res://Assets/Art/UI/ASS_nine_slice_text_box.png" id="4_ntv7o"]
+[ext_resource type="FontFile" uid="uid://b5tdl08iam8po" path="res://Assets/Fonts/Crayonia.ttf" id="5_egt4u"]
+[ext_resource type="FontFile" uid="uid://bv46ygjy2to3u" path="res://Assets/Fonts/MessyHandwritten-Regular.ttf" id="6_1du4c"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_v6lbk"]
 streams_count = 1
@@ -65,10 +68,11 @@ offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_v6lbk")
-fade_in_time = 0.3
-fade_out_time = 0.3
 on_display_audio = SubResource("AudioStreamRandomizer_v6lbk")
 on_text_audio = SubResource("AudioStreamRandomizer_xm3ya")
+left_dialogue_texture = ExtResource("4_ntv7o")
+left_dialogue_font = ExtResource("5_egt4u")
+right_dialogue_font = ExtResource("6_1du4c")
 dialogue_label = NodePath("NinePatchRect/HBoxContainer/MarginContainer/DialogueLabel")
 animation_player = NodePath("AnimationPlayer")
 
@@ -81,8 +85,8 @@ texture_filter = 1
 layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
-offset_right = 159.0
-offset_bottom = 50.0
+offset_right = 202.0
+offset_bottom = 51.0
 texture = ExtResource("4_ercv4")
 region_rect = Rect2(0, 0, 84, 84)
 patch_margin_left = 30
@@ -101,17 +105,18 @@ grow_vertical = 2
 [node name="MarginContainer" type="MarginContainer" parent="NinePatchRect/HBoxContainer" unique_id=508877511]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="DialogueLabel" type="Label" parent="NinePatchRect/HBoxContainer/MarginContainer" unique_id=244370270]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.003921569, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
 text = "Message blablabla shimmy shimmy ya"
 horizontal_alignment = 1
 vertical_alignment = 1
