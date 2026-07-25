@@ -7,7 +7,8 @@ enum Turn {
 }
 
 
-const FULL_BAR_FRACTION: float = 0.1
+# Made this lower because it was too hard.
+const FULL_BAR_FRACTION: float = 0.5
 const NO_PENDING_EMOTION: int = -1
 
 const FORCED_DEJECTED_LEVEL: int = 3
@@ -22,7 +23,8 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
 # GAME
 
-@export var STARTING_BALL_COUNT: int = 20
+# Made this 50 because it was too hard.
+@export var STARTING_BALL_COUNT: int = 50
 
 
 # COLLISION INFORMATION
@@ -88,6 +90,13 @@ var sfx_max_scale: float = 2.0
 )
 
 
+# GLOBE LAUNCHER
+
+@onready var globe_launcher: GlobeLauncher = (
+	$GlobeLauncher
+)
+
+
 # BALL REMOVAL NODES
 
 @onready var endzone: Area2D = (
@@ -101,16 +110,12 @@ var sfx_max_scale: float = 2.0
 
 # INTERFACE NODES
 
-@onready var player_progress_bar: ProgressBar = (
+@onready var player_progress_bar: TextureProgressBar = (
 	$ProgressBar
 )
 
-@onready var ai_progress_bar: ProgressBar = (
+@onready var ai_progress_bar: TextureProgressBar = (
 	$ProgressBar2
-)
-
-@onready var ball_bar: ProgressBar = (
-	$BallBar
 )
 
 @onready var counting_label: Label = (
@@ -174,6 +179,8 @@ var is_ai_ball_smol: int = 0
 
 
 func _ready() -> void:
+	setup_progress_bar_colours()
+
 	cache_original_dialogue()
 	cache_original_bin_emotions()
 
@@ -242,6 +249,18 @@ func _ready() -> void:
 	)
 
 	reset_current_round()
+
+
+func setup_progress_bar_colours() -> void:
+	# Tint only the filling texture.
+	# The under and over textures stay unchanged.
+	player_progress_bar.tint_progress = (
+		cannon.player_trajectory_dot_colour
+	)
+
+	ai_progress_bar.tint_progress = (
+		cannon.enemy_trajectory_dot_colour
+	)
 
 
 func _on_story_dialogue_started(
@@ -356,16 +375,8 @@ func refund_ball() -> void:
 
 
 func update_ball_counter() -> void:
-	ball_bar.min_value = 0.0
-
-	ball_bar.max_value = float(
-		GameData.maximum_ball_count
-	)
-
-	ball_bar.value = float(
-		GameData.balls_remaining
-	)
-
+	# The BallBar progress bar has been removed.
+	# Only the numeric ball count remains.
 	counting_label.text = str(
 		GameData.balls_remaining
 	)
@@ -812,23 +823,16 @@ func play_final_win_sequence() -> void:
 	game_ended = true
 	resolving_ball = true
 
-	# The cannon must remain disabled throughout
-	# the final conversation and transition.
 	cannon.lock_cannon()
 
-	# Remove any short emotion dialogue which may
-	# still be present from the completed turn.
 	EventBus.dialogue_mood_hide.emit()
 
 	DialogueManager.force_close_dialogue()
 
-	# Play the level 5 post-win dialogue.
 	await DialogueManager.play_post_win_dialogue(
 		LevelManager.level
 	)
 
-	# After the final line closes, fade the board
-	# out before moving to the win scene.
 	await fade_out_board()
 
 	SceneManager.go(
@@ -856,8 +860,6 @@ func advance_to_next_peg_level() -> void:
 
 	reset_current_round()
 
-	# Prevent input before the story-dialogue
-	# trigger is processed.
 	cannon.lock_cannon()
 
 	game_ended = false
@@ -929,8 +931,6 @@ func end_game(
 
 
 func fire_ball() -> void:
-	# Hard protection even if another script
-	# calls fire_ball directly.
 	if cannon.is_cannon_locked():
 		return
 
@@ -956,6 +956,11 @@ func fire_ball() -> void:
 
 	if fired_ball == null:
 		return
+
+	# Player and AI shots both use fire_ball(),
+	# so both trigger the globe animation.
+	if globe_launcher != null:
+		globe_launcher.play_launch_animation()
 
 	fired_ball.contact_monitor = true
 	fired_ball.max_contacts_reported = 4
@@ -1294,8 +1299,6 @@ func finish_ball_resolution(
 
 	await animate_progress_bars()
 
-	# Winning may have started a level transition
-	# or the final post-win sequence.
 	if game_ended:
 		resolving_ball = false
 		return
@@ -1463,8 +1466,6 @@ func _on_ball_body_entered(
 
 
 func debug_win_current_level() -> void:
-	# Extra protection in case this method is
-	# accidentally called by another script.
 	if not OS.has_feature(
 		"editor"
 	):
@@ -1473,12 +1474,9 @@ func debug_win_current_level() -> void:
 	if game_ended:
 		return
 
-	# Do not interrupt story dialogue or a level
-	# transition that already has the cannon locked.
 	if cannon.is_cannon_locked():
 		return
 
-	# Remove any balls currently on the board.
 	for active_ball: RigidBody2D in active_balls:
 		if is_instance_valid(
 			active_ball
@@ -1490,7 +1488,6 @@ func debug_win_current_level() -> void:
 	ball_in_play = false
 	resolving_ball = false
 
-	# Remove any short emotion dialogue.
 	pending_dialogue_emotion = (
 		NO_PENDING_EMOTION
 	)
@@ -1499,8 +1496,6 @@ func debug_win_current_level() -> void:
 
 	DialogueManager.force_close_dialogue()
 
-	# Visually fill the player's bar before
-	# starting the normal win flow.
 	player_progress_bar.value = (
 		player_progress_bar.max_value
 	)
@@ -1509,10 +1504,6 @@ func debug_win_current_level() -> void:
 		LevelManager.level
 		< LevelManager.MAX_LEVEL
 	):
-		# This increments the level and automatically
-		# starts both story-dialogue sets for it.
 		advance_to_next_peg_level()
 	else:
-		# On level 5, play the post-win conversation
-		# and then transition to the win screen.
 		play_final_win_sequence()

@@ -4,13 +4,13 @@ extends Node2D
 @export_group("Form Positions")
 
 @export var human_position: Vector2 = Vector2(
-	218.0,
-	142.0
+	230.0,
+	143.0
 )
 
 @export var chimera_position: Vector2 = Vector2(
-	260.0,
-	68.0
+	259.0,
+	66.0
 )
 
 

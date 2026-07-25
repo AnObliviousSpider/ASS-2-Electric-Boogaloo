@@ -4,7 +4,7 @@ extends Node2D
 @export_group("Position")
 
 @export var root_position: Vector2 = Vector2(
-	87.0,
+	60.0,
 	187.0
 )
 
