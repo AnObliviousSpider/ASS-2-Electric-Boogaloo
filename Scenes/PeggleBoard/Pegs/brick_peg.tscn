@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://4bxgldxkkafv"]
+
+[ext_resource type="Script" uid="uid://be5urohynxkmf" path="res://Scenes/PeggleBoard/Pegs/brick_peg.gd" id="1_uhobn"]
+[ext_resource type="Texture2D" uid="uid://cr4hdaahgsl0q" path="res://Assets/Art/Game/PeggleBoard/blue-brick-24x8.png" id="2_pbfyx"]
+
+[node name="BrickPeg" type="StaticBody2D" unique_id=564660912 groups=["breakable_blocks", "pegs"]]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_uhobn")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=45122073]
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1628296231]
+texture_filter = 1
+texture = ExtResource("2_pbfyx")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1600018995]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D" unique_id=2049636468]
