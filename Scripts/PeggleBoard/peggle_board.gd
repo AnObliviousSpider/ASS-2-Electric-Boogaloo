@@ -29,6 +29,8 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 # Layer 3: Ball
 # Layer 4: Bin
 
+#random
+var rng = RandomNumberGenerator.new()
 
 # PEG LEVELS
 # Assign PegsLevel1 through PegsLevel5 in order.
@@ -1081,7 +1083,7 @@ func start_ai_turn() -> void:
 		return
 
 	var target_peg := (
-		all_pegs.pick_random() as Node2D
+		all_pegs[rng.randi_range(0, len(all_pegs) - 1)] as Node2D
 	)
 
 	if target_peg == null:
