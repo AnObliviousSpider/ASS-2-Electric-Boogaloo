@@ -13,7 +13,8 @@ signal claim_changed
 
 # -1 means the peg is unclaimed.
 var claimed_turn: int = -1
-
+@export var destroy: bool = false
+@export var dummy: bool = false
 
 # VISUAL STATE
 
@@ -28,6 +29,7 @@ var rotation_tween: Tween
 
 
 func _ready() -> void:
+	destroy = true
 	add_to_group(
 		"pegs"
 	)
@@ -91,6 +93,11 @@ func change_peg_colour(
 	play_claim_rotation()
 
 	claim_changed.emit()
+
+	#if destroy:
+		#print("destroy yes")
+		#await scale_tween.finished
+		#queue_free()
 
 
 func play_hit_animation() -> void:

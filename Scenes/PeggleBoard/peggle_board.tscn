@@ -136,39 +136,50 @@ position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel1" unique_id=1411103836 instance=ExtResource("4_ryebi")]
 position = Vector2(238, 105.00001)
+dummy = true
 
 [node name="PegglePeg2" parent="PegsLevel1" unique_id=494578711 instance=ExtResource("4_ryebi")]
 position = Vector2(216, 80)
+dummy = true
 
 [node name="PegglePeg3" parent="PegsLevel1" unique_id=178260736 instance=ExtResource("4_ryebi")]
 position = Vector2(260, 80)
+dummy = true
 
 [node name="PegglePeg4" parent="PegsLevel1" unique_id=875669569 instance=ExtResource("4_ryebi")]
 position = Vector2(200, 95)
+dummy = true
 
 [node name="PegglePeg5" parent="PegsLevel1" unique_id=1539789439 instance=ExtResource("4_ryebi")]
 position = Vector2(276, 95)
+dummy = true
 
 [node name="PegglePeg6" parent="PegsLevel1" unique_id=1348138800 instance=ExtResource("4_ryebi")]
 position = Vector2(200, 168)
+dummy = true
 
 [node name="PegglePeg7" parent="PegsLevel1" unique_id=2110922431 instance=ExtResource("4_ryebi")]
 position = Vector2(280, 170)
+dummy = true
 
 [node name="PegglePeg8" parent="PegsLevel1" unique_id=1446963668 instance=ExtResource("4_ryebi")]
 position = Vector2(299, 150)
+dummy = true
 
 [node name="PegglePeg9" parent="PegsLevel1" unique_id=1802255788 instance=ExtResource("4_ryebi")]
 position = Vector2(184, 148)
+dummy = true
 
 [node name="PegglePeg10" parent="PegsLevel1" unique_id=2006107150 instance=ExtResource("4_ryebi")]
 position = Vector2(244, 132)
 
 [node name="PegglePeg11" parent="PegsLevel1" unique_id=393130168 instance=ExtResource("4_ryebi")]
 position = Vector2(183, 115)
+dummy = true
 
 [node name="PegglePeg12" parent="PegsLevel1" unique_id=1163546502 instance=ExtResource("4_ryebi")]
 position = Vector2(294, 114)
+dummy = true
 
 [node name="PegsLevel2" type="Node2D" parent="." unique_id=752156241]
 visible = false
