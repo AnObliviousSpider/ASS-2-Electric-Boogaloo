@@ -1,9 +1,19 @@
 extends RigidBody2D
 
 
+# SCENES
+
+@export var ball_dot: PackedScene
+
+
 # TEXTURES
 
 @export var ball_textures: Array[Texture2D] = []
+
+
+# AUDIO
+
+@export var ball_hit_wall_sound: AudioStream
 
 
 # NODES
@@ -24,9 +34,56 @@ func _ready() -> void:
 		)
 		return
 
-	# Choose the texture once when the ball spawns.
 	sprite_2d.texture = (
 		ball_textures.pick_random()
+	)
+
+
+func _integrate_forces(
+	state: PhysicsDirectBodyState2D
+) -> void:
+	for contact_index: int in range(
+		state.get_contact_count()
+	):
+		var contact_normal: Vector2 = (
+			state.get_contact_local_normal(
+				contact_index
+			)
+		)
+
+		if absf(contact_normal.y) < 0.1:
+			if ball_hit_wall_sound != null:
+				SfxPlayer.play(
+					ball_hit_wall_sound
+				)
+
+			break
+
+
+func _on_dot_cooldown_timeout() -> void:
+	if ball_dot == null:
+		push_warning(
+			"No ball dot scene has been assigned."
+		)
+		return
+
+	var dot_instance: Node2D = (
+		ball_dot.instantiate() as Node2D
+	)
+
+	if dot_instance == null:
+		push_error(
+			"The ball dot scene must have "
+			+ "a Node2D root."
+		)
+		return
+
+	get_tree().current_scene.add_child(
+		dot_instance
+	)
+
+	dot_instance.global_position = (
+		global_position
 	)
 
 

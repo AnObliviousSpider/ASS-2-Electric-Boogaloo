@@ -3,8 +3,9 @@ extends Node2D
 class_name PeggleCannon
 
 
-#Eyes
-@onready var eye: AnimatedSprite2D = $Eye
+# EYE
+
+@onready var eye_pupil: Sprite2D = $Eye/EyePupil
 
 
 # BALL
@@ -34,48 +35,40 @@ var maximum_turn_angle: float = 45.0
 
 # TRAJECTORY DOTS
 
-# More points make the predicted path more accurate.
 @export_range(2, 100, 1)
 var trajectory_point_count: int = 40
 
-# How far into the future we try to predict.
 @export_range(0.1, 5.0, 0.05)
 var trajectory_duration: float = 1.0
 
-# The dotted line cannot become longer than this.
 @export_range(10.0, 500.0, 5.0)
 var trajectory_max_length: float = 100.0
 
-# Distance between each visible dot.
 @export_range(1.0, 30.0, 0.5)
 var trajectory_dot_spacing: float = 8.0
 
-# Size of each visible dot.
 @export_range(0.5, 10.0, 0.25)
 var trajectory_dot_radius: float = 1.5
 
-@export var trajectory_dot_colour: Color = (
-	Color(1.0, 1.0, 1.0, 0.75)
+@export var player_trajectory_dot_colour: Color = (
+	Color("54cea7")
 )
 
-# Walls are on layer 1.
-# Pegs are on layer 2.
-# Layers 1 and 2 together produce mask value 3.
+@export var enemy_trajectory_dot_colour: Color = (
+	Color("ff82bd")
+)
+
+# Walls use layer 1.
+# Pegs use layer 2.
 @export_flags_2d_physics
 var trajectory_collision_mask: int = 3
 
-# How much speed the predicted ball keeps
-# after hitting something.
 @export_range(0.0, 1.5, 0.05)
 var trajectory_bounce_strength: float = 0.8
 
-# Prevent the prediction from bouncing forever.
 @export_range(0, 10, 1)
 var trajectory_max_bounces: int = 3
 
-# Move slightly away from a surface after a bounce.
-# This prevents the next check from hitting
-# the exact same surface immediately.
 @export_range(0.1, 5.0, 0.1)
 var trajectory_collision_offset: float = 1.0
 
@@ -86,12 +79,10 @@ var trajectory_collision_offset: float = 1.0
 	Vector2(0.0, 13.0)
 )
 
-# Barrel position at -45 degrees.
 @export var negative_turn_position: Vector2 = (
 	Vector2(10.0, 10.0)
 )
 
-# Barrel position at 45 degrees.
 @export var positive_turn_position: Vector2 = (
 	Vector2(-10.0, 10.0)
 )
@@ -99,7 +90,6 @@ var trajectory_collision_offset: float = 1.0
 
 # RECOIL
 
-# The barrel moves four pixels toward the origin.
 @export_range(0.0, 10.0, 0.25)
 var recoil_distance: float = 4.0
 
@@ -125,6 +115,36 @@ var rare_fire_pitch: float = 0.5
 
 @export_range(0.0, 1.0, 0.01)
 var rare_fire_pitch_chance: float = 0.08
+
+
+# TURN SWAP
+
+@export_range(0.1, 5.0, 0.05)
+var turn_swap_pause_duration: float = 2.0
+
+
+# AI THINKING
+
+@export_range(0.1, 5.0, 0.05)
+var ai_thinking_duration: float = 1.0
+
+@export_range(0.05, 3.0, 0.05)
+var ai_thinking_settle_duration: float = 0.4
+
+@export_range(0.5, 20.0, 0.5)
+var ai_thinking_oscillation_speed: float = 2.5
+
+@export_range(0.0, 1.0, 0.05)
+var ai_thinking_oscillation_extent: float = 0.6
+
+
+# BARREL FADE
+
+@export_range(0.05, 3.0, 0.05)
+var barrel_fade_out_duration: float = 0.3
+
+@export_range(0.05, 3.0, 0.05)
+var barrel_fade_in_duration: float = 0.3
 
 
 # NODES
@@ -153,15 +173,18 @@ var last_shoot_direction: Vector2 = Vector2.DOWN
 
 # TRAJECTORY DATA
 
-# This stores all the corners of the predicted path.
 var trajectory_points: Array[Vector2] = []
-
 var trajectory_visible: bool = true
 
+var trajectory_dot_colour: Color = (
+	player_trajectory_dot_colour
+)
 
-# RECOIL DATA
+
+# TWEEN DATA
 
 var recoil_tween: Tween
+var barrel_fade_tween: Tween
 
 
 func _ready() -> void:
@@ -184,9 +207,6 @@ func _draw() -> void:
 	if trajectory_points.size() < 2:
 		return
 
-	# We have a list of positions forming the path.
-	# This loop walks along that path and draws
-	# a small circle every few pixels.
 	var distance_until_next_dot: float = 0.0
 
 	for index: int in range(
@@ -219,8 +239,6 @@ func _draw() -> void:
 			distance_until_next_dot
 		)
 
-		# Keep moving along this little part
-		# of the path and place dots.
 		while distance_along_segment <= segment_length:
 			var dot_position: Vector2 = (
 				segment_start
@@ -238,8 +256,6 @@ func _draw() -> void:
 				trajectory_dot_spacing
 			)
 
-		# Remember how far away the next dot is.
-		# This keeps the spacing even across corners.
 		distance_until_next_dot = (
 			distance_along_segment
 				- segment_length
@@ -248,28 +264,56 @@ func _draw() -> void:
 
 func aim_at(
 	target_position: Vector2,
-	show_trajectory: bool = true
+	show_trajectory: bool = true,
+	is_player_turn: bool = true
 ) -> void:
-	var target_direction: Vector2 = (
-		barrel.global_position
-		.direction_to(target_position)
+	var target_angle: float = (
+		get_clamped_aim_angle(
+			target_position
+		)
 	)
 
-	# The barrel points down at zero degrees.
-	# This finds how far left or right it must turn.
+	_apply_aim_angle(
+		target_angle,
+		show_trajectory,
+		is_player_turn
+	)
+
+
+func get_clamped_aim_angle(
+	target_position: Vector2
+) -> float:
+	var target_direction: Vector2 = (
+		barrel.global_position.direction_to(
+			target_position
+		)
+	)
+
 	var target_angle: float = (
 		Vector2.DOWN.angle_to(
 			target_direction
 		)
 	)
 
-	# Do not let the barrel turn farther
-	# than the allowed angles.
-	barrel.rotation = clampf(
+	return clampf(
 		target_angle,
 		deg_to_rad(minimum_turn_angle),
 		deg_to_rad(maximum_turn_angle)
 	)
+
+
+func _apply_aim_angle(
+	angle: float,
+	show_trajectory: bool,
+	is_player_turn: bool
+) -> void:
+	trajectory_dot_colour = (
+		player_trajectory_dot_colour
+		if is_player_turn
+		else enemy_trajectory_dot_colour
+	)
+
+	barrel.rotation = angle
 
 	update_barrel_position()
 
@@ -336,9 +380,6 @@ func update_barrel_position() -> void:
 
 
 func get_shoot_direction() -> Vector2:
-	# DOWN is the direction at zero rotation.
-	# Rotating it gives us the direction
-	# the barrel currently points.
 	return Vector2.DOWN.rotated(
 		barrel.global_rotation
 	).normalized()
@@ -347,22 +388,17 @@ func get_shoot_direction() -> Vector2:
 func update_trajectory_points() -> void:
 	trajectory_points.clear()
 
-	# Start the prediction at the barrel opening.
 	var start_position: Vector2 = (
 		firing_point.global_position
 			+ shoot_offset
 	)
 
-	# Work out how fast the ball begins moving.
-	# More shooting strength means more speed.
-	# More mass means less speed from the same push.
 	var initial_velocity: Vector2 = (
 		get_shoot_direction()
 			* shoot_strength
 			/ ball_mass
 	)
 
-	# Ask the project how strong normal gravity is.
 	var default_gravity: float = float(
 		ProjectSettings.get_setting(
 			"physics/2d/default_gravity",
@@ -370,8 +406,6 @@ func update_trajectory_points() -> void:
 		)
 	)
 
-	# Ask which direction gravity pulls.
-	# This is normally straight down.
 	var gravity_direction: Vector2 = (
 		ProjectSettings.get_setting(
 			"physics/2d/default_gravity_vector",
@@ -379,28 +413,22 @@ func update_trajectory_points() -> void:
 		)
 	)
 
-	# Make gravity weaker or stronger using
-	# the same gravity scale as the real ball.
 	var gravity_acceleration: Vector2 = (
 		gravity_direction.normalized()
 			* default_gravity
 			* ball_gravity_scale
 	)
 
-	# We need at least two points to make a path.
 	var safe_point_count: int = maxi(
 		trajectory_point_count,
 		2
 	)
 
-	# Split the future into lots of tiny time steps.
-	# Smaller steps usually make the prediction better.
 	var step_duration: float = (
 		trajectory_duration
 			/ float(safe_point_count - 1)
 	)
 
-	# Begin at the barrel with the firing velocity.
 	var current_position: Vector2 = (
 		start_position
 	)
@@ -412,13 +440,10 @@ func update_trajectory_points() -> void:
 	var travelled_distance: float = 0.0
 	var bounce_count: int = 0
 
-	# This lets us ask Godot whether something
-	# exists between two positions.
 	var space_state: PhysicsDirectSpaceState2D = (
 		get_world_2d().direct_space_state
 	)
 
-	# Store the first point at the barrel opening.
 	trajectory_points.append(
 		to_local(current_position)
 	)
@@ -427,24 +452,17 @@ func update_trajectory_points() -> void:
 		1,
 		safe_point_count
 	):
-		# Gravity changes the ball's velocity
-		# a little bit during every time step.
 		current_velocity += (
 			gravity_acceleration
 				* step_duration
 		)
 
-		# Guess where the ball will be
-		# after this tiny amount of time.
 		var predicted_position: Vector2 = (
 			current_position
 				+ current_velocity
 					* step_duration
 		)
 
-		# Draw an invisible test ray between
-		# the current and predicted positions.
-		# The ray checks for walls and pegs.
 		var ray_query := (
 			PhysicsRayQueryParameters2D.create(
 				current_position,
@@ -456,16 +474,12 @@ func update_trajectory_points() -> void:
 		ray_query.collide_with_bodies = true
 		ray_query.collide_with_areas = false
 
-		# Ask Godot whether the test ray
-		# touched anything.
 		var collision: Dictionary = (
 			space_state.intersect_ray(
 				ray_query
 			)
 		)
 
-		# If nothing was hit, the segment ends
-		# at our predicted position.
 		var segment_end: Vector2 = (
 			predicted_position
 		)
@@ -479,15 +493,11 @@ func update_trajectory_points() -> void:
 		)
 
 		if did_collide:
-			# Stop this part of the path
-			# exactly where the collision happened.
 			segment_end = collision.get(
 				"position",
 				predicted_position
 			)
 
-			# The normal points away from
-			# the surface we just hit.
 			collision_normal = collision.get(
 				"normal",
 				Vector2.ZERO
@@ -499,8 +509,6 @@ func update_trajectory_points() -> void:
 			)
 		)
 
-		# Do not allow the preview to become
-		# longer than the chosen maximum.
 		if (
 			travelled_distance
 				+ segment_length
@@ -536,8 +544,6 @@ func update_trajectory_points() -> void:
 		)
 
 		if did_collide:
-			# Stop if we have already predicted
-			# the maximum number of bounces.
 			if (
 				collision_normal == Vector2.ZERO
 				or bounce_count
@@ -545,8 +551,6 @@ func update_trajectory_points() -> void:
 			):
 				break
 
-			# Bounce the velocity away from
-			# the surface that was hit.
 			current_velocity = (
 				current_velocity.bounce(
 					collision_normal
@@ -554,9 +558,6 @@ func update_trajectory_points() -> void:
 				* trajectory_bounce_strength
 			)
 
-			# Move one tiny step away from the surface.
-			# Otherwise the next ray might immediately
-			# hit the same surface again.
 			current_position = (
 				segment_end
 					+ collision_normal
@@ -566,19 +567,124 @@ func update_trajectory_points() -> void:
 			bounce_count += 1
 
 		else:
-			# Nothing was hit, so accept
-			# the predicted position.
 			current_position = (
 				predicted_position
 			)
 
-	# Tell Godot to draw the new dots.
 	queue_redraw()
 
 
-func fire_at(
-	_target_position: Vector2
-) -> RigidBody2D:
+func play_turn_swap() -> void:
+	await get_tree().create_timer(
+		turn_swap_pause_duration
+	).timeout
+
+	fade_barrel_in()
+
+
+func think_and_aim_at(
+	target_position: Vector2
+) -> void:
+	var target_angle: float = (
+		get_clamped_aim_angle(
+			target_position
+		)
+	)
+
+	var min_angle: float = deg_to_rad(
+		minimum_turn_angle
+	)
+
+	var max_angle: float = deg_to_rad(
+		maximum_turn_angle
+	)
+
+	var oscillation_centre: float = (
+		(min_angle + max_angle) / 2.0
+	)
+
+	var oscillation_extent: float = (
+		(max_angle - min_angle)
+			/ 2.0
+			* ai_thinking_oscillation_extent
+	)
+
+	var elapsed_time: float = 0.0
+
+	while elapsed_time < ai_thinking_duration:
+		var frame_delta: float = (
+			get_process_delta_time()
+		)
+
+		elapsed_time += frame_delta
+
+		var oscillation_angle: float = (
+			oscillation_centre
+				+ sin(
+					elapsed_time
+						* ai_thinking_oscillation_speed
+				)
+				* oscillation_extent
+		)
+
+		_apply_aim_angle(
+			oscillation_angle,
+			true,
+			false
+		)
+
+		await get_tree().process_frame
+
+	var start_angle: float = barrel.rotation
+
+	var safe_settle_duration: float = maxf(
+		ai_thinking_settle_duration,
+		0.001
+	)
+
+	var settle_elapsed: float = 0.0
+
+	while settle_elapsed < safe_settle_duration:
+		var frame_delta: float = (
+			get_process_delta_time()
+		)
+
+		settle_elapsed += frame_delta
+
+		var lerp_amount: float = clampf(
+			settle_elapsed / safe_settle_duration,
+			0.0,
+			1.0
+		)
+
+		var eased_amount: float = (
+			lerp_amount
+				* lerp_amount
+				* (3.0 - 2.0 * lerp_amount)
+		)
+
+		var current_angle: float = lerp(
+			start_angle,
+			target_angle,
+			eased_amount
+		)
+
+		_apply_aim_angle(
+			current_angle,
+			true,
+			false
+		)
+
+		await get_tree().process_frame
+
+	_apply_aim_angle(
+		target_angle,
+		true,
+		false
+	)
+
+
+func fire() -> RigidBody2D:
 	if ball_scene == null:
 		push_error(
 			"No ball scene was assigned to the cannon."
@@ -666,10 +772,15 @@ func _spawn_ball(
 
 
 func apply_fire_effects() -> void:
+	var current_alpha: float = (
+		barrel.modulate.a
+	)
+
 	barrel.modulate = Color(
-		2,
-		2,
-		2
+		2.0,
+		2.0,
+		2.0,
+		current_alpha
 	)
 
 	if animation_player.is_playing():
@@ -699,18 +810,18 @@ func apply_fire_effects() -> void:
 			get_random_fire_pitch()
 		)
 
+	_fade_barrel_out_after_recoil()
+
 
 func play_recoil() -> void:
 	if recoil_tween != null:
 		if recoil_tween.is_valid():
 			recoil_tween.kill()
 
-	# Remember where the barrel was before firing.
 	var resting_position: Vector2 = (
 		barrel.position
 	)
 
-	# Move four pixels closer to the cannon's origin.
 	var recoil_position: Vector2 = (
 		resting_position.move_toward(
 			Vector2.ZERO,
@@ -720,7 +831,6 @@ func play_recoil() -> void:
 
 	recoil_tween = create_tween()
 
-	# Quickly kick backward.
 	recoil_tween.tween_property(
 		barrel,
 		"position",
@@ -732,7 +842,6 @@ func play_recoil() -> void:
 		Tween.EASE_OUT
 	)
 
-	# Then spring back to the aimed position.
 	recoil_tween.tween_property(
 		barrel,
 		"position",
@@ -755,8 +864,93 @@ func get_random_fire_pitch() -> float:
 	)
 
 
+func _fade_barrel_out_after_recoil() -> void:
+	if (
+		recoil_tween != null
+		and recoil_tween.is_valid()
+	):
+		await recoil_tween.finished
+
+	fade_barrel_out()
+
+
+func fade_barrel_out() -> void:
+	if barrel_fade_tween != null:
+		if barrel_fade_tween.is_valid():
+			barrel_fade_tween.kill()
+
+		barrel_fade_tween = null
+
+	barrel_fade_tween = create_tween()
+	barrel_fade_tween.set_parallel(true)
+
+	barrel_fade_tween.tween_property(
+		barrel,
+		"modulate:a",
+		0.0,
+		barrel_fade_out_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_IN
+	)
+
+	barrel_fade_tween.tween_property(
+		eye_pupil,
+		"modulate:a",
+		0.0,
+		barrel_fade_out_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_IN
+	)
+
+
+func fade_barrel_in() -> void:
+	if barrel_fade_tween != null:
+		if barrel_fade_tween.is_valid():
+			barrel_fade_tween.kill()
+
+		barrel_fade_tween = null
+
+	barrel_fade_tween = create_tween()
+	barrel_fade_tween.set_parallel(true)
+
+	barrel_fade_tween.tween_property(
+		barrel,
+		"modulate:a",
+		1.0,
+		barrel_fade_in_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+	barrel_fade_tween.tween_property(
+		eye_pupil,
+		"modulate:a",
+		1.0,
+		barrel_fade_in_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+
 func _on_flash_cooldown_timeout() -> void:
-	barrel.modulate = Color.WHITE
+	var current_alpha: float = (
+		barrel.modulate.a
+	)
+
+	barrel.modulate = Color(
+		1.0,
+		1.0,
+		1.0,
+		current_alpha
+	)
 
 	animation_player.play(
 		"RESET"
