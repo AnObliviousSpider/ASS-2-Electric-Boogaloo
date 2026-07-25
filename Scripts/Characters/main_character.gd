@@ -1,17 +1,15 @@
 extends Node2D
 
 
-@export_group("Form Positions")
+@export_group("Animation Positions")
 
-@export var human_position: Vector2 = Vector2(
-	300.0,
-	170.0
-)
-
-@export var chimera_position: Vector2 = Vector2(
-	347.0,
-	101.0
-)
+@export var animation_positions: Dictionary[StringName, Vector2] = {
+	&"human_idle": Vector2.ZERO,
+	&"human_happy": Vector2.ZERO,
+	&"human_flirty": Vector2.ZERO,
+	&"human_angry": Vector2.ZERO,
+	&"human_sad": Vector2.ZERO,
+}
 
 
 @onready var animated_sprite: AnimatedSprite2D = (
@@ -27,9 +25,8 @@ func _ready() -> void:
 			change_animation
 	)
 
-	# Always begin in the human idle animation.
 	play_animation(
-		"idle_human"
+		&"human_idle"
 	)
 
 
@@ -45,9 +42,13 @@ func change_animation(
 		mood_index < 0
 		or mood_index >= emotion_names.size()
 	):
-		push_warning(
+		push_error(
 			"Invalid mood index: %s"
 			% mood_index
+		)
+
+		play_animation(
+			&"human_idle"
 		)
 		return
 
@@ -55,16 +56,13 @@ func change_animation(
 		emotion_names[mood_index]
 	).to_lower()
 
-	match mood_name:
-		"happy", "flirty":
-			play_animation(
-				"idle_human"
-			)
+	var animation_name := StringName(
+		"human_" + mood_name
+	)
 
-		_:
-			play_animation(
-				"idle_chimera"
-			)
+	play_animation(
+		animation_name
+	)
 
 
 func play_animation(
@@ -73,22 +71,28 @@ func play_animation(
 	if not animated_sprite.sprite_frames.has_animation(
 		animation_name
 	):
-		push_warning(
-			"Li animation does not exist: %s"
+		push_error(
+			(
+				"Human animation does not exist: %s. "
+				+ "Falling back to human_idle."
+			)
 			% animation_name
+		)
+
+		animation_name = &"human_idle"
+
+	if not animated_sprite.sprite_frames.has_animation(
+		animation_name
+	):
+		push_error(
+			"Fallback animation human_idle does not exist."
 		)
 		return
 
-	match animation_name:
-		&"idle_human":
-			animated_sprite.position = (
-				human_position
-			)
-
-		&"idle_chimera":
-			animated_sprite.position = (
-				chimera_position
-			)
+	if animation_positions.has(animation_name):
+		animated_sprite.position = (
+			animation_positions[animation_name]
+		)
 
 	if animated_sprite.animation == animation_name:
 		return
