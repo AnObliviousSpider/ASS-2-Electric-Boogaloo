@@ -6,9 +6,9 @@
 [sub_resource type="Curve2D" id="Curve2D_3jus1"]
 bake_interval = 10.0
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 108, -70, 72.482124, -10.409666, -72.482124, 10.409666, 40, 55, 59.759197, 30.843456, -59.759197, -30.843456, -169, 62, 0, 0, 0, 0, -242, -46)
+"points": PackedVector2Array(0, 0, 0, 0, 186, 129, 8.487534, -5.8759847, -8.487534, 5.8759847, 159, 158, 0, 0, 0, 0, 118, 146)
 }
-point_count = 4
+point_count = 3
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3jus1"]
 bounce = 1.0
@@ -19,5 +19,4 @@ curve = SubResource("Curve2D_3jus1")
 script = ExtResource("1_3jus1")
 block_scene = ExtResource("2_i4hnq")
 wall_physics_material = SubResource("PhysicsMaterial_3jus1")
-default_color = null
 bake_interval = 10.0
