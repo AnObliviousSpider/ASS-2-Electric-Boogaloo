@@ -9,6 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://cmvatd14ckwn7" path="res://Assets/Audio/SFX/Sad Bin.mp3" id="5_iotme"]
 [ext_resource type="AudioStream" uid="uid://u0u03y0b1pjx" path="res://Assets/Audio/SFX/Angry Bin.mp3" id="6_pr6su"]
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
+[ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 [ext_resource type="AudioStream" uid="uid://dmx3b2ht8gmgu" path="res://Assets/Audio/SFX/GAME/happy_bin.mp3" id="7_1uqbv"]
 [ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
 [ext_resource type="PackedScene" uid="uid://b05yad54fqqov" path="res://Scenes/PeggleBoard/Ball/ball_explosion.tscn" id="7_iotme"]
@@ -36,6 +37,12 @@ size = Vector2(180, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36fd3"]
 size = Vector2(177, 25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
+size = Vector2(180, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
+size = Vector2(180, 14)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42h65"]
 bg_color = Color(0.32941177, 0.80784315, 0.654902, 1)
@@ -139,42 +146,52 @@ position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel1" unique_id=1411103836 instance=ExtResource("4_ryebi")]
 position = Vector2(238, 105.00001)
+dummy = true
 
 [node name="PegglePeg2" parent="PegsLevel1" unique_id=494578711 instance=ExtResource("4_ryebi")]
 position = Vector2(216, 80)
+dummy = true
 
 [node name="PegglePeg3" parent="PegsLevel1" unique_id=178260736 instance=ExtResource("4_ryebi")]
 position = Vector2(260, 80)
+dummy = true
 
 [node name="PegglePeg4" parent="PegsLevel1" unique_id=875669569 instance=ExtResource("4_ryebi")]
 position = Vector2(200, 95)
+dummy = true
 
 [node name="PegglePeg5" parent="PegsLevel1" unique_id=1539789439 instance=ExtResource("4_ryebi")]
 position = Vector2(276, 95)
+dummy = true
 
 [node name="PegglePeg6" parent="PegsLevel1" unique_id=1348138800 instance=ExtResource("4_ryebi")]
 position = Vector2(200, 168)
+dummy = true
 
 [node name="PegglePeg7" parent="PegsLevel1" unique_id=2110922431 instance=ExtResource("4_ryebi")]
 position = Vector2(280, 170)
+dummy = true
 
 [node name="PegglePeg8" parent="PegsLevel1" unique_id=1446963668 instance=ExtResource("4_ryebi")]
 position = Vector2(299, 150)
+dummy = true
 
 [node name="PegglePeg9" parent="PegsLevel1" unique_id=1802255788 instance=ExtResource("4_ryebi")]
 position = Vector2(184, 148)
+dummy = true
 
 [node name="PegglePeg10" parent="PegsLevel1" unique_id=2006107150 instance=ExtResource("4_ryebi")]
 position = Vector2(244, 132)
 
 [node name="PegglePeg11" parent="PegsLevel1" unique_id=393130168 instance=ExtResource("4_ryebi")]
 position = Vector2(183, 115)
+dummy = true
 
 [node name="PegglePeg12" parent="PegsLevel1" unique_id=1163546502 instance=ExtResource("4_ryebi")]
 position = Vector2(294, 114)
+dummy = true
 
 [node name="PegsLevel2" type="Node2D" parent="." unique_id=752156241]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel2" unique_id=109279465 instance=ExtResource("4_ryebi")]
@@ -214,7 +231,6 @@ position = Vector2(208, 170)
 position = Vector2(271, 169)
 
 [node name="PegsLevel3" type="Node2D" parent="." unique_id=1268814216]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel3" unique_id=728100677 instance=ExtResource("4_ryebi")]
@@ -254,7 +270,6 @@ position = Vector2(269, 153)
 position = Vector2(271, 105)
 
 [node name="PegsLevel4" type="Node2D" parent="." unique_id=1945990691]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel4" unique_id=781750181 instance=ExtResource("4_ryebi")]
@@ -294,7 +309,6 @@ position = Vector2(282, 127)
 position = Vector2(239, 126)
 
 [node name="PegsLevel5" type="Node2D" parent="." unique_id=2069571751]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel5" unique_id=2084831918 instance=ExtResource("4_ryebi")]
@@ -451,6 +465,22 @@ autoplay = "default"
 frame_progress = 0.059644017
 metadata/_edit_lock_ = true
 
-[connection signal="timeout" from="PeggleBallShooter/FlashCooldown" to="." method="_on_flash_cooldown_timeout"]
+[node name="BounceOnce" type="StaticBody2D" parent="." unique_id=249566150]
+position = Vector2(243, 206)
+collision_layer = 16
+script = ExtResource("7_42h65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce" unique_id=147314452]
+position = Vector2(5, 0)
+shape = SubResource("RectangleShape2D_cvs26")
+
+[node name="Area2D" type="Area2D" parent="BounceOnce" unique_id=1568000702]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce/Area2D" unique_id=2073638313]
+position = Vector2(5, -1)
+shape = SubResource("RectangleShape2D_1eppy")
+
+[connection signal="body_entered" from="BounceOnce/Area2D" to="BounceOnce" method="_on_area_2d_body_entered"]
 
 [editable path="PeggleBallShooter"]

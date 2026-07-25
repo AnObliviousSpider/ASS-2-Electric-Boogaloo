@@ -8,6 +8,7 @@ enum Turn {
 
 
 const FULL_BAR_FRACTION: float = 0.75
+const NO_PENDING_EMOTION: int = -1
 
 const WIN_SCENE_KEY: String = "win_screen"
 const LOSS_SCENE_KEY: String = "loss_screen"
@@ -103,6 +104,13 @@ var sfx_max_scale: float = 2.0
 )
 
 
+# POWER-UP NODES
+
+@onready var bounce_once: StaticBody2D = (
+	$BounceOnce
+)
+
+
 # ROUND STATE
 
 var current_turn: int = Turn.PLAYER
@@ -110,11 +118,14 @@ var ball_in_play: bool = false
 var resolving_ball: bool = false
 var game_ended: bool = false
 
+var pending_dialogue_emotion: int = (
+	NO_PENDING_EMOTION
+)
+
 
 # PEG DATA
 
 var active_peg_level: Node2D
-
 var all_pegs: Array[Node] = []
 
 var total_peg_count: int = 0
@@ -130,34 +141,44 @@ var progress_tween: Tween
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
 var is_blast_ball: bool = false
+var is_bounce_once: bool = false
+
+# The number of upcoming AI balls that
+# should be made smaller.
+var is_ai_ball_smol: int = 0
 
 
 func _ready() -> void:
-	# A ball entering the endzone missed
-	# all of the emotion bins.
-	endzone.body_entered.connect(
+	if not endzone.body_entered.is_connected(
 		destroy_ball
-	)
+	):
+		endzone.body_entered.connect(
+			destroy_ball
+		)
 
-	endzone.body_entered.connect(
-		missed_bin
-	)
-
-	EventBus.peg_hit_sound_update.connect(
+	if not EventBus.peg_hit_sound_update.is_connected(
 		play_peg_hit_sound
-	)
+	):
+		EventBus.peg_hit_sound_update.connect(
+			play_peg_hit_sound
+		)
 	
 	PowerUpManager.trigger_power_up.connect(
 		_apply_power_up
 	)
 
-	# Connect every emotion bin directly
-	# to the Peggle board.
 	for child: Node in bins.get_children():
-		if child.has_signal(
+		if not child.has_signal(
 			"ball_caught"
 		):
-			child.ball_caught.connect(
+			continue
+
+		if not child.is_connected(
+			"ball_caught",
+			catch_ball
+		):
+			child.connect(
+				"ball_caught",
 				catch_ball
 			)
 
@@ -213,11 +234,13 @@ func _input(
 	if ball_in_play:
 		return
 
+	if DialogueManager._dialogue_box_displayed:
+		return
+
 	if event.is_action_pressed(
 		"action_primary"
 	):
-		if not DialogueManager._dialogue_box_displayed:
-			fire_ball()
+		fire_ball()
 
 
 func setup_ball_counter() -> void:
@@ -291,7 +314,6 @@ func show_peg_level(
 			peg_level.process_mode = (
 				Node.PROCESS_MODE_INHERIT
 			)
-
 		else:
 			peg_level.process_mode = (
 				Node.PROCESS_MODE_DISABLED
@@ -358,9 +380,16 @@ func _collect_pegs(
 		if child.is_in_group(
 			"pegs"
 		):
-			all_pegs.append(
-				child
+			var is_dummy: bool = (
+				child.get(
+					"dummy"
+				) == true
 			)
+
+			if not is_dummy:
+				all_pegs.append(
+					child
+				)
 
 		_collect_pegs(
 			child
@@ -422,6 +451,10 @@ func reset_current_round() -> void:
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
+
+	pending_dialogue_emotion = (
+		NO_PENDING_EMOTION
+	)
 
 
 func get_progress_values() -> Vector2:
@@ -549,7 +582,6 @@ func check_for_winner() -> void:
 			< LevelManager.MAX_LEVEL
 		):
 			advance_to_next_peg_level()
-
 		else:
 			end_game(
 				WIN_SCENE_KEY
@@ -568,7 +600,6 @@ func check_for_winner() -> void:
 			end_game(
 				LOSS_SCENE_KEY
 			)
-
 		else:
 			end_game(
 				TRY_AGAIN_SCENE_KEY
@@ -650,7 +681,6 @@ func end_game(
 			END_SCREEN_TRANSITION_DURATION,
 			true
 		)
-
 	else:
 		SceneManager.go(
 			scene_key,
@@ -663,6 +693,9 @@ func fire_ball() -> void:
 		return
 
 	if resolving_ball:
+		return
+
+	if ball_in_play:
 		return
 
 	if GameData.balls_remaining <= 0:
@@ -686,6 +719,7 @@ func fire_ball() -> void:
 			)
 	)
 
+	# Apply the ghost effect independently.
 	if is_ghost_ball:
 		is_ghost_ball = false
 
@@ -694,6 +728,32 @@ func fire_ball() -> void:
 		):
 			fired_ball.call(
 				"ghost_ball"
+			)
+
+	# Apply the small-ball effect only to AI balls.
+	if (
+		current_turn == Turn.AI
+		and is_ai_ball_smol > 0
+	):
+		apply_small_ai_ball(
+			fired_ball
+		)
+
+		is_ai_ball_smol -= 1
+
+	# Activate the one-use bounce effect.
+	if is_bounce_once:
+		is_bounce_once = false
+
+		if bounce_once.has_method(
+			"bounce_once"
+		):
+			bounce_once.call(
+				"bounce_once"
+			)
+		else:
+			push_warning(
+				"BounceOnce does not have a bounce_once method."
 			)
 
 	configure_ball(
@@ -706,24 +766,69 @@ func fire_ball() -> void:
 	use_ball()
 
 
+func apply_small_ai_ball(
+	fired_ball: RigidBody2D
+) -> void:
+	var ball_sprite: Sprite2D = (
+		fired_ball.get_node_or_null(
+			"Sprite2D"
+		) as Sprite2D
+	)
+
+	if ball_sprite != null:
+		if is_ai_ball_smol >= 2:
+			ball_sprite.scale = Vector2(
+				0.2,
+				0.2
+			)
+		else:
+			ball_sprite.scale = Vector2(
+				0.1,
+				0.1
+			)
+
+	var ball_collision: CollisionShape2D = (
+		fired_ball.get_node_or_null(
+			"CollisionShape2D"
+		) as CollisionShape2D
+	)
+
+	if (
+		ball_collision == null
+		or ball_collision.shape == null
+	):
+		return
+
+	# Do not resize the shared collision resource.
+	ball_collision.shape = (
+		ball_collision.shape.duplicate()
+	)
+
+	if ball_collision.shape is CircleShape2D:
+		var circle_shape: CircleShape2D = (
+			ball_collision.shape as CircleShape2D
+		)
+
+		if is_ai_ball_smol >= 2:
+			circle_shape.radius = 3.0
+		else:
+			circle_shape.radius = 1.5
+
+
 func configure_ball(
 	fired_ball: RigidBody2D,
 	turn_owner: int
 ) -> void:
-	# Identifies this body as a Peggle ball.
 	fired_ball.set_meta(
 		"is_peggle_ball",
 		true
 	)
 
-	# Prevents one ball from being handled twice.
 	fired_ball.set_meta(
 		"ball_resolved",
 		false
 	)
 
-	# Used by pegs to choose the correct
-	# player or AI animation.
 	fired_ball.set_meta(
 		"ball_owner",
 		get_ball_owner(
@@ -731,7 +836,6 @@ func configure_ball(
 		)
 	)
 
-	# Stores which turn fired this ball.
 	fired_ball.set_meta(
 		"turn_owner",
 		turn_owner
@@ -751,14 +855,43 @@ func catch_ball(
 	body: Node2D,
 	bin_emotion: int
 ) -> void:
-	# The ball entered a bin, so the spent
-	# ball should be refunded.
+	if (
+		body.get_meta(
+			"is_peggle_ball",
+			false
+		) != true
+	):
+		return
+
+	if (
+		body.get_meta(
+			"ball_resolved",
+			false
+		) == true
+	):
+		return
+
+	var ball_owner: int = int(
+		body.get_meta(
+			"turn_owner",
+			current_turn
+		)
+	)
+
+	# Only a player's bin hit stores dialogue
+	# for the following opponent turn.
+	if ball_owner == Turn.PLAYER:
+		pending_dialogue_emotion = (
+			bin_emotion
+		)
+
+	# Both player and opponent bin hits refund
+	# the ball that was spent.
 	resolve_ball(
 		body,
 		true
 	)
 
-	# Emotion indexes use 0 through 3.
 	var sound_index: int = (
 		bin_emotion
 	)
@@ -781,26 +914,47 @@ func catch_ball(
 func destroy_ball(
 	body: Node2D
 ) -> void:
-	# The ball reached the endzone without
-	# entering a bin, so it is not refunded.
 	resolve_ball(
 		body,
 		false
 	)
 
 
-func missed_bin(
-	body: Node2D
-) -> void:
+func play_pending_opponent_dialogue() -> void:
 	if (
-		body.get_meta(
-			"is_peggle_ball",
-			false
-		) != true
+		pending_dialogue_emotion
+		== NO_PENDING_EMOTION
 	):
 		return
 
-	GameData.current_emotion = 4
+	var emotion_to_play: int = (
+		pending_dialogue_emotion
+	)
+
+	pending_dialogue_emotion = (
+		NO_PENDING_EMOTION
+	)
+
+	GameData.current_emotion = (
+		emotion_to_play
+	)
+
+	EventBus.dialogue_mood_triggered.emit(
+		emotion_to_play,
+		LevelManager.level
+	)
+
+	DialogueManager.lock_dialogue()
+
+
+func finish_opponent_turn() -> void:
+	# Close the dialogue before giving control
+	# back to the player.
+	EventBus.dialogue_mood_hide.emit()
+	DialogueManager.force_close_dialogue()
+
+	current_turn = Turn.PLAYER
+	resolving_ball = false
 
 
 func resolve_ball(
@@ -823,8 +977,6 @@ func resolve_ball(
 	):
 		return
 
-	# Mark it immediately so another Area2D
-	# cannot resolve the same ball again.
 	body.set_meta(
 		"ball_resolved",
 		true
@@ -846,7 +998,6 @@ func resolve_ball(
 
 	if should_refund:
 		refund_ball()
-
 	else:
 		var percentage_left: float = 0.0
 
@@ -895,14 +1046,14 @@ func finish_ball_resolution(
 		current_turn = Turn.AI
 		resolving_ball = false
 
+		play_pending_opponent_dialogue()
+
+		if game_ended:
+			return
+
 		start_ai_turn()
-
 	else:
-		current_turn = Turn.PLAYER
-
-		EventBus.dialogue_mood_hide.emit()
-
-		resolving_ball = false
+		finish_opponent_turn()
 
 
 func start_ai_turn() -> void:
@@ -912,10 +1063,13 @@ func start_ai_turn() -> void:
 	if resolving_ball:
 		return
 
+	if current_turn != Turn.AI:
+		return
+
 	refresh_pegs()
 
 	if all_pegs.is_empty():
-		current_turn = Turn.PLAYER
+		finish_opponent_turn()
 		return
 
 	var target_peg := (
@@ -923,7 +1077,7 @@ func start_ai_turn() -> void:
 	)
 
 	if target_peg == null:
-		current_turn = Turn.PLAYER
+		finish_opponent_turn()
 		return
 
 	await cannon.think_and_aim_at(
