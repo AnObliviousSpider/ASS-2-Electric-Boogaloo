@@ -394,11 +394,6 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_42h65")
 fill_mode = 1
 show_percentage = false
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="ProgressBar" unique_id=813126269]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="ProgressBar2" type="ProgressBar" parent="." unique_id=1828367252]
 z_index = 1
 offset_left = 342.0

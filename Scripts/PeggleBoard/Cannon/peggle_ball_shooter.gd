@@ -3,8 +3,10 @@ extends Node2D
 class_name PeggleCannon
 
 
-#Eyes
+# EYES
+
 @onready var eye: AnimatedSprite2D = $Eye
+@onready var eye_pupil: Sprite2D = $Eye/EyePupil
 
 
 # BALL
@@ -54,9 +56,11 @@ var trajectory_dot_spacing: float = 8.0
 @export_range(0.5, 10.0, 0.25)
 var trajectory_dot_radius: float = 1.5
 
-@export var trajectory_dot_colour: Color = (
-	Color(1.0, 1.0, 1.0, 0.75)
-)
+# Colour of the dots when it is the player's turn.
+@export var player_trajectory_dot_colour: Color = Color("54cea7")
+
+# Colour of the dots when it is the enemy/AI's turn.
+@export var enemy_trajectory_dot_colour: Color = Color("ff82bd")
 
 # Walls are on layer 1.
 # Pegs are on layer 2.
@@ -127,6 +131,49 @@ var rare_fire_pitch: float = 0.5
 var rare_fire_pitch_chance: float = 0.08
 
 
+# TURN SWAP
+
+@export_range(0.1, 5.0, 0.05)
+var turn_swap_pause_duration: float = 2.0
+
+
+# AI THINKING
+
+# How long the barrel oscillates back and forth
+# before settling on the chosen peg.
+@export_range(0.1, 5.0, 0.05)
+var ai_thinking_duration: float = 1.0
+
+# How long it takes to lerp from the oscillation
+# into the final aimed angle.
+@export_range(0.05, 3.0, 0.05)
+var ai_thinking_settle_duration: float = 0.4
+
+# How fast the barrel oscillates while "thinking".
+# Higher values swing back and forth more quickly.
+@export_range(0.5, 20.0, 0.5)
+var ai_thinking_oscillation_speed: float = 2.5
+
+# How wide the oscillation swings, as a fraction
+# of the full turn range. 1.0 uses the entire
+# range between the minimum and maximum turn angle.
+@export_range(0.0, 1.0, 0.05)
+var ai_thinking_oscillation_extent: float = 0.6
+
+
+# BARREL FADE
+
+# How long the barrel and eyeball take to fade out
+# once firing and recoiling have finished.
+@export_range(0.05, 3.0, 0.05)
+var barrel_fade_out_duration: float = 0.3
+
+# How long the barrel and eyeball take to fade back
+# in when the next turn begins.
+@export_range(0.05, 3.0, 0.05)
+var barrel_fade_in_duration: float = 0.3
+
+
 # NODES
 
 @onready var barrel: Sprite2D = (
@@ -158,10 +205,19 @@ var trajectory_points: Array[Vector2] = []
 
 var trajectory_visible: bool = true
 
+# The colour actually used by _draw(). Updated each
+# time aim_at() is called, based on whose turn it is.
+var trajectory_dot_colour: Color = player_trajectory_dot_colour
+
 
 # RECOIL DATA
 
 var recoil_tween: Tween
+
+
+# BARREL FADE DATA
+
+var barrel_fade_tween: Tween
 
 
 func _ready() -> void:
@@ -248,8 +304,28 @@ func _draw() -> void:
 
 func aim_at(
 	target_position: Vector2,
-	show_trajectory: bool = true
+	show_trajectory: bool = true,
+	is_player_turn: bool = true
 ) -> void:
+	var target_angle: float = (
+		get_clamped_aim_angle(
+			target_position
+		)
+	)
+
+	_apply_aim_angle(
+		target_angle,
+		show_trajectory,
+		is_player_turn
+	)
+
+
+# Works out the barrel angle needed to point at
+# a target position, clamped to the allowed
+# turning range.
+func get_clamped_aim_angle(
+	target_position: Vector2
+) -> float:
 	var target_direction: Vector2 = (
 		barrel.global_position
 		.direction_to(target_position)
@@ -263,13 +339,29 @@ func aim_at(
 		)
 	)
 
-	# Do not let the barrel turn farther
-	# than the allowed angles.
-	barrel.rotation = clampf(
+	return clampf(
 		target_angle,
 		deg_to_rad(minimum_turn_angle),
 		deg_to_rad(maximum_turn_angle)
 	)
+
+
+# Rotates the barrel to a specific angle, updates
+# its recoil-style offset position, and refreshes
+# the trajectory preview in the correct colour.
+# Shared by aim_at() and the AI "thinking" animation.
+func _apply_aim_angle(
+	angle: float,
+	show_trajectory: bool,
+	is_player_turn: bool
+) -> void:
+	trajectory_dot_colour = (
+		player_trajectory_dot_colour
+			if is_player_turn
+			else enemy_trajectory_dot_colour
+	)
+
+	barrel.rotation = angle
 
 	update_barrel_position()
 
@@ -576,6 +668,132 @@ func update_trajectory_points() -> void:
 	queue_redraw()
 
 
+# Called between turns.
+# The barrel and eyeball remain hidden during the
+# pause, then fade back in when the pause finishes.
+func play_turn_swap() -> void:
+	await get_tree().create_timer(
+		turn_swap_pause_duration
+	).timeout
+
+	fade_barrel_in()
+
+
+# Makes the barrel swing back and forth for a
+# moment, as if the AI is thinking, then smoothly
+# lerps into the final angle needed to hit
+# target_position. The trajectory preview stays
+# visible throughout in the enemy colour.
+func think_and_aim_at(
+	target_position: Vector2
+) -> void:
+	var target_angle: float = (
+		get_clamped_aim_angle(
+			target_position
+		)
+	)
+
+	var min_angle: float = deg_to_rad(
+		minimum_turn_angle
+	)
+
+	var max_angle: float = deg_to_rad(
+		maximum_turn_angle
+	)
+
+	var oscillation_centre: float = (
+		(min_angle + max_angle) / 2.0
+	)
+
+	var oscillation_extent: float = (
+		(max_angle - min_angle)
+			/ 2.0
+			* ai_thinking_oscillation_extent
+	)
+
+	# Swing back and forth for a moment
+	# before settling on the chosen peg.
+	var elapsed_time: float = 0.0
+
+	while elapsed_time < ai_thinking_duration:
+		var frame_delta: float = (
+			get_process_delta_time()
+		)
+
+		elapsed_time += frame_delta
+
+		var oscillation_angle: float = (
+			oscillation_centre
+				+ sin(
+					elapsed_time
+						* ai_thinking_oscillation_speed
+				)
+				* oscillation_extent
+		)
+
+		_apply_aim_angle(
+			oscillation_angle,
+			true,
+			false
+		)
+
+		await get_tree().process_frame
+
+	# Smoothly settle from wherever the oscillation
+	# ended into the actual target angle.
+	var start_angle: float = barrel.rotation
+
+	var safe_settle_duration: float = maxf(
+		ai_thinking_settle_duration,
+		0.001
+	)
+
+	var settle_elapsed: float = 0.0
+
+	while settle_elapsed < safe_settle_duration:
+		var frame_delta: float = (
+			get_process_delta_time()
+		)
+
+		settle_elapsed += frame_delta
+
+		var lerp_amount: float = clampf(
+			settle_elapsed / safe_settle_duration,
+			0.0,
+			1.0
+		)
+
+		# A simple smoothstep curve so the
+		# settle eases in and out instead of
+		# moving at a constant speed.
+		var eased_amount: float = (
+			lerp_amount
+				* lerp_amount
+				* (3.0 - 2.0 * lerp_amount)
+		)
+
+		var current_angle: float = lerp(
+			start_angle,
+			target_angle,
+			eased_amount
+		)
+
+		_apply_aim_angle(
+			current_angle,
+			true,
+			false
+		)
+
+		await get_tree().process_frame
+
+	# Make sure we end up exactly on target.
+	_apply_aim_angle(
+		target_angle,
+		true,
+		false
+	)
+
+
 func fire_at(
 	_target_position: Vector2
 ) -> RigidBody2D:
@@ -666,10 +884,16 @@ func _spawn_ball(
 
 
 func apply_fire_effects() -> void:
+	# Preserve the current alpha so the flash
+	# does not fight the ongoing fade tween.
+	# We only brighten the RGB channels here.
+	var current_alpha: float = barrel.modulate.a
+
 	barrel.modulate = Color(
-		2,
-		2,
-		2
+		2.0,
+		2.0,
+		2.0,
+		current_alpha
 	)
 
 	if animation_player.is_playing():
@@ -699,6 +923,8 @@ func apply_fire_effects() -> void:
 			get_random_fire_pitch()
 		)
 
+	_fade_barrel_out_after_recoil()
+
 
 func play_recoil() -> void:
 	if recoil_tween != null:
@@ -710,7 +936,7 @@ func play_recoil() -> void:
 		barrel.position
 	)
 
-	# Move four pixels closer to the cannon's origin.
+	# Move a few pixels closer to the cannon's origin.
 	var recoil_position: Vector2 = (
 		resting_position.move_toward(
 			Vector2.ZERO,
@@ -755,8 +981,98 @@ func get_random_fire_pitch() -> float:
 	)
 
 
+# Waits for the recoil to finish, then fades both
+# the barrel and the eyeball out together.
+func _fade_barrel_out_after_recoil() -> void:
+	if (
+		recoil_tween != null
+		and recoil_tween.is_valid()
+	):
+		await recoil_tween.finished
+
+	fade_barrel_out()
+
+
+# Fades the barrel and eyeball out together.
+func fade_barrel_out() -> void:
+	if barrel_fade_tween != null:
+		if barrel_fade_tween.is_valid():
+			barrel_fade_tween.kill()
+
+		barrel_fade_tween = null
+
+	barrel_fade_tween = create_tween()
+	barrel_fade_tween.set_parallel(true)
+
+	barrel_fade_tween.tween_property(
+		barrel,
+		"modulate:a",
+		0.0,
+		barrel_fade_out_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_IN
+	)
+
+	barrel_fade_tween.tween_property(
+		eye_pupil,
+		"modulate:a",
+		0.0,
+		barrel_fade_out_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_IN
+	)
+
+
+# Fades the barrel and eyeball back in together.
+# This is called only after the turn timer finishes.
+func fade_barrel_in() -> void:
+	if barrel_fade_tween != null:
+		if barrel_fade_tween.is_valid():
+			barrel_fade_tween.kill()
+
+		barrel_fade_tween = null
+
+	barrel_fade_tween = create_tween()
+	barrel_fade_tween.set_parallel(true)
+
+	barrel_fade_tween.tween_property(
+		barrel,
+		"modulate:a",
+		1.0,
+		barrel_fade_in_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+	barrel_fade_tween.tween_property(
+		eye_pupil,
+		"modulate:a",
+		1.0,
+		barrel_fade_in_duration
+	).set_trans(
+		Tween.TRANS_SINE
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+
+# The flash timer has elapsed.
+# Reset the barrel RGB without changing its alpha.
 func _on_flash_cooldown_timeout() -> void:
-	barrel.modulate = Color.WHITE
+	var current_alpha: float = barrel.modulate.a
+
+	barrel.modulate = Color(
+		1.0,
+		1.0,
+		1.0,
+		current_alpha
+	)
 
 	animation_player.play(
 		"RESET"
