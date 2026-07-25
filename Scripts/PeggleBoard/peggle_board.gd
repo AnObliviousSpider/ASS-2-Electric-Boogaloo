@@ -81,17 +81,10 @@ var sfx_max_scale: float = 2.0
 
 # BALL REMOVAL NODES
 
-@onready var endzone: Area2D = (
-	$Endzone
-)
-
 @onready var ball_bin: PeggleBallBin = (
 	%Bin
 )
 
-@onready var bins: Node2D = (
-	$Bins
-)
 
 # BALL REMOVAL NODES
 @onready var endzone: Area2D = $Endzone
@@ -190,6 +183,7 @@ func _process(_delta: float) -> void:
 		# Show the trajectory for the player.
 		cannon.aim_at(
 			get_global_mouse_position(),
+			true,
 			true
 		)
 
@@ -879,6 +873,11 @@ func finish_ball_resolution(
 		)
 		return
 
+	# Make the swap obvious with the cannon's eye
+	# animation and a short pause before the
+	# next turn begins.
+	await cannon.play_turn_swap()
+
 	if finished_turn == Turn.PLAYER:
 		current_turn = Turn.AI
 		resolving_ball = false
@@ -914,12 +913,27 @@ func start_ai_turn() -> void:
 		current_turn = Turn.PLAYER
 		return
 
-	# Aim without showing the trajectory.
-	cannon.aim_at(
-		target_peg.global_position,
-		false
+	# Let the cannon "think" for a moment, swinging
+	# back and forth, then settle onto the peg.
+	await cannon.think_and_aim_at(
+		target_peg.global_position
 	)
 
+	if game_ended:
+		return
+
+	if (
+		current_turn != Turn.AI
+		or ball_in_play
+	):
+		return
+
+	if not is_instance_valid(target_peg):
+		start_ai_turn()
+		return
+
+	# A short pause once locked onto the target,
+	# before actually firing.
 	await get_tree().create_timer(
 		ai_aim_time
 	).timeout
