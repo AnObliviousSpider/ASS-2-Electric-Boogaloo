@@ -29,7 +29,7 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
-				"text": "There you are! All the power in the universe and you're still so hard to find?"
+				"text": "There you are! All the power in the universe, and you're still so hard to find?"
 			},
 		],
 
@@ -37,19 +37,19 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
-				"text": "Yeah, I found a stray meteor drifting through the Xal'Thari sector. But I'm here now."
+				"text": "I found a stray meteor drifting through the Xal'Thari sector that just had to go. But I'm here now."
 			},
 			{
 				"align": "left",
-				"text": "I see. So... We can hang out now. Just for a bit?"
+				"text": "I see. So... can we hang out for a while?"
 			},
 			{
 				"align": "right",
-				"text": "We can play something in this Arcade I kept for you. How about that one over there? Until you win five times?"
+				"text": "We could play something in the arcade I kept for you. How about that one, until you win five times?"
 			},
 			{
 				"align": "left",
-				"text": "Okay. That one is new. how does that game work?"
+				"text": "Okay. That one's new. How does it work?"
 			},
 		],
 
@@ -57,11 +57,11 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
-				"text": "Well, this is a special machine I made for you. A gift, perhaps, from you to me."
+				"text": "It's a special machine I made for you. A gift from me to you. It links our emotions, so you can understand me a bit better."
 			},
 			{
 				"align": "right",
-				"text": "It links our emotions, so you can understand me. We take turns shooting orbs. Every peg you hit becomes yours, and vice versa."
+				"text": "We take turns shooting orbs. Every peg you hit becomes yours, and vice versa, until one of us owns three quarters of the board."
 			},
 			{
 				"align": "left",
@@ -69,15 +69,15 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "Every orb is a planet. If you lose an orb by not hitting the emotion-link bins at the bottom, that planet is gone."
+				"text": "Every orb is a planet. Miss the emotion-link bins at the bottom, and that planet is gone. Hit the right emotion, and you get a power-up."
 			},
 			{
 				"align": "right",
-				"text": "...And if we run out, then it's over. A countdown to the end."
+				"text": "...And if we run out, it's over. A countdown to the end."
 			},
 		],
 	],
-
+	
 	2: [
 		[
 			{
