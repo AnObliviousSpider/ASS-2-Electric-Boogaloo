@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://btvs6nijl4827"]
+
+[ext_resource type="Script" uid="uid://djgsng5jajup4" path="res://Scripts/Characters/main_character.gd" id="1_2u60s"]
+[ext_resource type="Texture2D" uid="uid://ct0lmjx5p3ega" path="res://Assets/Art/Characters/MC/pegglemc-dejected-Sheet.png" id="2_igfpp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_73jwo"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(0, 0, 192, 238)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crg1q"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(192, 0, 192, 238)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ohvrq"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(384, 0, 192, 238)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_074b6"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(576, 0, 192, 238)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dh0tk"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(768, 0, 192, 238)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d58b2"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(960, 0, 192, 238)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ghaa1"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(1152, 0, 192, 238)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_myhks"]
+atlas = ExtResource("2_igfpp")
+region = Rect2(1344, 0, 192, 238)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_715ky"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_73jwo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crg1q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ohvrq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_074b6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dh0tk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d58b2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ghaa1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_myhks")
+}],
+"loop": 1,
+"name": &"human_idle",
+"speed": 5.0
+}]
+
+[node name="MainCharacter" type="Node2D" unique_id=118005980]
+script = ExtResource("1_2u60s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1634788010]
+sprite_frames = SubResource("SpriteFrames_715ky")
+animation = &"human_idle"
+autoplay = "human_idle"
+frame_progress = 0.91575414
