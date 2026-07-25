@@ -8,6 +8,7 @@ enum Turn {
 
 
 const FULL_BAR_FRACTION: float = 0.75
+const NO_PENDING_EMOTION: int = -1
 
 const WIN_SCENE_KEY: String = "win_screen"
 const LOSS_SCENE_KEY: String = "loss_screen"
@@ -90,6 +91,10 @@ var sfx_max_scale: float = 2.0
 @onready var ai_progress_bar: ProgressBar = (
 	$ProgressBar2
 )
+@onready var ball_bar: ProgressBar = $BallBar
+@onready var counting_label: Label = $CountingLabel
+
+@onready var bounce_once: StaticBody2D = $BounceOnce
 
 @onready var ball_bar: ProgressBar = (
 	$BallBar
@@ -106,6 +111,10 @@ var current_turn: int = Turn.PLAYER
 var ball_in_play: bool = false
 var resolving_ball: bool = false
 var game_ended: bool = false
+
+var pending_dialogue_emotion: int = (
+	NO_PENDING_EMOTION
+)
 
 
 # PEG DATA
@@ -126,30 +135,44 @@ var progress_tween: Tween
 
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
+var is_bounce_once: bool = false
+var is_ai_ball_smol = 0
+
+# SPAWNED BALLS
+var new_ball: RigidBody2D
+var split_ball: RigidBody2D
 
 
 func _ready() -> void:
-	# A ball entering the endzone missed
-	# all of the emotion bins.
-	endzone.body_entered.connect(
+	# The endzone handles balls that missed
+	# every emotion bin.
+	if not endzone.body_entered.is_connected(
 		destroy_ball
-	)
+	):
+		endzone.body_entered.connect(
+			destroy_ball
+		)
 
-	endzone.body_entered.connect(
-		missed_bin
-	)
-
-	EventBus.peg_hit_sound_update.connect(
+	if not EventBus.peg_hit_sound_update.is_connected(
 		play_peg_hit_sound
-	)
+	):
+		EventBus.peg_hit_sound_update.connect(
+			play_peg_hit_sound
+		)
 
-	# Connect every emotion bin directly
-	# to the Peggle board.
+	# Connect every emotion bin to this board.
 	for child: Node in bins.get_children():
-		if child.has_signal(
+		if not child.has_signal(
 			"ball_caught"
 		):
-			child.ball_caught.connect(
+			continue
+
+		if not child.is_connected(
+			"ball_caught",
+			catch_ball
+		):
+			child.connect(
+				"ball_caught",
 				catch_ball
 			)
 
@@ -197,11 +220,13 @@ func _input(
 	if ball_in_play:
 		return
 
+	if DialogueManager._dialogue_box_displayed:
+		return
+
 	if event.is_action_pressed(
 		"action_primary"
 	):
-		if not DialogueManager._dialogue_box_displayed:
-			fire_ball()
+		fire_ball()
 
 
 func setup_ball_counter() -> void:
@@ -275,7 +300,6 @@ func show_peg_level(
 			peg_level.process_mode = (
 				Node.PROCESS_MODE_INHERIT
 			)
-
 		else:
 			peg_level.process_mode = (
 				Node.PROCESS_MODE_DISABLED
@@ -341,7 +365,7 @@ func _collect_pegs(
 	for child: Node in node.get_children():
 		if child.is_in_group(
 			"pegs"
-		):
+		) and not child.dummy:
 			all_pegs.append(
 				child
 			)
@@ -407,6 +431,10 @@ func reset_current_round() -> void:
 	ball_in_play = false
 	resolving_ball = false
 
+	pending_dialogue_emotion = (
+		NO_PENDING_EMOTION
+	)
+
 
 func get_progress_values() -> Vector2:
 	refresh_pegs()
@@ -424,6 +452,7 @@ func get_progress_values() -> Vector2:
 			"get_claimed_turn"
 		):
 			continue
+			
 
 		var claimed_turn: int = int(
 			peg.call(
@@ -533,7 +562,6 @@ func check_for_winner() -> void:
 			< LevelManager.MAX_LEVEL
 		):
 			advance_to_next_peg_level()
-
 		else:
 			end_game(
 				WIN_SCENE_KEY
@@ -552,7 +580,6 @@ func check_for_winner() -> void:
 			end_game(
 				LOSS_SCENE_KEY
 			)
-
 		else:
 			end_game(
 				TRY_AGAIN_SCENE_KEY
@@ -634,7 +661,6 @@ func end_game(
 			END_SCREEN_TRANSITION_DURATION,
 			true
 		)
-
 	else:
 		SceneManager.go(
 			scene_key,
@@ -647,6 +673,9 @@ func fire_ball() -> void:
 		return
 
 	if resolving_ball:
+		return
+
+	if ball_in_play:
 		return
 
 	if GameData.balls_remaining <= 0:
@@ -669,7 +698,7 @@ func fire_ball() -> void:
 				body
 			)
 	)
-
+	
 	if is_ghost_ball:
 		is_ghost_ball = false
 
@@ -679,6 +708,21 @@ func fire_ball() -> void:
 			fired_ball.call(
 				"ghost_ball"
 			)
+		if is_ai_ball_smol == 2:
+			is_ai_ball_smol -= 1
+
+		elif is_ai_ball_smol == 1:
+			is_ai_ball_smol -= 1
+			new_ball.get_node("Sprite2D").scale = Vector2(0.1, 0.1)
+			new_ball.get_node("CollisionShape2D").shape.radius *= 0.5
+
+		else:
+			new_ball.get_node("Sprite2D").scale = Vector2(0.2,0.2)
+			new_ball.get_node("CollisionShape2D").shape.radius =3
+
+	if is_bounce_once:
+		is_bounce_once=false
+		bounce_once.bounce_once()
 
 	configure_ball(
 		fired_ball,
@@ -694,20 +738,16 @@ func configure_ball(
 	fired_ball: RigidBody2D,
 	turn_owner: int
 ) -> void:
-	# Identifies this body as a Peggle ball.
 	fired_ball.set_meta(
 		"is_peggle_ball",
 		true
 	)
 
-	# Prevents one ball from being handled twice.
 	fired_ball.set_meta(
 		"ball_resolved",
 		false
 	)
 
-	# Used by pegs to choose the correct
-	# player or AI animation.
 	fired_ball.set_meta(
 		"ball_owner",
 		get_ball_owner(
@@ -715,7 +755,6 @@ func configure_ball(
 		)
 	)
 
-	# Stores which turn fired this ball.
 	fired_ball.set_meta(
 		"turn_owner",
 		turn_owner
@@ -735,14 +774,43 @@ func catch_ball(
 	body: Node2D,
 	bin_emotion: int
 ) -> void:
-	# The ball entered a bin, so the spent
-	# ball should be refunded.
+	if (
+		body.get_meta(
+			"is_peggle_ball",
+			false
+		) != true
+	):
+		return
+
+	if (
+		body.get_meta(
+			"ball_resolved",
+			false
+		) == true
+	):
+		return
+
+	var ball_owner: int = int(
+		body.get_meta(
+			"turn_owner",
+			current_turn
+		)
+	)
+
+	# Only a player's bin hit creates dialogue
+	# for the following opponent turn.
+	if ball_owner == Turn.PLAYER:
+		pending_dialogue_emotion = (
+			bin_emotion
+		)
+
+	# Both player and opponent bin hits refund
+	# the ball that was spent.
 	resolve_ball(
 		body,
 		true
 	)
 
-	# Emotion indexes use 0 through 3.
 	var sound_index: int = (
 		bin_emotion
 	)
@@ -766,25 +834,52 @@ func destroy_ball(
 	body: Node2D
 ) -> void:
 	# The ball reached the endzone without
-	# entering a bin, so it is not refunded.
+	# entering an emotion bin.
 	resolve_ball(
 		body,
 		false
 	)
 
 
-func missed_bin(
-	body: Node2D
-) -> void:
+func play_pending_opponent_dialogue() -> void:
 	if (
-		body.get_meta(
-			"is_peggle_ball",
-			false
-		) != true
+		pending_dialogue_emotion
+		== NO_PENDING_EMOTION
 	):
 		return
 
-	GameData.current_emotion = 4
+	var emotion_to_play: int = (
+		pending_dialogue_emotion
+	)
+
+	# Clear it before opening the dialogue so
+	# the same response cannot play twice.
+	pending_dialogue_emotion = (
+		NO_PENDING_EMOTION
+	)
+
+	GameData.current_emotion = (
+		emotion_to_play
+	)
+
+	EventBus.dialogue_mood_triggered.emit(
+		emotion_to_play,
+		LevelManager.level
+	)
+
+	# Keep the dialogue visible for the entire
+	# opponent turn.
+	DialogueManager.lock_dialogue()
+
+
+func finish_opponent_turn() -> void:
+	# Close dialogue before returning control
+	# to the player.
+	EventBus.dialogue_mood_hide.emit()
+	DialogueManager.force_close_dialogue()
+
+	current_turn = Turn.PLAYER
+	resolving_ball = false
 
 
 func resolve_ball(
@@ -807,8 +902,8 @@ func resolve_ball(
 	):
 		return
 
-	# Mark it immediately so another Area2D
-	# cannot resolve the same ball again.
+	# Prevent another Area2D from resolving
+	# the same ball.
 	body.set_meta(
 		"ball_resolved",
 		true
@@ -830,7 +925,6 @@ func resolve_ball(
 
 	if should_refund:
 		refund_ball()
-
 	else:
 		var percentage_left: float = 0.0
 
@@ -876,17 +970,21 @@ func finish_ball_resolution(
 	await cannon.play_turn_swap()
 
 	if finished_turn == Turn.PLAYER:
+		# The turn changes to AI first.
 		current_turn = Turn.AI
 		resolving_ball = false
 
+		# Then the stored dialogue opens and locks.
+		play_pending_opponent_dialogue()
+
+		if game_ended:
+			return
+
 		start_ai_turn()
-
 	else:
-		current_turn = Turn.PLAYER
-
-		EventBus.dialogue_mood_hide.emit()
-
-		resolving_ball = false
+		# The AI ball has now resolved.
+		# Close dialogue before changing to player.
+		finish_opponent_turn()
 
 
 func start_ai_turn() -> void:
@@ -896,10 +994,13 @@ func start_ai_turn() -> void:
 	if resolving_ball:
 		return
 
+	if current_turn != Turn.AI:
+		return
+
 	refresh_pegs()
 
 	if all_pegs.is_empty():
-		current_turn = Turn.PLAYER
+		finish_opponent_turn()
 		return
 
 	var target_peg := (
@@ -907,7 +1008,7 @@ func start_ai_turn() -> void:
 	)
 
 	if target_peg == null:
-		current_turn = Turn.PLAYER
+		finish_opponent_turn()
 		return
 
 	await cannon.think_and_aim_at(
