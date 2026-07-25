@@ -1149,25 +1149,20 @@ func _on_ball_body_entered(
 		if spawned_split_ball == null:
 			return
 
-	spawned_split_ball.contact_monitor = true
-	spawned_split_ball.max_contacts_reported = 4
+		spawned_split_ball.contact_monitor = true
+		spawned_split_ball.max_contacts_reported = 4
 
-	spawned_split_ball.body_entered.connect(
-		func(hit_body: Node) -> void:
-			_on_ball_body_entered(
-				spawned_split_ball,
-				hit_body
-			)
-	)
+		spawned_split_ball.body_entered.connect(
+			func(hit_body: Node) -> void:
+				_on_ball_body_entered(
+					spawned_split_ball,
+					hit_body
+				)
+		)
 
-	configure_ball(
-		spawned_split_ball,
-		turn_owner
-	)
-
-	active_balls.append(
-		spawned_split_ball
-	)
+		active_balls.append(
+			spawned_split_ball
+		)
 		configure_ball(
 			spawned_split_ball,
 			turn_owner
