@@ -16,21 +16,23 @@ var _level_dialogue_sequence_running: bool = false
 
 
 # Stores the most recently resolved alignment.
-# This no longer controls every DialogueBox.
+# Each DialogueBox still applies its own alignment
+# locally and remains visually unchanged afterwards.
 var current_dialogue_alignment: String = "right"
 
 
-# Each level contains one or more dialogue chunks.
+# These are the conversations that play before
+# each level begins.
 #
-# Level 1:
-# Chunk 0: First line before Li appears.
-# Chunk 1: Remaining lines from story set 1.
-# Chunk 2: Story set 2.
+# Levels 2 to 4 contain two sets. Calling
+# play_level_dialogue_sequence() plays set 1,
+# then set 2, before emitting level_dialogue_closed.
 #
-# Levels 2 to 5 currently contain one chunk each.
+# Level 5 contains only its pre-game conversation.
+# Its post-win conversation is stored separately.
 var dialogue_level_sets: Dictionary = {
 	1: [
-		# SET 1, FIRST DIALOGUE BOX
+		# INTRO: FIRST ISOLATED LINE
 		[
 			{
 				"align": "left",
@@ -38,7 +40,7 @@ var dialogue_level_sets: Dictionary = {
 			},
 		],
 
-		# SET 1, REMAINING DIALOGUE
+		# INTRO: REMAINDER OF SET 1
 		[
 			{
 				"align": "right",
@@ -58,7 +60,7 @@ var dialogue_level_sets: Dictionary = {
 			},
 		],
 
-		# SET 2
+		# INTRO: SET 2
 		[
 			{
 				"align": "right",
@@ -78,114 +80,219 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "Hit the right emotion, and you get a power-up. ...And if we run out, it's over. A countdown to the end."
+				"text": "Hit the right emotion and you get a power-up. And if we run out, it's over. A countdown to the end."
 			},
 		],
 	],
 
 	2: [
+		# LEVEL 2: SET 1
 		[
 			{
 				"align": "left",
-				"text": "There aren't that many planets left."
+				"text": "So, what happens if I win every round?"
 			},
 			{
 				"align": "right",
-				"text": "I could start fishing for more in some black holes. Fun date idea, right?"
+				"text": "Then we get to spend one more day together."
 			},
 			{
 				"align": "left",
-				"text": "Come on, there's got to be some way to keep this going... Right?"
+				"text": "Only one more? Why not longer?!"
 			},
 			{
 				"align": "right",
-				"text": "I could try cutting the planets in two... Wait, no. Then they would not work as balls."
+				"text": "Because my very existence means I have to keep ending things."
 			},
 			{
 				"align": "left",
-				"text": "Well, we still have not been kicked out of the arcade yet. One more game?"
+				"text": "I know, but there has to be some way to keep this going..."
+			},
+		],
+
+		# LEVEL 2: SET 2
+		[
+			{
+				"align": "left",
+				"text": "Uh... we could start fishing in black holes again? Didn't that work that one time?"
+			},
+			{
+				"align": "right",
+				"text": "There aren't any left."
+			},
+			{
+				"align": "left",
+				"text": "What if you cut the planets in half?"
+			},
+			{
+				"align": "right",
+				"text": "They wouldn't bounce as well."
+			},
+			{
+				"align": "left",
+				"text": "Okay... a few more games, then?"
 			},
 		],
 	],
 
 	3: [
+		# LEVEL 3: SET 1
 		[
 			{
 				"align": "left",
-				"text": "UH, SO... I WISH YOU WOULD JUST STOP WITH THIS NONSENSE."
+				"text": "So many more planets are gone now..."
 			},
 			{
 				"align": "right",
-				"text": "You have no idea what you are talking about."
+				"text": "It's not as though your family was on any of those."
 			},
 			{
 				"align": "left",
-				"text": "YOU ALWAYS SAY THAT. WHY CAN'T YOU JUST STOP?"
+				"text": "You can't say things like that."
 			},
 			{
 				"align": "right",
-				"text": "BECAUSE EVERYTHING WOULD END RIGHT NOW, AND I DO NOT WANT US TO END."
+				"text": "Why not? They've been gone for eons."
 			},
 			{
 				"align": "left",
-				"text": "...Oh, I see."
+				"text": "Because... I wish... YOU WOULD JUST STOP WITH THIS NONSENSE!"
+			},
+		],
+
+		# LEVEL 3: SET 2
+		[
+			{
+				"align": "right",
+				"text": "That's not how this works. You should know that."
+			},
+			{
+				"align": "right",
+				"text": "This cannot be stopped. Not by you. Not by me. It's inevitable."
+			},
+			{
+				"align": "left",
+				"text": "THEN WHY NOT JUST END IT ALREADY?"
+			},
+			{
+				"align": "right",
+				"text": "BECAUSE I AM NOT READY TO SAY GOODBYE YET."
+			},
+			{
+				"align": "left",
+				"text": "..."
 			},
 		],
 	],
 
 	4: [
+		# LEVEL 4: SET 1
 		[
 			{
 				"align": "left",
-				"text": "Please... do not let this end..."
+				"text": "Hey, so... I'm not ready to say goodbye yet either."
 			},
 			{
 				"align": "right",
-				"text": "Look, we both know I have to fulfil my purpose eventually..."
-			},
-			{
-				"align": "left",
-				"text": "There is nothing left after this."
+				"text": "...I suppose I just don't know what will be left after this."
 			},
 			{
 				"align": "right",
-				"text": "No matter what happens, I will always hold you in my hearts."
+				"text": "Everything will be gone. Everyone will be dead. We won't be able to talk anymore."
 			},
 			{
 				"align": "left",
-				"text": "If you are remembered, you are never dead. I guess I WILL be eternal within you."
+				"text": "Oh... I didn't think you actually cared."
+			},
+			{
+				"align": "right",
+				"text": "..."
+			},
+		],
+
+		# LEVEL 4: SET 2
+		[
+			{
+				"align": "right",
+				"text": "Soon, everything will be gone. Everyone will be dead."
+			},
+			{
+				"align": "left",
+				"text": "..."
+			},
+			{
+				"align": "right",
+				"text": "But you'll remain. I won't let you disappear."
+			},
+			{
+				"align": "left",
+				"text": "...But that's so cruel."
+			},
+			{
+				"align": "right",
+				"text": "I just don't want to be alone."
 			},
 		],
 	],
 
 	5: [
+		# LEVEL 5: PRE-GAME SET
 		[
 			{
+				"align": "left",
+				"text": "So, if I win this round, we get another day?"
+			},
+			{
 				"align": "right",
-				"text": "Thank you for winning..."
+				"text": "And I won't have to erase anything else today."
 			},
 			{
 				"align": "left",
-				"text": "So that was it, then?"
+				"text": "Are you sure?"
 			},
 			{
 				"align": "right",
-				"text": "That was it. I guess we will just have to play again tomorrow."
+				"text": "Yes. Thank you for not losing all the planets yet."
 			},
 			{
 				"align": "left",
-				"text": "...What do we do when we play for the final world?"
-			},
-			{
-				"align": "right",
-				"text": "Enjoy it."
+				"text": "Thank you for telling me how you felt."
 			},
 		],
 	],
 }
 
 
-# Contains the currently active flat dialogue chunk.
+# Dialogue that plays only after winning its level.
+# This is kept separate so it does not play before
+# the final round begins.
+var post_win_dialogue_sets: Dictionary = {
+	5: [
+		{
+			"align": "right",
+			"text": "Maybe we can play something else until tomorrow."
+		},
+		{
+			"align": "left",
+			"text": "That would be nice."
+		},
+		{
+			"align": "right",
+			"text": "Every second we spend together is nice."
+		},
+		{
+			"align": "left",
+			"text": "But what do we do when we play for the final world?"
+		},
+		{
+			"align": "right",
+			"text": "Enjoy it."
+		},
+	],
+}
+
+
+# Contains the currently active flat dialogue set.
 var dialogue_levels: Dictionary = {}
 
 
@@ -245,7 +352,6 @@ func _ready() -> void:
 	_prepare_first_dialogue_sets()
 
 
-# DialogueBox uses this before processing a click.
 func can_accept_dialogue_input() -> bool:
 	return (
 		_dialogue_box_displayed
@@ -331,10 +437,31 @@ func _load_level_dialogue_set(
 	return true
 
 
+func _load_post_win_dialogue_set(
+	level_number: int
+) -> bool:
+	var dialogue_set: Array = (
+		post_win_dialogue_sets.get(
+			level_number,
+			[]
+		)
+	)
+
+	if dialogue_set.is_empty():
+		return false
+
+	dialogue_levels[level_number] = (
+		dialogue_set.duplicate(
+			true
+		)
+	)
+
+	return true
+
+
 # Returns the alignment for one specific line.
-#
-# It does not emit a signal, so other existing
-# DialogueBox nodes remain unchanged.
+# It does not emit a global signal, so existing
+# dialogue boxes retain their original appearance.
 func get_alignment_for_dialogue_text(
 	dialogue_text: String
 ) -> String:
@@ -387,8 +514,8 @@ func get_alignment_for_dialogue_text(
 
 		return entry_alignment
 
-	# Mood dialogue and unknown dialogue use
-	# the right-side appearance.
+	# Mood dialogue and unknown text use the
+	# right-side appearance.
 	current_dialogue_alignment = "right"
 
 	return "right"
@@ -523,6 +650,47 @@ func play_level_dialogue_sequence(
 	_level_dialogue_sequence_running = false
 
 	level_dialogue_closed.emit()
+
+
+# Plays dialogue stored in post_win_dialogue_sets.
+# It does not emit level_dialogue_closed because
+# gameplay must not resume after the final ending.
+func play_post_win_dialogue(
+	level_number: int
+) -> void:
+	if LevelManager.level != level_number:
+		return
+
+	_dialogue_box_displayed = false
+	_dialogue_input_locked = true
+
+	dialogue_levels[level_number] = []
+
+	current_dialogue_alignment = "right"
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	await get_tree().create_timer(
+		LEVEL_DIALOGUE_CHUNK_GAP
+	).timeout
+
+	if not _load_post_win_dialogue_set(
+		level_number
+	):
+		return
+
+	_dialogue_input_locked = false
+
+	EventBus.dialogue_level_triggered.emit(
+		level_number
+	)
+
+	await level_dialogue_set_closed
+
+	await get_tree().create_timer(
+		LEVEL_DIALOGUE_CHUNK_GAP
+	).timeout
 
 
 func open_dialogue() -> void:

@@ -30,6 +30,8 @@ func _ready() -> void:
 		0.1
 	).timeout
 
+	# This controller only performs the special
+	# level 1 introduction.
 	if LevelManager.level != 1:
 		main_character.modulate.a = 1.0
 		li.modulate.a = 1.0
@@ -41,32 +43,29 @@ func _ready() -> void:
 		main_character_fade_duration
 	)
 
-	# Chunk 0:
-	# Play the main character's isolated first line.
+	# Level 1, chunk 0:
+	# Main character's isolated opening line.
 	await DialogueManager.play_level_dialogue_set(
 		LevelManager.level,
 		0
 	)
 
-	# Fade in Li after the first dialogue box closes.
+	# Reveal Li after the opening line closes.
 	await fade_in_character(
 		li,
 		li_fade_duration
 	)
 
-	# Chunk 1:
-	# Play the remainder of the first conversation.
+	# Level 1, chunk 1:
+	# Remainder of the first conversation.
 	await DialogueManager.play_level_dialogue_set(
 		LevelManager.level,
 		1
 	)
 
-	# Chunk 2:
-	# Fully reset the level-dialogue state, then
-	# start set 2 as completely fresh level dialogue.
-	#
-	# This emits level_dialogue_closed after set 2
-	# finishes, allowing the Peggle board to appear.
+	# Level 1, chunk 2:
+	# Restart the dialogue UI and play the tutorial
+	# conversation as a fresh set.
 	await DialogueManager.restart_level_dialogue_from_set(
 		LevelManager.level,
 		2,
