@@ -167,7 +167,8 @@ func _ready() -> void:
 
 func _apply_power_up() -> void:
 	if PowerUpManager.active_power_up == PowerUpManager.power_ups.ghost_ball:
-		is_ghost_ball = true
+		if current_turn == Turn.PLAYER:
+			is_ghost_ball = true
 	if PowerUpManager.active_power_up == PowerUpManager.power_ups.split_ball:
 		is_split_ball = true
 
@@ -945,7 +946,7 @@ func _on_ball_body_entered(
 	current_ball: RigidBody2D,
 	_body: Node
 ) -> void:
-	if not is_split_ball:
+	if not is_split_ball or current_turn == Turn.AI:
 		return
 
 	is_split_ball = false
