@@ -114,10 +114,7 @@ animations = [{
 editor_description = "A prototype peggleboard (with placeholder art)"
 script = ExtResource("1_g8rvb")
 peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLevel3"), NodePath("PegsLevel4"), NodePath("PegsLevel5")]
-peg_hit_sfx = ExtResource("3_42h65")
-cannon_fire_sfx = ExtResource("3_42h65")
-sfx_max_scale = 2.0
-bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), ExtResource("3_42h65"), ExtResource("6_pr6su")])
+bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), null, ExtResource("6_pr6su")])
 
 [node name="PeggleBallShooter" parent="." unique_id=345197782 instance=ExtResource("3_s3sbd")]
 z_index = 1
@@ -130,7 +127,6 @@ rare_fire_pitch = 0.30000000000000004
 libraries/PEGGLE_CANNON = SubResource("AnimationLibrary_s3sbd")
 
 [node name="PegsLevel1" type="Node2D" parent="." unique_id=200026943]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel1" unique_id=1411103836 instance=ExtResource("4_ryebi")]
