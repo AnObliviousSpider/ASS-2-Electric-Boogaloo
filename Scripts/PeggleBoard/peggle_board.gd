@@ -15,88 +15,84 @@ const WIN_SCENE_KEY: String = "win_screen"
 const LOSS_SCENE_KEY: String = "loss_screen"
 const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
+
 # COLLISION INFORMATION
 # Layer 1: Walls
 # Layer 2: Pegs
 # Layer 3: Ball
 # Layer 4: Bin
 
-# BALL
-@export var ball: PackedScene
 
 # PEG LEVELS
 # Assign PegsLevel1 through PegsLevel5 in order.
+
 @export var peg_levels: Array[Node2D] = []
 
-# AUDIO
-@export var cannon_fire_sfx: AudioStream
 
-# CANNON NODES
-@onready var peggle_ball_shooter: Node2D = (
+# CANNON
+
+@onready var cannon: PeggleCannon = (
 	$PeggleBallShooter
 )
-@onready var peggle_ball_barrel: Sprite2D = (
-	$PeggleBallShooter/PeggleBallBarrel
-)
-@onready var peggle_ball_firing_point: Node2D = (
-	$PeggleBallShooter/PeggleBallBarrel/PeggleBallFiringPoint
-)
-@onready var flash_cooldown: Timer = (
-	$PeggleBallShooter/FlashCooldown
-)
-@onready var peggle_ball_animation_player: AnimationPlayer = (
-	$PeggleBallShooter/PeggleBallAnimationPlayer
-)
+
 
 # BALL REMOVAL NODES
+
 @onready var endzone: Area2D = $Endzone
 @onready var ball_bin: PeggleBallBin = %Bin
 @onready var bins: Node2D = $Bins
 
+
 # INTERFACE NODES
+
 @onready var player_progress_bar: ProgressBar = (
 	$ProgressBar
 )
+
 @onready var ai_progress_bar: ProgressBar = (
 	$ProgressBar2
 )
-@onready var ball_bar: ProgressBar = $BallBar
-@onready var counting_label: Label = $CountingLabel
 
-# SHOOTING
-@export var shoot_offset: Vector2 = Vector2.ZERO
-@export var shoot_strength: float = 100.0
-@export_range(0, 180, 1) var left_turn_limit: int = 165
-@export_range(0, 180, 1) var right_turn_limit: int = 15
+@onready var ball_bar: ProgressBar = (
+	$BallBar
+)
 
-var shoot_direction: Vector2
+@onready var counting_label: Label = (
+	$CountingLabel
+)
+
 
 # AI
+
 @export var ai_aim_time: float = 0.75
 
+
 # PROGRESS BARS
+
 @export var progress_bar_duration: float = 0.75
 
+
 # ROUND STATE
+
 var current_turn: int = Turn.PLAYER
 var ball_in_play: bool = false
 var resolving_ball: bool = false
 var game_ended: bool = false
 
+
 # PEG DATA
+
 var active_peg_level: Node2D
 var all_pegs: Array[Node] = []
 var total_peg_count: int = 0
 
 var progress_tween: Tween
 
+
 # POWER-UPS
+
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
-
-# SPAWNED BALLS
-var new_ball: RigidBody2D
-var split_ball: RigidBody2D
 
 
 func _ready() -> void:
@@ -110,13 +106,8 @@ func _ready() -> void:
 				catch_ball
 			)
 
-	peggle_ball_shooter.rotation = (
-		deg_to_rad(90)
-	)
-
 	setup_ball_counter()
 
-	# Show the peg layout for the current level.
 	show_peg_level(
 		LevelManager.level
 	)
@@ -135,8 +126,11 @@ func _process(_delta: float) -> void:
 		current_turn == Turn.PLAYER
 		and not ball_in_play
 	):
-		aim_shooter_at(
-			get_global_mouse_position()
+		# Show the trajectory while the
+		# player aims with the mouse.
+		cannon.aim_at(
+			get_global_mouse_position(),
+			true
 		)
 
 
@@ -172,11 +166,13 @@ func setup_ball_counter() -> void:
 
 func use_ball() -> void:
 	GameData.use_ball()
+
 	update_ball_counter()
 
 
 func refund_ball() -> void:
 	GameData.refund_ball()
+
 	update_ball_counter()
 
 
@@ -196,7 +192,9 @@ func update_ball_counter() -> void:
 	)
 
 
-func show_peg_level(level_number: int) -> void:
+func show_peg_level(
+	level_number: int
+) -> void:
 	if peg_levels.is_empty():
 		push_error(
 			"No peg level nodes were assigned."
@@ -209,11 +207,12 @@ func show_peg_level(level_number: int) -> void:
 		peg_levels.size() - 1
 	)
 
-	# Hide and disable every peg layout.
 	for index: int in range(
 		peg_levels.size()
 	):
-		var peg_level: Node2D = peg_levels[index]
+		var peg_level: Node2D = (
+			peg_levels[index]
+		)
 
 		if peg_level == null:
 			continue
@@ -228,6 +227,7 @@ func show_peg_level(level_number: int) -> void:
 			peg_level.process_mode = (
 				Node.PROCESS_MODE_INHERIT
 			)
+
 		else:
 			peg_level.process_mode = (
 				Node.PROCESS_MODE_DISABLED
@@ -238,7 +238,9 @@ func show_peg_level(level_number: int) -> void:
 			is_active
 		)
 
-	active_peg_level = peg_levels[level_index]
+	active_peg_level = (
+		peg_levels[level_index]
+	)
 
 	refresh_pegs()
 
@@ -247,8 +249,6 @@ func _set_level_collisions_enabled(
 	node: Node,
 	enabled: bool
 ) -> void:
-	# Hiding a Node2D does not disable physics,
-	# so its collision shapes must also be disabled.
 	for child: Node in node.get_children():
 		if child is CollisionShape2D:
 			child.set_deferred(
@@ -290,25 +290,28 @@ func refresh_pegs() -> void:
 func _collect_pegs(node: Node) -> void:
 	for child: Node in node.get_children():
 		if child.is_in_group("pegs"):
-			all_pegs.append(child)
+			all_pegs.append(
+				child
+			)
 
-		_collect_pegs(child)
+		_collect_pegs(
+			child
+		)
 
 
 func reset_current_round() -> void:
-	# Stop an old progress animation.
 	if progress_tween != null:
 		progress_tween.kill()
 		progress_tween = null
 
 	refresh_pegs()
 
-	# Reset every active peg.
 	for peg: Node in all_pegs:
 		if peg.has_method("reset_peg"):
-			peg.call("reset_peg")
+			peg.call(
+				"reset_peg"
+			)
 
-	# Reset the progress bars.
 	player_progress_bar.min_value = 0.0
 	player_progress_bar.max_value = 100.0
 	player_progress_bar.value = 0.0
@@ -317,7 +320,6 @@ func reset_current_round() -> void:
 	ai_progress_bar.max_value = 100.0
 	ai_progress_bar.value = 0.0
 
-	# Reset the turn.
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
@@ -339,11 +341,14 @@ func get_progress_values() -> Vector2:
 			continue
 
 		var claimed_turn: int = int(
-			peg.call("get_claimed_turn")
+			peg.call(
+				"get_claimed_turn"
+			)
 		)
 
 		if claimed_turn == Turn.PLAYER:
 			player_peg_count += 1
+
 		elif claimed_turn == Turn.AI:
 			ai_peg_count += 1
 
@@ -369,7 +374,9 @@ func animate_progress_bars() -> void:
 		progress_tween.kill()
 
 	progress_tween = create_tween()
-	progress_tween.set_parallel(true)
+	progress_tween.set_parallel(
+		true
+	)
 
 	progress_tween.tween_property(
 		player_progress_bar,
@@ -416,7 +423,9 @@ func get_progress_percentage(
 
 	return clampf(
 		float(claimed_peg_count)
-			/ float(pegs_required_for_full_bar)
+			/ float(
+				pegs_required_for_full_bar
+			)
 			* 100.0,
 		0.0,
 		100.0
@@ -424,7 +433,6 @@ func get_progress_percentage(
 
 
 func check_for_winner() -> void:
-	# Player wins the current peg level.
 	if (
 		player_progress_bar.value
 		>= player_progress_bar.max_value
@@ -434,21 +442,21 @@ func check_for_winner() -> void:
 			< LevelManager.MAX_LEVEL
 		):
 			advance_to_next_peg_level()
+
 		else:
 			end_game(
 				WIN_SCENE_KEY
 			)
 
-	# AI wins the current peg level.
 	elif (
 		ai_progress_bar.value
 		>= ai_progress_bar.max_value
 	):
-		# Zero balls always opens the loss screen.
 		if GameData.balls_remaining <= 0:
 			end_game(
 				LOSS_SCENE_KEY
 			)
+
 		else:
 			restart_current_peg_level()
 
@@ -459,25 +467,20 @@ func advance_to_next_peg_level() -> void:
 
 	game_ended = true
 
-	# Fade out the board before changing pegs.
 	await fade_out_board()
 
-	# Advance the level number.
 	LevelManager.set_level(
 		LevelManager.level + 1
 	)
 
-	# Switch to the next group of pegs.
 	show_peg_level(
 		LevelManager.level
 	)
 
 	reset_current_round()
 
-	# Allow gameplay after dialogue opens.
 	game_ended = false
 
-	# Start the next level dialogue.
 	EventBus.dialogue_level_triggered.emit(
 		LevelManager.level
 	)
@@ -489,10 +492,8 @@ func restart_current_peg_level() -> void:
 
 	game_ended = true
 
-	# Fade the board out.
 	await fade_out_board()
 
-	# Keep the same level and reset its pegs.
 	show_peg_level(
 		LevelManager.level
 	)
@@ -501,7 +502,6 @@ func restart_current_peg_level() -> void:
 
 	game_ended = false
 
-	# Replay the current level dialogue.
 	EventBus.dialogue_level_triggered.emit(
 		LevelManager.level
 	)
@@ -528,33 +528,18 @@ func end_game(scene_key: String) -> void:
 
 	await fade_out_board()
 
-	# Only the final win and zero balls
-	# cause a full scene transition.
 	if scene_key == WIN_SCENE_KEY:
 		SceneManager.go(
 			WIN_SCENE_KEY,
 			END_SCREEN_TRANSITION_DURATION,
 			true
 		)
+
 	else:
 		SceneManager.go(
 			LOSS_SCENE_KEY,
 			END_SCREEN_TRANSITION_DURATION
 		)
-
-
-func aim_shooter_at(
-	target_position: Vector2
-) -> void:
-	peggle_ball_shooter.look_at(
-		target_position
-	)
-
-	peggle_ball_shooter.rotation = clampf(
-		peggle_ball_shooter.rotation,
-		deg_to_rad(right_turn_limit),
-		deg_to_rad(left_turn_limit)
-	)
 
 
 func fire_ball(
@@ -566,108 +551,83 @@ func fire_ball(
 	if resolving_ball:
 		return
 
-	# Zero balls opens the loss screen.
 	if GameData.balls_remaining <= 0:
 		end_game(
 			LOSS_SCENE_KEY
 		)
 		return
 
-	new_ball = (
-		ball.instantiate() as RigidBody2D
+	var fired_ball: RigidBody2D = (
+		cannon.fire_at(
+			target_position
+		)
 	)
 
-	if new_ball == null:
-		push_error(
-			"The assigned ball scene must use a RigidBody2D root."
-		)
+	if fired_ball == null:
 		return
 
-	get_tree().current_scene.add_child(
-		new_ball
-	)
-
-	new_ball.body_entered.connect(
+	fired_ball.body_entered.connect(
 		func(body: Node) -> void:
 			_on_ball_body_entered(
-				new_ball,
+				fired_ball,
 				body
 			)
 	)
 
 	if is_ghost_ball:
 		is_ghost_ball = false
-		new_ball.ghost_ball()
 
-	new_ball.global_position = (
-		peggle_ball_firing_point.global_position
-			+ shoot_offset
-	)
+		if fired_ball.has_method(
+			"ghost_ball"
+		):
+			fired_ball.call(
+				"ghost_ball"
+			)
 
-	new_ball.set_meta(
-		"is_peggle_ball",
-		true
-	)
-
-	new_ball.set_meta(
-		"ball_resolved",
-		false
-	)
-
-	new_ball.set_meta(
-		"ball_owner",
-		get_current_ball_owner()
-	)
-
-	new_ball.set_meta(
-		"turn_owner",
+	configure_ball(
+		fired_ball,
 		current_turn
-	)
-
-	shoot_direction = (
-		peggle_ball_firing_point.global_position
-		.direction_to(target_position)
-	)
-
-	new_ball.apply_central_impulse(
-		shoot_strength * shoot_direction
 	)
 
 	ball_in_play = true
 
 	use_ball()
-	game_feel()
 
 
-func get_current_ball_owner() -> String:
-	if current_turn == Turn.PLAYER:
+func configure_ball(
+	fired_ball: RigidBody2D,
+	turn_owner: int
+) -> void:
+	fired_ball.set_meta(
+		"is_peggle_ball",
+		true
+	)
+
+	fired_ball.set_meta(
+		"ball_resolved",
+		false
+	)
+
+	fired_ball.set_meta(
+		"ball_owner",
+		get_ball_owner(
+			turn_owner
+		)
+	)
+
+	fired_ball.set_meta(
+		"turn_owner",
+		turn_owner
+	)
+
+
+func get_ball_owner(
+	turn_owner: int
+) -> String:
+	if turn_owner == Turn.PLAYER:
 		return "player"
 
 	return "ai"
-
-
-func game_feel() -> void:
-	peggle_ball_barrel.modulate = Color(
-		2,
-		2,
-		2
-	)
-
-	if peggle_ball_animation_player.is_playing():
-		peggle_ball_animation_player.play(
-			"RESET"
-		)
-
-	peggle_ball_animation_player.play(
-		"CANNON_FIRE"
-	)
-
-	flash_cooldown.start()
-
-	if cannon_fire_sfx != null:
-		SfxPlayer.play(
-			cannon_fire_sfx
-		)
 
 
 func catch_ball(
@@ -728,6 +688,7 @@ func resolve_ball(
 
 	if should_refund:
 		refund_ball()
+
 	else:
 		var percentage_left: float = 0.0
 
@@ -762,9 +723,9 @@ func finish_ball_resolution(
 		resolving_ball = false
 		return
 
-	# Zero balls is the only loss condition.
 	if GameData.balls_remaining <= 0:
 		resolving_ball = false
+
 		end_game(
 			LOSS_SCENE_KEY
 		)
@@ -773,7 +734,9 @@ func finish_ball_resolution(
 	if finished_turn == Turn.PLAYER:
 		current_turn = Turn.AI
 		resolving_ball = false
+
 		start_ai_turn()
+
 	else:
 		current_turn = Turn.PLAYER
 		resolving_ball = false
@@ -800,8 +763,10 @@ func start_ai_turn() -> void:
 		current_turn = Turn.PLAYER
 		return
 
-	aim_shooter_at(
-		target_peg.global_position
+	# Aim without showing the trajectory line.
+	cannon.aim_at(
+		target_peg.global_position,
+		false
 	)
 
 	await get_tree().create_timer(
@@ -826,37 +791,33 @@ func start_ai_turn() -> void:
 	)
 
 
-func _on_flash_cooldown_timeout() -> void:
-	peggle_ball_barrel.modulate = Color.WHITE
-
-	peggle_ball_animation_player.play(
-		"RESET"
-	)
-
-
 func _on_ball_body_entered(
 	current_ball: RigidBody2D,
 	_body: Node
 ) -> void:
-	if is_split_ball:
-		is_split_ball = false
+	if not is_split_ball:
+		return
 
-		split_ball = (
-			ball.instantiate() as RigidBody2D
+	is_split_ball = false
+
+	var turn_owner: int = int(
+		current_ball.get_meta(
+			"turn_owner",
+			current_turn
 		)
+	)
 
-		if split_ball == null:
-			return
-
-		get_tree().current_scene.add_child(
-			split_ball
+	var spawned_split_ball: RigidBody2D = (
+		cannon.fire_extra_ball(
+			current_ball.global_position,
+			cannon.last_shoot_direction
 		)
+	)
 
-		split_ball.global_position = (
-			current_ball.global_position
-				+ shoot_offset
-		)
+	if spawned_split_ball == null:
+		return
 
-		split_ball.apply_central_impulse(
-			shoot_strength * shoot_direction
-		)
+	configure_ball(
+		spawned_split_ball,
+		turn_owner
+	)

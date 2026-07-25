@@ -1,7 +1,14 @@
 [gd_scene format=3 uid="uid://6u1m71svqmc6"]
 
-[ext_resource type="Texture2D" uid="uid://blyqjy2v1o80x" path="res://Assets/Art/Game/PeggleBoard/Cannon rim.png" id="1_hqqx0"]
-[ext_resource type="Texture2D" uid="uid://dk4xq22h4saw1" path="res://Assets/Art/Game/PeggleBoard/Cannon barrel.png" id="2_y8aek"]
+[ext_resource type="Script" uid="uid://b0qqpa1spbw2c" path="res://Scripts/PeggleBoard/Cannon/peggle_ball_shooter.gd" id="1_hdkc6"]
+[ext_resource type="Texture2D" uid="uid://bnoji8gsssb04" path="res://Assets/Art/Cannon/Cannon_New.png" id="2_hdkc6"]
+[ext_resource type="PackedScene" uid="uid://hxtqjqdwxevl" path="res://Scenes/PeggleBoard/Ball/peggle_ball.tscn" id="2_vr734"]
+[ext_resource type="AudioStream" uid="uid://dsytf7gugvqu3" path="res://Assets/Audio/SFX/Pop (1).mp3" id="3_ltsw1"]
+[ext_resource type="Texture2D" uid="uid://cf3biwtknct5" path="res://Assets/Art/Cannon/Cannon inside.png" id="3_vr734"]
+[ext_resource type="Texture2D" uid="uid://7yyyymigyqrc" path="res://Assets/Art/Cannon/Eye.png" id="6_u7u7o"]
+[ext_resource type="Texture2D" uid="uid://bxfuodh2hfv5v" path="res://Assets/Art/Cannon/Eye_closed.png" id="7_dcon5"]
+[ext_resource type="Texture2D" uid="uid://cju084w7bqsk3" path="res://Assets/Art/Cannon/EyePupil.png" id="8_soxyr"]
+[ext_resource type="Script" uid="uid://vmokh7ui80mb" path="res://Scripts/PeggleBoard/eye_pupil.gd" id="9_imest"]
 
 [sub_resource type="Animation" id="Animation_hqqx0"]
 resource_name = "CANNON_FIRE"
@@ -64,17 +71,40 @@ _data = {
 &"RESET": SubResource("Animation_y8aek")
 }
 
-[node name="PeggleBallShooter" type="Node2D" unique_id=1839521812]
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7u7o"]
+atlas = ExtResource("6_u7u7o")
+region = Rect2(0, 0, 160, 125)
 
-[node name="PeggleBallBase" type="Sprite2D" parent="." unique_id=345197782]
-scale = Vector2(0.22, 0.22)
-texture = ExtResource("1_hqqx0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_dcon5"]
+atlas = ExtResource("7_dcon5")
+region = Rect2(0, 0, 160, 125)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yufna"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u7u7o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dcon5")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="PeggleBallShooter" type="Node2D" unique_id=1839521812]
+script = ExtResource("1_hdkc6")
+ball_scene = ExtResource("2_vr734")
+trajectory_max_bounces = 2
+recoil_distance = 8.0
+recoil_return_duration = 0.2
+cannon_fire_sfx = ExtResource("3_ltsw1")
 
 [node name="PeggleBallBarrel" type="Sprite2D" parent="." unique_id=1449746995]
-position = Vector2(0, -1)
-rotation = 4.712389
+position = Vector2(0, 13)
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_y8aek")
+texture = ExtResource("2_hdkc6")
 
 [node name="PeggleBallFiringPoint" type="Node2D" parent="PeggleBallBarrel" unique_id=1606232759]
 position = Vector2(1.0489944e-06, 88)
@@ -85,3 +115,20 @@ libraries/ = SubResource("AnimationLibrary_hdkc6")
 [node name="FlashCooldown" type="Timer" parent="." unique_id=1384966503]
 wait_time = 0.2
 one_shot = true
+
+[node name="Eye" type="AnimatedSprite2D" parent="." unique_id=1628992134]
+scale = Vector2(0.7, 0.7)
+sprite_frames = SubResource("SpriteFrames_yufna")
+
+[node name="EyePupil" type="Sprite2D" parent="Eye" unique_id=1229513750]
+texture = ExtResource("8_soxyr")
+script = ExtResource("9_imest")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=112973309]
+position = Vector2(0, 3.9999998)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_vr734")
+
+[node name="TrajectoryLine" type="Line2D" parent="." unique_id=256294385]
+width = 2.0
+default_color = Color(1, 1, 1, 0.25882354)
