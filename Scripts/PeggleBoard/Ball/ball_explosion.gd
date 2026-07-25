@@ -1,5 +1,7 @@
 class_name BallExplosion extends Area2D
 
+@export var soundfx : AudioStream
+
 @onready var sprite_2d: Sprite2D = $Sprite2D
 
 var scale_tween : Tween
@@ -11,6 +13,7 @@ func _ready() -> void:
 	scale_tween.tween_callback(shrink_explostion)
 	await get_tree().physics_frame
 	await get_tree().physics_frame
+	SfxPlayer.play(soundfx)
 
 	for body in self.get_overlapping_bodies():
 		if body is PegglePeg:
