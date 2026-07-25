@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b05yad54fqqov"]
+
+[ext_resource type="Script" uid="uid://c4o6gk4wosikm" path="res://Scripts/PeggleBoard/Ball/ball_explosion.gd" id="1_ltmvt"]
+[ext_resource type="Texture2D" uid="uid://6nowch8l0g5w" path="res://Assets/Art/Background/Planets/blue_planet_placeholder.png" id="1_uux7y"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hfg1r"]
+radius = 35.0
+
+[node name="BallExplosion" type="Area2D" unique_id=1675967453]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_ltmvt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1621188786]
+shape = SubResource("CircleShape2D_hfg1r")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=757685762]
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("1_uux7y")
