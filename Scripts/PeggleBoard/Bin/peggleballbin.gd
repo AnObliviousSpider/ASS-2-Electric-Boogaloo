@@ -21,53 +21,99 @@ var light_vfx_tween : Tween
 @export_enum("Happy", "Dejected", "Flirty", "Angry") var what_emotion_to_respond_with: int = 0 :
 	set(value):
 		what_emotion_to_respond_with = value
+
 		if $Sprite2D and GameData.emotions.keys()[what_emotion_to_respond_with]:
 			set_emotion()
 
 
 func set_emotion() -> void:
-	$Sprite2D.texture = load("res://Assets/Art/Game/BinSprites/" + GameData.emotions.keys()[what_emotion_to_respond_with] + "Bin.png")
-	animated_sprite.sprite_frames = load("res://Resources/Art/Game/BinSpriteFrames/" + GameData.emotions.keys()[what_emotion_to_respond_with] + "BinSpin.tres")
+	$Sprite2D.texture = load(
+		"res://Assets/Art/Game/BinSprites/"
+			+ GameData.emotions.keys()[what_emotion_to_respond_with]
+			+ "Bin.png"
+	)
+
+	animated_sprite.sprite_frames = load(
+		"res://Resources/Art/Game/BinSpriteFrames/"
+			+ GameData.emotions.keys()[what_emotion_to_respond_with]
+			+ "BinSpin.tres"
+	)
+
 
 func _ready() -> void:
 	set_emotion()
+
+	# Everything below this line is gameplay wiring -
+	# connecting to the GameData autoload's signals,
+	# listening for balls, playing tweens. This script
+	# is @tool so it also runs while editing the scene
+	# in the editor, and the GameData autoload isn't
+	# guaranteed to be in a valid, fully-loaded state
+	# at that point. Running this code while editing
+	# was the actual cause of the
+	# "Invalid access to property or key 'emotion_changed'"
+	# errors, so we skip it entirely outside of a
+	# running game.
+	if Engine.is_editor_hint():
+		return
+
 	body_entered.connect(_on_body_entered)
+
 	if GameData:
-		GameData.emotion_changed.connect(on_active_emotion_changed)
+		GameData.emotion_changed.connect(
+			on_active_emotion_changed
+		)
+
 
 func on_active_emotion_changed(emotion_index: int) -> void:
 	if emotion_index == what_emotion_to_respond_with:
 		bin_active = true
 		animated_sprite.visible = true
 		animated_sprite.play("default")
+
 		if light_vfx_tween and light_vfx_tween.is_valid():
 			light_vfx_tween.kill()
+
 		light_vfx_tween = create_tween()
-		light_vfx_tween.tween_property(light_vfx, "modulate:a", 1.0, fade_in_duration)
+		light_vfx_tween.tween_property(
+			light_vfx,
+			"modulate:a",
+			1.0,
+			fade_in_duration
+		)
+
 	else:
 		bin_active = false
 		animated_sprite.visible = false
+
 		if light_vfx_tween and light_vfx_tween.is_valid():
 			light_vfx_tween.kill()
+
 		light_vfx_tween = create_tween()
-		light_vfx_tween.tween_property(light_vfx, "modulate:a", 0.0, fade_out_duration)
+		light_vfx_tween.tween_property(
+			light_vfx,
+			"modulate:a",
+			0.0,
+			fade_out_duration
+		)
+
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.get_meta("is_peggle_ball", false) != true:
 		return
-	
+
 	if body.get_meta("ball_resolved", false) == true:
 		return
-	
+
 	ball_caught.emit(body, what_emotion_to_respond_with)
 	SfxPlayer.play(emotion_sound)
 	EventBus.dialogue_mood_triggered.emit(what_emotion_to_respond_with, LevelManager.level)
 	animation_player.play("ball_caught")
-	
+
 	GameData.current_emotion = what_emotion_to_respond_with
-	
+
 	GameData.ball_entered_bin.emit()
-	
+
 	if bin_active:
 		# give powerup
 		pass
