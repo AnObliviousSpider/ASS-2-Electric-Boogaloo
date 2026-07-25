@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cmvatd14ckwn7"
+path="res://.godot/imported/Sad Bin.mp3-6f2c721a7d2e9e6f0ce2fc4da5eccb83.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Sad Bin.mp3"
+dest_files=["res://.godot/imported/Sad Bin.mp3-6f2c721a7d2e9e6f0ce2fc4da5eccb83.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

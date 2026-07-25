@@ -34,9 +34,15 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 # AUDIO
 @export_group("Audio")
 
+# Emotions Int
+# 1. Happy
+# 2. Sad/Dejected
+# 3. Flirty - ADD THIS PLEASE!!
+# 4. Angry
 @export var peg_hit_sfx: AudioStream
 @export var cannon_fire_sfx: AudioStream
 @export var sfx_max_scale: float
+@export var bin_emotion_sfx: Array[AudioStream]
 
 # CANNON NODES
 
@@ -716,12 +722,13 @@ func game_feel() -> void:
 
 func catch_ball(
 	body: Node2D,
-	_bin_emotion: int
+	bin_emotion: int
 ) -> void:
 	resolve_ball(
 		body,
 		true
 	)
+	SfxPlayer.play(bin_emotion_sfx[bin_emotion])
 
 
 func destroy_ball(
