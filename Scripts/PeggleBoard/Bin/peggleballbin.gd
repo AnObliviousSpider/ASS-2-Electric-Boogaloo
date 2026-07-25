@@ -31,8 +31,6 @@ var what_emotion_to_respond_with: int = 0:
 			set_emotion()
 
 
-# CHILD NODES
-
 @onready var bin_sprite: Sprite2D = (
 	$Sprite2D
 )
@@ -47,16 +45,12 @@ var what_emotion_to_respond_with: int = 0:
 
 
 var bin_active: bool = false
-
 var light_vfx_tween: Tween
 
 
 func _ready() -> void:
 	set_emotion()
 
-	# This script runs in the editor because
-	# it uses @tool. Gameplay signals should
-	# only be connected while the game runs.
 	if Engine.is_editor_hint():
 		return
 
@@ -129,7 +123,6 @@ func set_emotion() -> void:
 			"Could not load bin texture: %s"
 			% bin_texture_path
 		)
-
 	else:
 		bin_sprite.texture = bin_texture
 
@@ -138,7 +131,6 @@ func set_emotion() -> void:
 			"Could not load bin animation: %s"
 			% animation_path
 		)
-
 	else:
 		animated_sprite.sprite_frames = (
 			sprite_frames
@@ -164,10 +156,8 @@ func on_active_emotion_changed(
 			1.0,
 			fade_in_duration
 		)
-
 	else:
 		animated_sprite.visible = false
-
 		animated_sprite.stop()
 
 		fade_light_to(
@@ -202,7 +192,6 @@ func fade_light_to(
 func _on_body_entered(
 	body: Node2D
 ) -> void:
-	# Ignore anything that is not a Peggle ball.
 	if (
 		body.get_meta(
 			"is_peggle_ball",
@@ -211,8 +200,6 @@ func _on_body_entered(
 	):
 		return
 
-	# Ignore balls that have already entered
-	# another bin or the endzone.
 	if (
 		body.get_meta(
 			"ball_resolved",
@@ -220,9 +207,25 @@ func _on_body_entered(
 		) == true
 	):
 		return
+		
+	if bin_active:
+		# Give power-up.
+		if what_emotion_to_respond_with == 0:
+			#	"Happy",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[1]) # split ball
+		if what_emotion_to_respond_with == 1:
+			# 	"Dejected",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[0]) # ghost ball
+		if what_emotion_to_respond_with == 2:
+			# 	"Flirty",
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[3]) # bounce ball
+		if what_emotion_to_respond_with == 3:
+			# 	"Angry"
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[2]) # blast ball
+		
 
-	# Tell the Peggle board which ball entered
-	# and which emotion this bin represents.
+	# The board decides whether this hit should
+	# produce dialogue based on who fired the ball.
 	ball_caught.emit(
 		body,
 		what_emotion_to_respond_with
@@ -233,19 +236,14 @@ func _on_body_entered(
 			emotion_sound
 		)
 
-	EventBus.dialogue_mood_triggered.emit(
-		what_emotion_to_respond_with,
-		LevelManager.level
-	)
-
 	animation_player.play(
 		"ball_caught"
 	)
 
+	if bin_active:
+		# Give power-up here.
+		pass
+
 	GameData.current_emotion = (
 		what_emotion_to_respond_with
 	)
-
-	if bin_active:
-		# Give power-up.
-		pass

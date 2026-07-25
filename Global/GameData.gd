@@ -17,7 +17,6 @@ signal ball_count_changed(
 	maximum_ball_count: int
 )
 
-
 const SAVE_PATH: String = "user://game_data.cfg"
 
 # Default audio and display settings.

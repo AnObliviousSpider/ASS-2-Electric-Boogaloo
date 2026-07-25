@@ -24,6 +24,7 @@ unique_name_in_owner = true
 z_index = 1
 
 [node name="Li" parent="World2D" unique_id=476922062 instance=ExtResource("5_y3v7k")]
+position = Vector2(243, 143)
 
 [node name="MainCharacter" parent="World2D" unique_id=118005980 instance=ExtResource("6_hryqi")]
 position = Vector2(87, 187)
