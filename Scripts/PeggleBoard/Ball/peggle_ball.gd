@@ -1,19 +1,23 @@
 extends RigidBody2D
 
-#SCENES
+
+# SCENES
+
 @export var ball_dot: PackedScene
+
 
 # TEXTURES
 
 @export var ball_textures: Array[Texture2D] = []
 
-@export var ball_hit_wall_sound: AudioStream
 
+# AUDIO
+
+@export var ball_hit_wall_sound: AudioStream
 
 
 # NODES
 
-<<<<<<< Updated upstream
 @onready var collision_shape_2d: CollisionShape2D = (
 	$CollisionShape2D
 )
@@ -24,32 +28,63 @@ extends RigidBody2D
 
 
 func _ready() -> void:
-=======
-func _process(delta: float) -> void:
-	
-	
->>>>>>> Stashed changes
 	if ball_textures.is_empty():
 		push_warning(
 			"No ball textures have been assigned."
 		)
 		return
 
-	sprite_2d.texture = ball_textures.pick_random()
+	sprite_2d.texture = (
+		ball_textures.pick_random()
+	)
 
 
-func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
-	for i in range(state.get_contact_count()):
+func _integrate_forces(
+	state: PhysicsDirectBodyState2D
+) -> void:
+	for contact_index: int in range(
+		state.get_contact_count()
+	):
+		var contact_normal: Vector2 = (
+			state.get_contact_local_normal(
+				contact_index
+			)
+		)
 
-		if abs(state.get_contact_local_normal(i).y) < 0.1: 
-			SfxPlayer.play(ball_hit_wall_sound)
+		if absf(contact_normal.y) < 0.1:
+			if ball_hit_wall_sound != null:
+				SfxPlayer.play(
+					ball_hit_wall_sound
+				)
+
 			break
 
 
 func _on_dot_cooldown_timeout() -> void:
-	var dot_ins = ball_dot.instantiate()
-	get_tree().current_scene.add_child(dot_ins)  
-	dot_ins.global_position = (global_position)
+	if ball_dot == null:
+		push_warning(
+			"No ball dot scene has been assigned."
+		)
+		return
+
+	var dot_instance: Node2D = (
+		ball_dot.instantiate() as Node2D
+	)
+
+	if dot_instance == null:
+		push_error(
+			"The ball dot scene must have "
+			+ "a Node2D root."
+		)
+		return
+
+	get_tree().current_scene.add_child(
+		dot_instance
+	)
+
+	dot_instance.global_position = (
+		global_position
+	)
 
 
 func ghost_ball() -> void:
