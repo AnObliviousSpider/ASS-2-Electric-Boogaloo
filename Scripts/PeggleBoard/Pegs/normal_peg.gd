@@ -1,4 +1,4 @@
-extends StaticBody2D
+class_name PegglePeg extends StaticBody2D
 
 
 signal claim_changed
@@ -57,7 +57,7 @@ func change_peg_colour(
 	if body.get_meta(
 		"is_peggle_ball",
 		false
-	) != true:
+	) != true and body is not BallExplosion:
 		return
 
 	EventBus.peg_hit_sound_update.emit()

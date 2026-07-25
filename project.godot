@@ -33,6 +33,7 @@ EventBus="*uid://il5fmhhrx06d"
 InputSettings="*uid://cxr1nueelnml5"
 DialogueManager="*uid://cvaw12cew253o"
 LevelManager="*uid://defqjybdfo4dx"
+PowerUpManager="*uid://b35xxfr10rqq4"
 
 [display]
 
