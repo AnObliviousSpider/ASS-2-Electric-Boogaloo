@@ -16,6 +16,14 @@ extends Node
 @export var board_fade_duration: float = 0.5
 
 
+@export_group("Debug")
+
+# Enable this in the Inspector while testing.
+#
+# This still will not work in an exported build.
+@export var enable_debug_win: bool = false
+
+
 @onready var peggle_board: Node2D = (
 	%PeggleBoard
 )
@@ -53,9 +61,47 @@ func _ready() -> void:
 	# Do not trigger dialogue here.
 	#
 	# Level 1 dialogue is started by the character
-	# intro script.
+	# introduction script.
 	#
 	# Later level dialogue is started by PeggleBoard.
+
+
+func _unhandled_input(
+	event: InputEvent
+) -> void:
+	# The Inspector toggle must be enabled.
+	if not enable_debug_win:
+		return
+
+	# The debug shortcut only works when the game
+	# is being run through the Godot editor.
+	#
+	# It cannot work in exported builds.
+	if not OS.has_feature(
+		"editor"
+	):
+		return
+
+	if not event.is_action_pressed(
+		"debug_win"
+	):
+		return
+
+	if not peggle_board.has_method(
+		"debug_win_current_level"
+	):
+		push_warning(
+			"PeggleBoard does not have "
+			+ "debug_win_current_level()."
+		)
+
+		return
+
+	peggle_board.call(
+		"debug_win_current_level"
+	)
+
+	get_viewport().set_input_as_handled()
 
 
 func fade_in_peggle_board() -> void:
