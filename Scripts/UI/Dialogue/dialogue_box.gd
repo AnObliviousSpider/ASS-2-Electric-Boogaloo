@@ -9,6 +9,7 @@ class_name DialogueBox extends Control
 @export_subgroup("Child Nodes")
 @export var dialogue_label: Label
 @export var animation_player: AnimationPlayer
+@export var dialogue_speed: float = 0.06
 
 var placeholder_text = "placeholder text: if you see this something went wrong!"
 
@@ -18,7 +19,8 @@ func display_dialogue(dialogue: String) -> void:
 	animation_player.speed_scale = 50.0 / float(len(dialogue))
 	await _fade_in(fade_in_time)
 	SfxPlayer.play(on_text_audio)
-	animation_player.play("typing_anim")
+	create_tween().tween_property(dialogue_label, "visible_ratio", 1.0, dialogue_speed * len(dialogue_label.text))
+	#animation_player.play("typing_anim")
 
 func hide_dialogue() -> void:
 	await _fade_out(fade_out_time)
