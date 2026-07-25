@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://hxtqjqdwxevl"]
+[gd_scene format=3 uid="uid://hxtqjqdwxevl"]
 
 [ext_resource type="Script" uid="uid://c3ivwy6d4s25w" path="res://Scripts/PeggleBoard/Ball/peggle_ball.gd" id="1_clndv"]
 [ext_resource type="Texture2D" uid="uid://cr45qgdoracu5" path="res://Assets/Art/Game/PeggleBoard/Ball (2).png" id="2_3b845"]
