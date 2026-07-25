@@ -10,6 +10,9 @@ extends Area2D
 
 signal ball_caught(ball: Node2D, bin_emotion: int)
 
+# CHILD NODES
+@onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
+
 var bin_active : bool
 var light_vfx_tween : Tween
 

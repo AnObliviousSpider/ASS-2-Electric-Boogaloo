@@ -12,6 +12,10 @@ shader = ExtResource("2_36tjo")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_715ky"]
 size = Vector2(25, 20)
 
+[sub_resource type="Curve" id="Curve_36tjo"]
+_data = [Vector2(0.049645394, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.26436788), 0.0, 0.0, 0, 0]
+point_count = 2
+
 [node name="Bin" type="Area2D" unique_id=212364139 node_paths=PackedStringArray("animated_sprite", "light_vfx")]
 scale = Vector2(0.6, 0.6)
 collision_layer = 8
@@ -36,3 +40,19 @@ texture = ExtResource("2_83aeu")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=798695772]
 sprite_frames = ExtResource("3_36tjo")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=1025908255]
+position = Vector2(0, -12)
+emitting = false
+amount = 100
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.7
+emission_shape = 3
+emission_rect_extents = Vector2(1, 1)
+spread = 180.0
+gravity = Vector2(0, 100)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_36tjo")

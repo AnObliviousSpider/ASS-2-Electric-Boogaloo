@@ -141,7 +141,9 @@ position = Vector2(0, 9)
 script = ExtResource("1_g8rvb")
 ball = ExtResource("2_8lsjk")
 peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLevel3"), NodePath("PegsLevel4"), NodePath("PegsLevel5")]
+peg_hit_sfx = ExtResource("3_42h65")
 cannon_fire_sfx = ExtResource("3_42h65")
+sfx_max_scale = 2.0
 
 [node name="PeggleBallShooter" parent="." unique_id=345197782 instance=ExtResource("3_s3sbd")]
 z_index = 1

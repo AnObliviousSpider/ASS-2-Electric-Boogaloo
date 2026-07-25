@@ -16,6 +16,7 @@ const LOSS_SCENE_KEY: String = "loss_screen"
 const TRY_AGAIN_SCENE_KEY: String = "try_again_screen"
 const END_SCREEN_TRANSITION_DURATION: float = 0.2
 
+
 # COLLISION INFORMATION
 # Layer 1: Walls
 # Layer 2: Pegs
@@ -29,10 +30,16 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 # Assign PegsLevel1 through PegsLevel5 in order.
 @export var peg_levels: Array[Node2D] = []
 
+
 # AUDIO
+@export_group("Audio")
+
+@export var peg_hit_sfx: AudioStream
 @export var cannon_fire_sfx: AudioStream
+@export var sfx_max_scale: float
 
 # CANNON NODES
+
 @onready var peggle_ball_shooter: Node2D = (
 	$PeggleBallShooter
 )
@@ -65,12 +72,15 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 @onready var counting_label: Label = $CountingLabel
 
 # SHOOTING
+@export_group("Shooting") # to break out of audio group
 @export var shoot_offset: Vector2 = Vector2.ZERO
 @export var shoot_strength: float = 100.0
 @export_range(0, 180, 1) var left_turn_limit: int = 165
 @export_range(0, 180, 1) var right_turn_limit: int = 15
 
 var shoot_direction: Vector2
+
+@export_group("") # to break out of group
 
 # AI
 @export var ai_aim_time: float = 0.75
@@ -88,6 +98,10 @@ var game_ended: bool = false
 var active_peg_level: Node2D
 var all_pegs: Array[Node] = []
 var total_peg_count: int = 0
+var peg_hit_count: int = 0
+
+var pegs_hit: int = 0
+var peg_hit_volume: float # decibels
 
 var progress_tween: Tween
 
@@ -110,6 +124,7 @@ func _ready() -> void:
 	GameData.ball_entered_bin.connect(
 		destroy_ball
 	)
+	EventBus.peg_hit_sound_update.connect(play_peg_hit_sound)
 
 	for child: Node in bins.get_children():
 		if child.has_signal("ball_caught"):
@@ -249,6 +264,26 @@ func show_peg_level(level_number: int) -> void:
 
 	refresh_pegs()
 
+func play_peg_hit_sound() -> void:
+	if peg_hit_sfx != null:
+		var sfx_pitch_scale = 1 + pegs_hit*0.1
+		if sfx_pitch_scale > sfx_max_scale:
+			sfx_pitch_scale = sfx_max_scale
+		
+		SfxPlayer.play(
+			peg_hit_sfx,
+			false,
+			false,
+			0.0,
+			false,
+			peg_hit_volume,
+			0.0,
+			false,
+			null,
+			sfx_pitch_scale
+		)
+
+	pegs_hit += 1
 
 func _set_level_collisions_enabled(
 	node: Node,
@@ -732,7 +767,8 @@ func resolve_ball(
 			current_turn
 		)
 	)
-
+	
+	pegs_hit = 0 # reset peg sound
 	body.queue_free()
 
 	ball_in_play = false
