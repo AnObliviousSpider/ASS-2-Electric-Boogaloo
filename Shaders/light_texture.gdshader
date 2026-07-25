@@ -8,5 +8,5 @@ void fragment() {
     float mask = texture(TEXTURE, UV).r;
 
     COLOR.rgb = vec3(1.0); // White
-    COLOR.a = mask;        // White = opaque, Black = transparent
+    COLOR.a = mask * COLOR.a;        // White = opaque, Black = transparent and use modulate.a
 }
