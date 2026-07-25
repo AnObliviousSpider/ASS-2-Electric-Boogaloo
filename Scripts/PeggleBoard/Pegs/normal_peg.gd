@@ -3,10 +3,8 @@ extends StaticBody2D
 
 signal claim_changed
 
-
 @onready var hit_area: Area2D = $Area2D
 @onready var peg_sprite: AnimatedSprite2D = $Sprite2D
-
 
 # -1 means the peg is unclaimed.
 var claimed_turn: int = -1
@@ -28,6 +26,7 @@ func change_peg_colour(body: Node2D) -> void:
 	) != true:
 		return
 
+	EventBus.peg_hit_sound_update.emit()
 
 	var new_claimed_turn: int = int(
 		body.get_meta(
