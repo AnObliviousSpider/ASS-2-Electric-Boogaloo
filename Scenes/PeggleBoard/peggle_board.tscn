@@ -51,7 +51,7 @@ size = Vector2(19, 195)
 size = Vector2(19, 195)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_oy24c"]
-size = Vector2(180, 20)
+size = Vector2(225, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36fd3"]
 size = Vector2(177, 25)
@@ -64,57 +64,45 @@ bg_color = Color(1, 0.50980395, 0.7411765, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e02v7"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4rndw"]
-atlas = ExtResource("7_bnnyb")
-region = Rect2(0, 0, 400, 524)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_p3c4q"]
-atlas = ExtResource("8_7po2y")
-region = Rect2(0, 0, 400, 524)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_df1sm"]
-atlas = ExtResource("9_232so")
-region = Rect2(0, 0, 400, 524)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1uqbv"]
-atlas = ExtResource("10_in8bm")
-region = Rect2(0, 0, 400, 524)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_iotme"]
-atlas = ExtResource("11_4rndw")
-region = Rect2(0, 0, 400, 524)
+atlas = ExtResource("7_bnnyb")
+region = Rect2(0, 0, 600, 524)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pr6su"]
-atlas = ExtResource("12_p3c4q")
-region = Rect2(0, 0, 400, 524)
+atlas = ExtResource("8_7po2y")
+region = Rect2(0, 0, 600, 524)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_17hcw"]
-atlas = ExtResource("13_df1sm")
-region = Rect2(0, 0, 400, 524)
+atlas = ExtResource("9_232so")
+region = Rect2(0, 0, 600, 524)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_at1d2"]
-atlas = ExtResource("14_1uqbv")
-region = Rect2(0, 0, 400, 524)
+atlas = ExtResource("10_in8bm")
+region = Rect2(0, 0, 600, 524)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h4o7a"]
+atlas = ExtResource("11_4rndw")
+region = Rect2(0, 0, 600, 524)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e0blb"]
+atlas = ExtResource("12_p3c4q")
+region = Rect2(0, 0, 600, 524)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w34gu"]
+atlas = ExtResource("13_df1sm")
+region = Rect2(0, 0, 600, 524)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rgciv"]
+atlas = ExtResource("14_1uqbv")
+region = Rect2(0, 0, 600, 524)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7pgve"]
 atlas = ExtResource("15_iotme")
-region = Rect2(0, 0, 400, 524)
+region = Rect2(0, 0, 600, 524)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_715ky"]
 animations = [{
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4rndw")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_p3c4q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_df1sm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1uqbv")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_iotme")
 }, {
@@ -129,6 +117,18 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_h4o7a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e0blb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w34gu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rgciv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7pgve")
 }],
 "loop": 1,
 "name": &"default",
@@ -136,10 +136,10 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
-size = Vector2(180, 10)
+size = Vector2(270, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
-size = Vector2(180, 14)
+size = Vector2(272, 14)
 
 [node name="PeggleBoard" type="Node2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels")]
 editor_description = "A prototype peggleboard (with placeholder art)"
@@ -154,6 +154,8 @@ explosion_scene = ExtResource("7_iotme")
 z_index = 1
 position = Vector2(248, 21)
 scale = Vector2(0.7, 0.7)
+minimum_turn_angle = -55.0
+maximum_turn_angle = 55.0
 cannon_fire_sfx = null
 
 [node name="PeggleBallAnimationPlayer" parent="PeggleBallShooter" index="1" unique_id=336605750]
@@ -232,7 +234,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1361472041 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_1" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1197493612 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(169.65826, 147.95561)
 collision_layer = 2
 collision_mask = 4
@@ -243,7 +245,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=41800665 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_2" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1298396541 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(157.05118, 158.54373)
 collision_layer = 2
 collision_mask = 4
@@ -254,7 +256,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1751854811 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_3" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=719079336 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(140.81625, 156.23747)
 collision_layer = 2
 collision_mask = 4
@@ -265,7 +267,7 @@ texture_player_hit = ExtResource("15_43oao")
 texture_ai = ExtResource("16_yni01")
 texture_ai_hit = ExtResource("17_gaglx")
 
-[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=431904673 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
+[node name="Block_4" type="StaticBody2D" parent="PegsLevel1/SplineWall/Blocks" unique_id=1266752769 groups=["breakable_blocks", "pegs"] instance=ExtResource("11_7pgve")]
 position = Vector2(125.44327, 149.76968)
 collision_layer = 2
 collision_mask = 4
@@ -435,19 +437,17 @@ position = Vector2(271, 73)
 [node name="Walls" type="Node2D" parent="." unique_id=789008413]
 
 [node name="Wallleft" type="StaticBody2D" parent="Walls" unique_id=1340492936]
-position = Vector2(161, -1)
+position = Vector2(130, 130)
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wallleft" unique_id=1184189861]
-position = Vector2(9.5, 126.5)
 shape = SubResource("RectangleShape2D_e02v7")
 
 [node name="WallRight" type="StaticBody2D" parent="Walls" unique_id=968335194]
-position = Vector2(-145, 0)
+position = Vector2(361, 130)
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallRight" unique_id=297448104]
-position = Vector2(471, 124.5)
 shape = SubResource("RectangleShape2D_ddted")
 
 [node name="WallUp" type="StaticBody2D" parent="Walls" unique_id=1075769406]
@@ -455,7 +455,7 @@ position = Vector2(0, 7)
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallUp" unique_id=997063395]
-position = Vector2(243, 10)
+position = Vector2(244.5, 23)
 shape = SubResource("RectangleShape2D_oy24c")
 
 [node name="Bins" type="Node2D" parent="." unique_id=1386732025]
@@ -495,10 +495,10 @@ debug_color = Color(0.9649028, 0.17603526, 0.18158463, 0.41960785)
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=726472209]
 z_index = 1
-offset_left = 174.0
-offset_top = 21.0
-offset_right = 374.0
-offset_bottom = 39.0
+offset_left = 121.0
+offset_top = 23.0
+offset_right = 321.0
+offset_bottom = 41.0
 rotation = 1.5707964
 theme_override_styles/fill = SubResource("StyleBoxFlat_42h65")
 fill_mode = 1
@@ -506,10 +506,10 @@ show_percentage = false
 
 [node name="ProgressBar2" type="ProgressBar" parent="." unique_id=1828367252]
 z_index = 1
-offset_left = 342.0
-offset_top = 20.0
-offset_right = 542.0
-offset_bottom = 38.0
+offset_left = 387.0
+offset_top = 22.0
+offset_right = 587.0
+offset_bottom = 40.0
 rotation = 1.5707964
 theme_override_styles/fill = SubResource("StyleBoxFlat_sxo5r")
 fill_mode = 1
@@ -534,24 +534,23 @@ show_percentage = false
 
 [node name="TextureRect" type="ColorRect" parent="." unique_id=254345196]
 z_index = -1
-offset_left = 180.0
+offset_left = 137.0
 offset_top = 232.0
-offset_right = 220.0
+offset_right = 200.24258
 offset_bottom = 271.99997
 scale = Vector2(3.4628568, -5.1028585)
 color = Color(0, 0, 0, 0.67058825)
-metadata/_edit_lock_ = true
 
 [node name="Frame" type="AnimatedSprite2D" parent="." unique_id=1632152543]
 position = Vector2(247.99998, 131)
 scale = Vector2(0.7, 0.7)
 sprite_frames = SubResource("SpriteFrames_715ky")
 autoplay = "default"
-frame_progress = 0.059644017
+frame_progress = 0.9195545
 metadata/_edit_lock_ = true
 
 [node name="BounceOnce" type="StaticBody2D" parent="." unique_id=249566150]
-position = Vector2(243, 206)
+position = Vector2(243, 227)
 collision_layer = 16
 script = ExtResource("7_42h65")
 
@@ -563,7 +562,7 @@ shape = SubResource("RectangleShape2D_cvs26")
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce/Area2D" unique_id=2073638313]
-position = Vector2(5, -1)
+position = Vector2(4, -1)
 shape = SubResource("RectangleShape2D_1eppy")
 
 [connection signal="body_entered" from="BounceOnce/Area2D" to="BounceOnce" method="_on_area_2d_body_entered"]
