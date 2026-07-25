@@ -8,19 +8,19 @@
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_wtern"]
 [ext_resource type="Script" uid="uid://dysgrw1rcoajh" path="res://Scripts/UI/Settings/snake.gd" id="6_1kc1o"]
 [ext_resource type="Texture2D" uid="uid://su82lcvygsc4" path="res://Assets/Art/Snake parts/Part1 (1).png" id="7_6asrm"]
-[ext_resource type="Texture2D" uid="uid://c1g6ypsqx7u7b" path="res://Assets/Art/UI/New_Game_Button_Green.png" id="7_af3ef"]
 [ext_resource type="Script" uid="uid://coldb71281d8e" path="res://Scripts/UI/Settings/island.gd" id="7_l6o0q"]
+[ext_resource type="Texture2D" uid="uid://crh2a34vxop4t" path="res://Assets/Art/MainMenu/New_Game_Button_Green.png" id="7_r818g"]
 [ext_resource type="Texture2D" uid="uid://dylbw5fmaa4ky" path="res://Assets/Art/Snake parts/Part2 (1).png" id="8_1kc1o"]
-[ext_resource type="Texture2D" uid="uid://4gioqqdw8ff6" path="res://Assets/Art/UI/New_Game_Button_Pink.png" id="8_e4dfx"]
+[ext_resource type="Texture2D" uid="uid://xl23h1ep24qo" path="res://Assets/Art/MainMenu/New_Game_Button_Pink.png" id="8_8d3ud"]
 [ext_resource type="Texture2D" uid="uid://dfqhpr6s3irjx" path="res://Assets/Art/Snake parts/Part4.png" id="9_jp6cc"]
+[ext_resource type="Texture2D" uid="uid://dnfub8423hcl7" path="res://Assets/Art/MainMenu/Credits_Button_Green.png" id="9_lhp0w"]
 [ext_resource type="Texture2D" uid="uid://btdwgjus77qaa" path="res://Assets/Art/Snake parts/Part3 (1).png" id="9_ocqal"]
-[ext_resource type="Texture2D" uid="uid://8scef0k05c6u" path="res://Assets/Art/UI/Credits_Button_Green.png" id="9_r818g"]
-[ext_resource type="Texture2D" uid="uid://dpmwhb6pll66s" path="res://Assets/Art/UI/Credits_Button_Pink.png" id="10_8d3ud"]
+[ext_resource type="Texture2D" uid="uid://dee6yoxsr5lb4" path="res://Assets/Art/MainMenu/Credits_Button_Pink.png" id="10_i3q7f"]
 [ext_resource type="Texture2D" uid="uid://dfqdmpisrifj4" path="res://Assets/Art/Snake parts/Part5.png" id="10_l6o0q"]
 [ext_resource type="Texture2D" uid="uid://6o43f3xpr4gu" path="res://Assets/Art/Snake parts/Part6.png" id="11_af3ef"]
-[ext_resource type="Texture2D" uid="uid://b1ccwydrmlno1" path="res://Assets/Art/UI/Settings_Button_Green.png" id="11_lhp0w"]
+[ext_resource type="Texture2D" uid="uid://cum7lr8mo3tj" path="res://Assets/Art/MainMenu/Settings_Button_Green.png" id="11_pm6ix"]
+[ext_resource type="Texture2D" uid="uid://cogdsavw5h1xx" path="res://Assets/Art/MainMenu/Settings_Button_Pink.png" id="12_56a6b"]
 [ext_resource type="Texture2D" uid="uid://2jt7ympyx5yr" path="res://Assets/Art/Snake parts/Part7.png" id="12_e4dfx"]
-[ext_resource type="Texture2D" uid="uid://xntdiubj2vlt" path="res://Assets/Art/UI/Settings_Button_Pink.png" id="12_i3q7f"]
 [ext_resource type="Texture2D" uid="uid://djb6w06ym3wgg" path="res://Assets/Art/Snake parts/Part8.png" id="13_dkfp2"]
 [ext_resource type="Texture2D" uid="uid://ch8jnia88spfp" path="res://Assets/Art/Snake parts/Part9.png" id="14_k5fhq"]
 [ext_resource type="Texture2D" uid="uid://bdydriqtigct" path="res://Assets/Art/Game/PeggleBoard/Rock2.png" id="16_6asrm"]
@@ -112,8 +112,8 @@ alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 58)
 layout_mode = 2
-texture_normal = ExtResource("7_af3ef")
-texture_hover = ExtResource("8_e4dfx")
+texture_normal = ExtResource("7_r818g")
+texture_hover = ExtResource("8_8d3ud")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -121,8 +121,8 @@ stretch_mode = 5
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
-texture_normal = ExtResource("9_r818g")
-texture_hover = ExtResource("10_8d3ud")
+texture_normal = ExtResource("9_lhp0w")
+texture_hover = ExtResource("10_i3q7f")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -130,8 +130,8 @@ stretch_mode = 5
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
-texture_normal = ExtResource("11_lhp0w")
-texture_hover = ExtResource("12_i3q7f")
+texture_normal = ExtResource("11_pm6ix")
+texture_hover = ExtResource("12_56a6b")
 ignore_texture_size = true
 stretch_mode = 5
 
