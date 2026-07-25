@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://6u1m71svqmc6"]
 
 [ext_resource type="Script" uid="uid://b0qqpa1spbw2c" path="res://Scripts/PeggleBoard/Cannon/peggle_ball_shooter.gd" id="1_hdkc6"]
+[ext_resource type="AudioStream" uid="uid://dsytf7gugvqu3" path="res://Assets/Audio/SFX/Pop (1).mp3" id="2_5gmk5"]
 [ext_resource type="Texture2D" uid="uid://bnoji8gsssb04" path="res://Assets/Art/Cannon/Cannon_New.png" id="2_hdkc6"]
 [ext_resource type="PackedScene" uid="uid://hxtqjqdwxevl" path="res://Scenes/PeggleBoard/Ball/peggle_ball.tscn" id="2_vr734"]
 [ext_resource type="Texture2D" uid="uid://cf3biwtknct5" path="res://Assets/Art/Cannon/Cannon inside.png" id="3_vr734"]
@@ -95,6 +96,7 @@ animations = [{
 [node name="PeggleBallShooter" type="Node2D" unique_id=1839521812]
 script = ExtResource("1_hdkc6")
 ball_scene = ExtResource("2_vr734")
+cannon_fire_sfx = ExtResource("2_5gmk5")
 
 [node name="PeggleBallBarrel" type="Sprite2D" parent="." unique_id=1449746995]
 position = Vector2(0, 13)

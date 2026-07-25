@@ -11,7 +11,6 @@
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
 [ext_resource type="AudioStream" uid="uid://dmx3b2ht8gmgu" path="res://Assets/Audio/SFX/GAME/happy_bin.mp3" id="7_1uqbv"]
 [ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
-[ext_resource type="AudioStream" uid="uid://dsytf7gugvqu3" path="res://Assets/Audio/SFX/Pop (1).mp3" id="8_1uqbv"]
 [ext_resource type="Texture2D" uid="uid://bl4qhbvyqfhvd" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
 [ext_resource type="AudioStream" uid="uid://b6s4d0jw7rg6v" path="res://Assets/Audio/SFX/GAME/sad_bin.mp3" id="8_iotme"]
 [ext_resource type="Texture2D" uid="uid://sis7laba3os1" path="res://Assets/Art/Frame/Peggle_Frame_2.png" id="9_232so"]
@@ -128,7 +127,6 @@ bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iot
 z_index = 1
 position = Vector2(248, 21)
 scale = Vector2(0.7, 0.7)
-cannon_fire_sfx = ExtResource("8_1uqbv")
 
 [node name="PeggleBallAnimationPlayer" parent="PeggleBallShooter" index="1" unique_id=336605750]
 libraries/PEGGLE_CANNON = SubResource("AnimationLibrary_s3sbd")
@@ -172,18 +170,6 @@ position = Vector2(183, 115)
 [node name="PegglePeg12" parent="PegsLevel1" unique_id=1163546502 instance=ExtResource("4_ryebi")]
 position = Vector2(294, 114)
 
-<<<<<<< Updated upstream
-=======
-[node name="SplineWall" type="Path2D" parent="PegsLevel1" unique_id=1420181371]
-position = Vector2(37, 3)
-curve = SubResource("Curve2D_57qmd")
-script = ExtResource("8_h4o7a")
-block_scene = ExtResource("4_ryebi")
-block_types = Array[int]([0, 0, 0, 0, 0, 0, 0, 0])
-closed_loop = true
-metadata/_custom_type_script = "uid://lidblx52ul6"
-
->>>>>>> Stashed changes
 [node name="PegsLevel2" type="Node2D" parent="." unique_id=752156241]
 visible = false
 position = Vector2(6, 13)
