@@ -37,6 +37,8 @@ const END_SCREEN_TRANSITION_DURATION: float = 1.0
 @onready var ball_bar: ProgressBar = $BallBar
 @onready var counting_label: Label = $CountingLabel
 
+@onready var bounce_once: StaticBody2D = $BounceOnce
+
 # SHOOTING
 @export var shoot_offset: Vector2 = Vector2.ZERO
 @export var shoot_strength: float = 100.0
@@ -63,8 +65,11 @@ var total_peg_count: int = 0
 var progress_tween: Tween
 
 #VARIABLES(for power ups)
-var is_ghost_ball=1
+var is_ghost_ball=0
 var is_split_ball=0
+var is_bounce_once=0
+var is_ai_ball_small=2
+
 var new_ball
 var split_ball
 
@@ -91,7 +96,6 @@ func _process(_delta: float) -> void:
 
 	if current_turn == Turn.PLAYER and not ball_in_play:
 		aim_shooter_at(get_global_mouse_position())
-
 
 func _input(event: InputEvent) -> void:
 	if game_ended:
@@ -287,11 +291,27 @@ func fire_ball(target_position: Vector2) -> void:
 	get_tree().current_scene.add_child(new_ball)
 	new_ball.body_entered.connect(func(body):_on_ball_body_entered(new_ball, body))
 	
-	 #Checking for powerups
+	new_ball.scale = Vector2(5, 5)
+	
+	 #CHECK FOR POWERUPS
 	if is_ghost_ball == 1:
 		is_ghost_ball=0
 		new_ball.ghost_ball()
+		
+	if is_bounce_once == 1:
+		is_bounce_once=0
+		bounce_once.bounce_once()
+		
+	if is_ai_ball_small == 2:
+		is_ai_ball_small -= 1
 
+	elif is_ai_ball_small == 1:
+		print("Making ball small")
+		is_ai_ball_small -= 1
+		new_ball.scale = Vector2(5, 5)
+		print("After set:", new_ball.scale)
+
+		
 	new_ball.global_position = (
 		peggle_ball_firing_point.global_position
 		+ shoot_offset
@@ -315,6 +335,8 @@ func fire_ball(target_position: Vector2) -> void:
 	)
 
 	ball_in_play = true
+	
+	
 
 	use_ball()
 	game_feel()

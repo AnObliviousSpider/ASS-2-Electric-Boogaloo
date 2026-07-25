@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://6u1m71svqmc6" path="res://Scenes/PeggleBoard/peggle_ball_shooter.tscn" id="3_s3sbd"]
 [ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="4_ryebi"]
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
+[ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s3sbd"]
 
@@ -28,6 +29,12 @@ bg_color = Color(0.32941177, 0.80784315, 0.654902, 1)
 bg_color = Color(1, 0.50980395, 0.7411765, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e02v7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
+size = Vector2(144, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
+size = Vector2(144, 9)
 
 [node name="PeggleBoard" type="Node2D" unique_id=1037463456]
 editor_description = "A prototype peggleboard (with placeholder art)"
@@ -160,6 +167,23 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_e02v7")
 fill_mode = 1
 show_percentage = false
 
+[node name="BounceOnce" type="StaticBody2D" parent="." unique_id=249566150]
+position = Vector2(237, 194)
+collision_layer = 16
+script = ExtResource("7_42h65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce" unique_id=147314452]
+position = Vector2(5, 0)
+shape = SubResource("RectangleShape2D_cvs26")
+
+[node name="Area2D" type="Area2D" parent="BounceOnce" unique_id=1568000702]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce/Area2D" unique_id=2073638313]
+position = Vector2(5, -1)
+shape = SubResource("RectangleShape2D_1eppy")
+
 [connection signal="timeout" from="PeggleBallShooter/FlashCooldown" to="." method="_on_flash_cooldown_timeout"]
+[connection signal="body_entered" from="BounceOnce/Area2D" to="BounceOnce" method="_on_area_2d_body_entered"]
 
 [editable path="PeggleBallShooter"]

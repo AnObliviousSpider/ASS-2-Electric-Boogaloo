@@ -15,7 +15,6 @@ func _process(delta: float) -> void:
 	if ball_textures.is_empty():
 		push_warning("No ballz textures have been assigned.")
 		return
-
 	sprite_2d.texture = ball_textures.pick_random()
 	
 func ghost_ball():
