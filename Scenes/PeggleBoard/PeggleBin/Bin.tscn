@@ -111,7 +111,6 @@ animated_sprite = NodePath("AnimatedSprite2D")
 light_vfx = NodePath("LightVFX")
 
 [node name="LightVFX" type="Sprite2D" parent="." unique_id=1988481638]
-visible = false
 modulate = Color(1, 1, 1, 0)
 material = SubResource("ShaderMaterial_6r8yq")
 position = Vector2(0, -15.000005)
@@ -119,7 +118,6 @@ scale = Vector2(0.09, 0.1)
 texture = ExtResource("4_8wksc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=303373192]
-visible = false
 position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_715ky")
 

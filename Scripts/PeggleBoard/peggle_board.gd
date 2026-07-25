@@ -729,7 +729,7 @@ func catch_ball(
 		true
 	)
 	
-	# SFX & FX
+	# SFX
 	SfxPlayer.play(bin_emotion_sfx[bin_emotion])
 
 func destroy_ball(
