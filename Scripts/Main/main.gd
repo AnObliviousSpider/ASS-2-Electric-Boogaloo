@@ -37,24 +37,25 @@ func _ready() -> void:
 		current_level_scene
 	)
 
-	# Reveal the board after level dialogue.
-	DialogueManager.level_dialogue_closed.connect(
+	# Reveal the board only after the complete
+	# level dialogue sequence has finished.
+	if not DialogueManager.level_dialogue_closed.is_connected(
 		fade_in_peggle_board
-	)
+	):
+		DialogueManager.level_dialogue_closed.connect(
+			fade_in_peggle_board
+		)
 
 	# Begin with the board hidden.
 	peggle_board.modulate.a = 0.0
 	peggle_board.hide()
 
-	# Wait for the dialogue controller to connect.
-	_trigger_level_dialogue.call_deferred()
-
-
-func _trigger_level_dialogue() -> void:
-	# LevelManager and dialogue both start at one.
-	EventBus.dialogue_level_triggered.emit(
-		LevelManager.level
-	)
+	# Do not trigger dialogue here.
+	#
+	# Level 1 dialogue is started by the character
+	# intro script.
+	#
+	# Later level dialogue is started by PeggleBoard.
 
 
 func fade_in_peggle_board() -> void:

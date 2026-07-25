@@ -10,6 +10,9 @@ enum Turn {
 const FULL_BAR_FRACTION: float = 0.75
 const NO_PENDING_EMOTION: int = -1
 
+const FORCED_DEJECTED_LEVEL: int = 3
+const DEJECTED_EMOTION_INDEX: int = 1
+
 const WIN_SCENE_KEY: String = "win_screen"
 const LOSS_SCENE_KEY: String = "loss_screen"
 const TRY_AGAIN_SCENE_KEY: String = "try_again_screen"
@@ -120,10 +123,20 @@ var current_turn: int = Turn.PLAYER
 var ball_in_play: bool = false
 var resolving_ball: bool = false
 var game_ended: bool = false
+var active_balls: Array[RigidBody2D] = []
 
 var pending_dialogue_emotion: int = (
 	NO_PENDING_EMOTION
 )
+
+
+# LEVEL THREE OVERRIDE STATE
+
+var original_dejected_dialogue: Array = []
+var dialogue_overrides_cached: bool = false
+
+# Stores every bin and its original emotion.
+var original_bin_emotions: Dictionary = {}
 
 
 # PEG DATA
@@ -146,12 +159,15 @@ var is_split_ball: bool = false
 var is_blast_ball: bool = false
 var is_bounce_once: bool = false
 
-# The number of upcoming AI balls that
+# Number of upcoming AI balls that
 # should be made smaller.
 var is_ai_ball_smol: int = 0
 
 
 func _ready() -> void:
+	cache_original_dialogue()
+	cache_original_bin_emotions()
+
 	if not endzone.body_entered.is_connected(
 		destroy_ball
 	):
@@ -286,13 +302,123 @@ func update_ball_counter() -> void:
 	)
 
 
+func cache_original_dialogue() -> void:
+	if dialogue_overrides_cached:
+		return
+
+	if DialogueManager.dialogue_moods.has(
+		"Dejected"
+	):
+		original_dejected_dialogue = (
+			DialogueManager.dialogue_moods[
+				"Dejected"
+			].duplicate(
+				true
+			)
+		)
+
+	dialogue_overrides_cached = true
+
+
+func cache_original_bin_emotions() -> void:
+	if not original_bin_emotions.is_empty():
+		return
+
+	for child: Node in bins.get_children():
+		var emotion_value: Variant = child.get(
+			"what_emotion_to_respond_with"
+		)
+
+		if emotion_value == null:
+			continue
+
+		original_bin_emotions[child] = int(
+			emotion_value
+		)
+
+
+func update_bin_emotion_visuals(
+	level_number: int
+) -> void:
+	cache_original_bin_emotions()
+
+	for child_variant: Variant in original_bin_emotions.keys():
+		var child: Node = (
+			child_variant as Node
+		)
+
+		if not is_instance_valid(
+			child
+		):
+			continue
+
+		var emotion_index: int = int(
+			original_bin_emotions[child]
+		)
+
+		if level_number == FORCED_DEJECTED_LEVEL:
+			emotion_index = (
+				DEJECTED_EMOTION_INDEX
+			)
+
+		child.set(
+			"what_emotion_to_respond_with",
+			emotion_index
+		)
+
+		if child.has_method(
+			"set_emotion"
+		):
+			child.call(
+				"set_emotion"
+			)
+
+
+func update_level_three_override(
+	level_number: int
+) -> void:
+	cache_original_dialogue()
+
+	update_bin_emotion_visuals(
+		level_number
+	)
+
+	if level_number == FORCED_DEJECTED_LEVEL:
+		# Only short bin-response dialogue changes.
+		# Story dialogue remains untouched.
+		DialogueManager.dialogue_moods[
+			"Dejected"
+		] = [
+			"...",
+		]
+
+		GameData.current_emotion = (
+			DEJECTED_EMOTION_INDEX
+		)
+
+		return
+
+	# Restore normal responses after level three.
+	if not original_dejected_dialogue.is_empty():
+		DialogueManager.dialogue_moods[
+			"Dejected"
+		] = original_dejected_dialogue.duplicate(
+			true
+		)
+
+
 func show_peg_level(
 	level_number: int
 ) -> void:
+	update_level_three_override(
+		level_number
+	)
+
 	if peg_levels.is_empty():
 		push_error(
 			"No peg level nodes were assigned."
 		)
+
 		return
 
 	var level_index: int = clampi(
@@ -461,6 +587,7 @@ func reset_current_round() -> void:
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
+	active_balls.clear()
 
 	pending_dialogue_emotion = (
 		NO_PENDING_EMOTION
@@ -573,10 +700,10 @@ func get_progress_percentage(
 
 	return clampf(
 		float(claimed_peg_count)
-			/ float(
-				pegs_required_for_full_bar
-			)
-			* 100.0,
+		/ float(
+			pegs_required_for_full_bar
+		)
+		* 100.0,
 		0.0,
 		100.0
 	)
@@ -636,7 +763,7 @@ func advance_to_next_peg_level() -> void:
 
 	game_ended = false
 
-	EventBus.dialogue_level_triggered.emit(
+	DialogueManager.play_level_dialogue_sequence(
 		LevelManager.level
 	)
 
@@ -657,7 +784,7 @@ func restart_current_peg_level() -> void:
 
 	game_ended = false
 
-	EventBus.dialogue_level_triggered.emit(
+	DialogueManager.play_level_dialogue_sequence(
 		LevelManager.level
 	)
 
@@ -712,6 +839,7 @@ func fire_ball() -> void:
 		end_game(
 			LOSS_SCENE_KEY
 		)
+
 		return
 
 	var fired_ball: RigidBody2D = (
@@ -721,6 +849,9 @@ func fire_ball() -> void:
 	if fired_ball == null:
 		return
 
+	fired_ball.contact_monitor = true
+	fired_ball.max_contacts_reported = 4
+
 	fired_ball.body_entered.connect(
 		func(body: Node) -> void:
 			_on_ball_body_entered(
@@ -729,7 +860,6 @@ func fire_ball() -> void:
 			)
 	)
 
-	# Apply the ghost effect independently.
 	if is_ghost_ball:
 		is_ghost_ball = false
 
@@ -740,7 +870,6 @@ func fire_ball() -> void:
 				"ghost_ball"
 			)
 
-	# Apply the small-ball effect only to AI balls.
 	if (
 		current_turn == Turn.AI
 		and is_ai_ball_smol > 0
@@ -751,7 +880,6 @@ func fire_ball() -> void:
 
 		is_ai_ball_smol -= 1
 
-	# Activate the one-use bounce effect.
 	if is_bounce_once:
 		is_bounce_once = false
 
@@ -769,6 +897,10 @@ func fire_ball() -> void:
 	configure_ball(
 		fired_ball,
 		current_turn
+	)
+
+	active_balls.append(
+		fired_ball
 	)
 
 	ball_in_play = true
@@ -809,7 +941,6 @@ func apply_small_ai_ball(
 	):
 		return
 
-	# Do not resize the shared collision resource.
 	ball_collision.shape = (
 		ball_collision.shape.duplicate()
 	)
@@ -888,15 +1019,19 @@ func catch_ball(
 		)
 	)
 
-	# Only a player's bin hit stores dialogue
-	# for the following opponent turn.
 	if ball_owner == Turn.PLAYER:
-		pending_dialogue_emotion = (
-			bin_emotion
-		)
+		if (
+			LevelManager.level
+			== FORCED_DEJECTED_LEVEL
+		):
+			pending_dialogue_emotion = (
+				DEJECTED_EMOTION_INDEX
+			)
+		else:
+			pending_dialogue_emotion = (
+				bin_emotion
+			)
 
-	# Both player and opponent bin hits refund
-	# the ball that was spent.
 	resolve_ball(
 		body,
 		true
@@ -941,6 +1076,14 @@ func play_pending_opponent_dialogue() -> void:
 		pending_dialogue_emotion
 	)
 
+	if (
+		LevelManager.level
+		== FORCED_DEJECTED_LEVEL
+	):
+		emotion_to_play = (
+			DEJECTED_EMOTION_INDEX
+		)
+
 	pending_dialogue_emotion = (
 		NO_PENDING_EMOTION
 	)
@@ -958,9 +1101,8 @@ func play_pending_opponent_dialogue() -> void:
 
 
 func finish_opponent_turn() -> void:
-	# Close the dialogue before giving control
-	# back to the player.
 	EventBus.dialogue_mood_hide.emit()
+
 	DialogueManager.force_close_dialogue()
 
 	current_turn = Turn.PLAYER
@@ -999,12 +1141,14 @@ func resolve_ball(
 		)
 	)
 
+	if body is RigidBody2D:
+		active_balls.erase(
+			body as RigidBody2D
+		)
+
 	pegs_hit = 0
 
 	body.queue_free()
-
-	ball_in_play = false
-	resolving_ball = true
 
 	if should_refund:
 		refund_ball()
@@ -1026,9 +1170,13 @@ func resolve_ball(
 			percentage_left
 		)
 
-	finish_ball_resolution(
-		finished_turn
-	)
+	if active_balls.is_empty():
+		ball_in_play = false
+		resolving_ball = true
+
+		finish_ball_resolution(
+			finished_turn
+		)
 
 
 func finish_ball_resolution(
@@ -1040,6 +1188,7 @@ func finish_ball_resolution(
 
 	if game_ended:
 		resolving_ball = false
+
 		return
 
 	if GameData.balls_remaining <= 0:
@@ -1048,6 +1197,7 @@ func finish_ball_resolution(
 		end_game(
 			LOSS_SCENE_KEY
 		)
+
 		return
 
 	await cannon.play_turn_swap()
@@ -1080,6 +1230,7 @@ func start_ai_turn() -> void:
 
 	if all_pegs.is_empty():
 		finish_opponent_turn()
+
 		return
 
 	var target_peg := (
@@ -1088,6 +1239,7 @@ func start_ai_turn() -> void:
 
 	if target_peg == null:
 		finish_opponent_turn()
+
 		return
 
 	await cannon.think_and_aim_at(
@@ -1107,6 +1259,7 @@ func start_ai_turn() -> void:
 		target_peg
 	):
 		start_ai_turn()
+
 		return
 
 	fire_ball()
@@ -1136,6 +1289,20 @@ func _on_ball_body_entered(
 		if spawned_split_ball == null:
 			return
 
+		spawned_split_ball.contact_monitor = true
+		spawned_split_ball.max_contacts_reported = 4
+
+		spawned_split_ball.body_entered.connect(
+			func(hit_body: Node) -> void:
+				_on_ball_body_entered(
+					spawned_split_ball,
+					hit_body
+				)
+		)
+
+		active_balls.append(
+			spawned_split_ball
+		)
 		configure_ball(
 			spawned_split_ball,
 			turn_owner
