@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://6u1m71svqmc6" path="res://Scenes/PeggleBoard/peggle_ball_shooter.tscn" id="3_s3sbd"]
 [ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="4_ryebi"]
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
+[ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 [ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
 [ext_resource type="Texture2D" uid="uid://bl4qhbvyqfhvd" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
 [ext_resource type="Texture2D" uid="uid://sis7laba3os1" path="res://Assets/Art/Frame/Peggle_Frame_2.png" id="9_232so"]
@@ -19,7 +20,6 @@
 [ext_resource type="Texture2D" uid="uid://bxfuodh2hfv5v" path="res://Assets/Art/Cannon/Eye_closed.png" id="18_df1sm"]
 [ext_resource type="Texture2D" uid="uid://cju084w7bqsk3" path="res://Assets/Art/Cannon/EyePupil.png" id="19_1uqbv"]
 [ext_resource type="Script" uid="uid://vmokh7ui80mb" path="res://Scripts/PeggleBoard/eye_pupil.gd" id="20_iotme"]
-[ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s3sbd"]
 
@@ -136,7 +136,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="PeggleBoard" type="Node2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels")]
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
 size = Vector2(144, 9)
 
@@ -148,7 +147,6 @@ editor_description = "A prototype peggleboard (with placeholder art)"
 position = Vector2(0, 9)
 script = ExtResource("1_g8rvb")
 ball = ExtResource("2_8lsjk")
-peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLevel3"), NodePath("PegsLevel4"), NodePath("PegsLevel5")]
 cannon_fire_sfx = ExtResource("3_42h65")
 
 [node name="PeggleBallShooter" parent="." unique_id=345197782 instance=ExtResource("3_s3sbd")]
@@ -160,7 +158,6 @@ scale = Vector2(0.7, 0.7)
 libraries/PEGGLE_CANNON = SubResource("AnimationLibrary_s3sbd")
 
 [node name="PegsLevel1" type="Node2D" parent="." unique_id=200026943]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel1" unique_id=1411103836 instance=ExtResource("4_ryebi")]
@@ -200,7 +197,6 @@ position = Vector2(269, 138)
 position = Vector2(271, 110)
 
 [node name="PegsLevel2" type="Node2D" parent="." unique_id=752156241]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel2" unique_id=109279465 instance=ExtResource("4_ryebi")]
@@ -240,7 +236,6 @@ position = Vector2(208, 170)
 position = Vector2(271, 169)
 
 [node name="PegsLevel3" type="Node2D" parent="." unique_id=1268814216]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel3" unique_id=728100677 instance=ExtResource("4_ryebi")]
@@ -280,7 +275,6 @@ position = Vector2(269, 153)
 position = Vector2(271, 105)
 
 [node name="PegsLevel4" type="Node2D" parent="." unique_id=1945990691]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel4" unique_id=781750181 instance=ExtResource("4_ryebi")]
@@ -320,7 +314,6 @@ position = Vector2(282, 127)
 position = Vector2(239, 126)
 
 [node name="PegsLevel5" type="Node2D" parent="." unique_id=2069571751]
-visible = false
 position = Vector2(6, 13)
 
 [node name="PegglePeg" parent="PegsLevel5" unique_id=2084831918 instance=ExtResource("4_ryebi")]
@@ -359,6 +352,28 @@ position = Vector2(291, 105)
 [node name="PegglePeg12" parent="PegsLevel5" unique_id=865599054 instance=ExtResource("4_ryebi")]
 position = Vector2(271, 73)
 
+[node name="Bins" type="Node2D" parent="." unique_id=1386732025]
+position = Vector2(0, 29)
+
+[node name="Bin1" parent="Bins" unique_id=407736055 instance=ExtResource("6_sxo5r")]
+unique_name_in_owner = true
+position = Vector2(197, 184)
+
+[node name="Bin2" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
+unique_name_in_owner = true
+position = Vector2(227.00002, 184)
+what_emotion_to_respond_with = 1
+
+[node name="Bin3" parent="Bins" unique_id=2044842428 instance=ExtResource("6_sxo5r")]
+unique_name_in_owner = true
+position = Vector2(260, 184)
+what_emotion_to_respond_with = 2
+
+[node name="Bin4" parent="Bins" unique_id=921239040 instance=ExtResource("6_sxo5r")]
+unique_name_in_owner = true
+position = Vector2(291, 184)
+what_emotion_to_respond_with = 3
+
 [node name="Walls" type="Node2D" parent="." unique_id=789008413]
 
 [node name="Wallleft" type="StaticBody2D" parent="Walls" unique_id=1340492936]
@@ -384,28 +399,6 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallUp" unique_id=997063395]
 position = Vector2(243, 10)
 shape = SubResource("RectangleShape2D_oy24c")
-
-[node name="Bins" type="Node2D" parent="." unique_id=1386732025]
-position = Vector2(0, 29)
-
-[node name="Bin1" parent="Bins" unique_id=407736055 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(197, 184)
-
-[node name="Bin2" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(227.00002, 184)
-what_emotion_to_respond_with = 1
-
-[node name="Bin3" parent="Bins" unique_id=2044842428 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(260, 184)
-what_emotion_to_respond_with = 2
-
-[node name="Bin4" parent="Bins" unique_id=921239040 instance=ExtResource("6_sxo5r")]
-unique_name_in_owner = true
-position = Vector2(291, 184)
-what_emotion_to_respond_with = 3
 
 [node name="Endzone" type="Area2D" parent="." unique_id=157617057]
 position = Vector2(0, -58)
@@ -487,8 +480,9 @@ sprite_frames = SubResource("SpriteFrames_pr6su")
 [node name="EyePupil" type="Sprite2D" parent="Eye" unique_id=253238988]
 texture = ExtResource("19_1uqbv")
 script = ExtResource("20_iotme")
+
 [node name="BounceOnce" type="StaticBody2D" parent="." unique_id=249566150]
-position = Vector2(237, 194)
+position = Vector2(243, 206)
 collision_layer = 16
 script = ExtResource("7_42h65")
 

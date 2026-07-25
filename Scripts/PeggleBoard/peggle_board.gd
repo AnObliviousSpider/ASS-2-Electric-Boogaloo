@@ -97,7 +97,7 @@ var progress_tween: Tween
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
 var is_bounce_once: bool = false
-var is_ai_ball_smol = 2
+var is_ai_ball_smol = 0
 
 # SPAWNED BALLS
 var new_ball: RigidBody2D
@@ -602,7 +602,7 @@ func fire_ball(
 				body
 			)
 	)
-
+	
 	if is_ghost_ball:
 		is_ghost_ball = false
 		new_ball.ghost_ball()
@@ -612,13 +612,17 @@ func fire_ball(
 
 	elif is_ai_ball_smol == 1:
 		is_ai_ball_smol -= 1
-		new_ball.scale = Vector2(5, 5)
+		new_ball.get_node("Sprite2D").scale = Vector2(0.1, 0.1)
+		new_ball.get_node("CollisionShape2D").shape.radius *= 0.5
 
 	else:
-		new_ball.scale = Vector2(1, 1)
+		new_ball.get_node("Sprite2D").scale = Vector2(0.2,0.2)
+		new_ball.get_node("CollisionShape2D").shape.radius =3
+	print(new_ball.get_node("Sprite2D").scale)
+	print(new_ball.get_node("CollisionShape2D").shape.radius)
 
-	if is_bounce_once == 1:
-		is_bounce_once=0
+	if is_bounce_once:
+		is_bounce_once=false
 		bounce_once.bounce_once()
 		
 			
