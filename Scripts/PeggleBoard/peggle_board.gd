@@ -81,17 +81,10 @@ var sfx_max_scale: float = 2.0
 
 # BALL REMOVAL NODES
 
-@onready var endzone: Area2D = (
-	$Endzone
-)
-
 @onready var ball_bin: PeggleBallBin = (
 	%Bin
 )
 
-@onready var bins: Node2D = (
-	$Bins
-)
 
 # BALL REMOVAL NODES
 @onready var endzone: Area2D = $Endzone
