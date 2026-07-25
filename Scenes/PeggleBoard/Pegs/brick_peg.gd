@@ -1,11 +1,16 @@
+@tool
+class_name BrickPeg
 extends StaticBody2D
 
 signal claim_changed
 
-@export var size: Vector2 = Vector2(24.0, 8.0)
-@export var unclaimed_color: Color = Color.WHITE
-@export var player_color: Color = Color(0.9, 0.2, 0.2)
-@export var ai_color: Color = Color(0.2, 0.4, 0.9)
+@export var texture_unclaimed: Texture2D
+@export var texture_player: Texture2D
+@export var texture_player_hit: Texture2D
+@export var texture_ai: Texture2D
+@export var texture_ai_hit: Texture2D
+
+@export var hit_frame_duration: float = 0.15
 
 @onready var hit_area: Area2D = $Area2D
 @onready var collision_polygon: CollisionPolygon2D = $CollisionPolygon2D
@@ -13,30 +18,21 @@ signal claim_changed
 @onready var visual_polygon: Polygon2D = $Polygon2D
 
 var claimed_turn: int = -1
+var claimed_owner: String = "unclaimed"
+var _hit_token: int = 0
+
 
 func _ready() -> void:
 	add_to_group("pegs")
-	hit_area.body_entered.connect(change_peg_colour)
-	visual_polygon.color = unclaimed_color
-
-	if collision_polygon.polygon.is_empty():
-		setup_centered_box(size)
-
-
-func setup_centered_box(box_size: Vector2) -> void:
-	var half_w: float = box_size.x * 0.5
-	var half_h: float = box_size.y * 0.5
-
-	var points: PackedVector2Array = PackedVector2Array([
-		Vector2(-half_w, -half_h),
-		Vector2(half_w, -half_h),
-		Vector2(half_w, half_h),
-		Vector2(-half_w, half_h)
-	])
-	set_polygon(points)
+	if not Engine.is_editor_hint():
+		hit_area.body_entered.connect(change_peg_colour)
+	_update_texture()
 
 
 func set_polygon(points: PackedVector2Array) -> void:
+	if not is_node_ready():
+		await ready
+
 	collision_polygon.polygon = points
 	area_collision_polygon.polygon = points
 	visual_polygon.polygon = points
@@ -44,7 +40,7 @@ func set_polygon(points: PackedVector2Array) -> void:
 
 
 func _update_uvs() -> void:
-	if visual_polygon.polygon.size() != 4:
+	if visual_polygon == null or visual_polygon.polygon.size() != 4:
 		return
 
 	var tex_size: Vector2 = Vector2.ONE
@@ -71,7 +67,9 @@ func change_peg_colour(body: Node2D) -> void:
 		return
 
 	var ball_owner: String = String(body.get_meta("ball_owner", "default"))
-	_apply_color_for_owner(ball_owner)
+	claimed_owner = ball_owner
+
+	_play_hit_feedback(ball_owner)
 
 	if claimed_turn == new_claimed_turn:
 		return
@@ -80,19 +78,42 @@ func change_peg_colour(body: Node2D) -> void:
 	claim_changed.emit()
 
 
-func _apply_color_for_owner(owner_name: String) -> void:
-	match owner_name:
+func _play_hit_feedback(ball_owner: String) -> void:
+	_hit_token += 1
+	var current_token: int = _hit_token
+
+	if ball_owner == "player":
+		visual_polygon.texture = texture_player_hit
+	elif ball_owner == "ai":
+		visual_polygon.texture = texture_ai_hit
+
+	_update_uvs()
+
+	await get_tree().create_timer(hit_frame_duration).timeout
+
+	if _hit_token == current_token:
+		_update_texture()
+
+
+func _update_texture() -> void:
+	if not is_node_ready() or visual_polygon == null:
+		return
+
+	match claimed_owner:
 		"player":
-			visual_polygon.color = player_color
+			visual_polygon.texture = texture_player
 		"ai":
-			visual_polygon.color = ai_color
+			visual_polygon.texture = texture_ai
 		_:
-			visual_polygon.color = unclaimed_color
+			visual_polygon.texture = texture_unclaimed
+
+	_update_uvs()
 
 
 func reset_peg() -> void:
 	claimed_turn = -1
-	visual_polygon.color = unclaimed_color
+	claimed_owner = "unclaimed"
+	_update_texture()
 
 
 func get_claimed_turn() -> int:

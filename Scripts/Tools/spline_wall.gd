@@ -2,8 +2,6 @@
 extends Path2D
 class_name SplineWall
 
-enum BlockType { BLUE, ORANGE, GREEN, PURPLE }
-
 @export var block_scene: PackedScene:
 	set(value):
 		block_scene = value
@@ -24,29 +22,9 @@ enum BlockType { BLUE, ORANGE, GREEN, PURPLE }
 		default_block_size = value
 		update_wall()
 
-@export var blue_block_color: Color = Color(0.2, 0.45, 0.95):
+@export var default_color: Color = Color.WHITE:
 	set(value):
-		blue_block_color = value
-		update_wall()
-
-@export var orange_block_color: Color = Color(0.95, 0.5, 0.1):
-	set(value):
-		orange_block_color = value
-		update_wall()
-
-@export var green_block_color: Color = Color(0.2, 0.8, 0.3):
-	set(value):
-		green_block_color = value
-		update_wall()
-
-@export var purple_block_color: Color = Color(0.7, 0.3, 0.9):
-	set(value):
-		purple_block_color = value
-		update_wall()
-
-@export var block_types: Array[BlockType] = []:
-	set(value):
-		block_types = value
+		default_color = value
 		update_wall()
 
 @export var closed_loop: bool = false:
@@ -68,19 +46,23 @@ func _ready() -> void:
 	_connect_curve()
 	update_wall()
 
+
 func _exit_tree() -> void:
 	if Engine.is_editor_hint() and blocks_container:
 		blocks_container.queue_free()
 
+
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		_connect_curve()
+
 
 func _connect_curve() -> void:
 	if curve:
 		if not curve.changed.is_connected(update_wall):
 			curve.changed.connect(update_wall)
 			update_wall()
+
 
 func setup_nodes() -> void:
 	blocks_container = get_node_or_null("Blocks") as Node2D
@@ -89,6 +71,7 @@ func setup_nodes() -> void:
 		blocks_container.name = "Blocks"
 		add_child(blocks_container)
 		_set_owner_recursive(blocks_container)
+
 
 func _set_owner_recursive(target_node: Node) -> void:
 	if not Engine.is_editor_hint() or not is_inside_tree():
@@ -101,12 +84,34 @@ func _set_owner_recursive(target_node: Node) -> void:
 	for child: Node in target_node.get_children():
 		_set_owner_recursive(child)
 
+
 func _is_curve_closed() -> bool:
 	if not curve or curve.get_point_count() < 3:
 		return false
 	var first_point: Vector2 = curve.get_point_position(0)
 	var last_point: Vector2 = curve.get_point_position(curve.get_point_count() - 1)
 	return first_point.distance_to(last_point) < 4.0
+
+
+func _get_curve_tangent(d: float, curve_length: float, is_closed: bool) -> Vector2:
+	var delta: float = 1.0
+	var p1: Vector2
+	var p2: Vector2
+
+	if is_closed:
+		var d1: float = fmod(d - delta + curve_length, curve_length)
+		var d2: float = fmod(d + delta, curve_length)
+		p1 = curve.sample_baked(d1)
+		p2 = curve.sample_baked(d2)
+	else:
+		var d1: float = maxf(0.0, d - delta)
+		var d2: float = minf(curve_length, d + delta)
+		p1 = curve.sample_baked(d1)
+		p2 = curve.sample_baked(d2)
+
+	var dir: Vector2 = (p2 - p1).normalized()
+	return dir if dir != Vector2.ZERO else Vector2.RIGHT
+
 
 func update_wall() -> void:
 	if not curve or not is_inside_tree() or not blocks_container:
@@ -121,21 +126,9 @@ func update_wall() -> void:
 		return
 
 	var is_closed: bool = closed_loop or _is_curve_closed()
-	var total_blocks: int = 0
-	var effective_spacing: float = block_spacing
-
-	if is_closed:
-		total_blocks = roundi(curve_length / block_spacing)
-		total_blocks = maxi(1, total_blocks)
-		effective_spacing = curve_length / float(total_blocks)
-	else:
-		total_blocks = ceili(curve_length / block_spacing)
-
-	if total_blocks <= 0:
-		return
-
-	if block_types.size() != total_blocks:
-		block_types.resize(total_blocks)
+	var total_blocks: int = roundi(curve_length / block_spacing)
+	total_blocks = maxi(1, total_blocks)
+	var effective_spacing: float = curve_length / float(total_blocks)
 
 	var half_height: float = default_block_size.y / 2.0
 	var first_start_normal: Vector2 = Vector2.ZERO
@@ -145,19 +138,11 @@ func update_wall() -> void:
 		var start_distance: float = float(block_index) * effective_spacing
 		var end_distance: float = float(block_index + 1) * effective_spacing
 
-		if not is_closed:
-			end_distance = minf(curve_length, end_distance)
-
 		var start_point: Vector2 = curve.sample_baked(start_distance)
 		var end_point: Vector2 = curve.sample_baked(end_distance)
 
-		var start_dir: Vector2 = (curve.sample_baked(minf(curve_length, start_distance + 1.0)) - start_point).normalized()
-		var end_dir: Vector2 = (curve.sample_baked(minf(curve_length, end_distance + 1.0)) - end_point).normalized()
-
-		if start_dir == Vector2.ZERO:
-			start_dir = Vector2.RIGHT
-		if end_dir == Vector2.ZERO:
-			end_dir = Vector2.RIGHT
+		var start_dir: Vector2 = _get_curve_tangent(start_distance, curve_length, is_closed)
+		var end_dir: Vector2 = _get_curve_tangent(end_distance, curve_length, is_closed)
 
 		var start_normal: Vector2 = Vector2(-start_dir.y, start_dir.x)
 		var end_normal: Vector2 = Vector2(-end_dir.y, end_dir.x)
@@ -179,47 +164,32 @@ func update_wall() -> void:
 		var bottom_left: Vector2 = (start_point - start_normal * half_height) - center
 
 		var polygon: PackedVector2Array = PackedVector2Array([top_left, top_right, bottom_right, bottom_left])
-		var current_type: BlockType = block_types[block_index]
 
 		var block_node: Node2D
 		if block_scene:
 			block_node = block_scene.instantiate() as Node2D
+			block_node.name = "Block_" + str(block_index)
 			block_node.position = center
-			block_node.rotation = (end_point - start_point).angle()
-			if "block_type" in block_node:
-				block_node.set("block_type", current_type)
+
+			blocks_container.add_child(block_node)
+			_set_owner_recursive(block_node)
+
+			if block_node.has_method("set_polygon"):
+				block_node.call("set_polygon", polygon)
+			else:
+				block_node.rotation = (end_point - start_point).angle()
 		else:
-			block_node = _create_wedge_block(polygon, current_type)
+			block_node = _create_wedge_block(polygon)
+			block_node.name = "Block_" + str(block_index)
 			block_node.position = center
+			blocks_container.add_child(block_node)
+			_set_owner_recursive(block_node)
 
-		block_node.name = "Block_" + str(block_index)
-		blocks_container.add_child(block_node)
-		_set_owner_recursive(block_node)
 
-func _create_wedge_block(polygon: PackedVector2Array, type: BlockType) -> StaticBody2D:
+func _create_wedge_block(polygon: PackedVector2Array) -> StaticBody2D:
 	var body_node: StaticBody2D = StaticBody2D.new()
 	body_node.physics_material_override = wall_physics_material
-	body_node.add_to_group("breakable_blocks")
-	body_node.set_meta("block_type", type)
-
-	var group_name: String = "blue_blocks"
-	var block_color: Color = blue_block_color
-
-	match type:
-		BlockType.ORANGE:
-			group_name = "orange_blocks"
-			block_color = orange_block_color
-		BlockType.GREEN:
-			group_name = "green_blocks"
-			block_color = green_block_color
-		BlockType.PURPLE:
-			group_name = "purple_blocks"
-			block_color = purple_block_color
-		_:
-			group_name = "blue_blocks"
-			block_color = blue_block_color
-
-	body_node.add_to_group(group_name)
+	body_node.add_to_group("pegs")
 
 	var collision_shape: CollisionPolygon2D = CollisionPolygon2D.new()
 	collision_shape.polygon = polygon
@@ -227,7 +197,7 @@ func _create_wedge_block(polygon: PackedVector2Array, type: BlockType) -> Static
 
 	var visual_polygon: Polygon2D = Polygon2D.new()
 	visual_polygon.polygon = polygon
-	visual_polygon.color = block_color
+	visual_polygon.color = default_color
 	body_node.add_child(visual_polygon)
 
 	return body_node
