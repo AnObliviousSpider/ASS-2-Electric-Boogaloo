@@ -107,4 +107,12 @@ var dialogue_moods: Dictionary = {
 		"At least this will be a very chill reality…",
 		"Well cat’s out the bag now.",
 	],
+	"Missed": [
+		"Phew, I was foaming at the meowth",
+		"You didn’t even leave a scwratch!",
+		"UUUUUUUH…. Meee-ow?" ,
+		"I freeze to imagine how you’ll one up that!",
+		"Beat that, Kitten!",
+		"You think I should diversify my puns? Starting to think I’m all Bark no Bite!",
+	]
 }

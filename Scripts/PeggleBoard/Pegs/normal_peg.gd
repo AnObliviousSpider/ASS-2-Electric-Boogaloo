@@ -3,19 +3,11 @@ extends StaticBody2D
 
 signal claim_changed
 
-
-@export_group("Audio")
-
-@export var peg_hit_sfx: AudioStream
-
-
 @onready var hit_area: Area2D = $Area2D
 @onready var peg_sprite: AnimatedSprite2D = $Sprite2D
 
-
 # -1 means the peg is unclaimed.
 var claimed_turn: int = -1
-
 
 func _ready() -> void:
 	add_to_group("pegs")
@@ -34,10 +26,7 @@ func change_peg_colour(body: Node2D) -> void:
 	) != true:
 		return
 
-	if peg_hit_sfx != null:
-		SfxPlayer.play(
-			peg_hit_sfx
-		)
+	EventBus.peg_hit_sound_update.emit()
 
 	var new_claimed_turn: int = int(
 		body.get_meta(

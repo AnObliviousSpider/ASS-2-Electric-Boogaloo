@@ -2,7 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bwgf3r1i0sr32" path="res://Scripts/PeggleBoard/peggle_board.gd" id="1_g8rvb"]
 [ext_resource type="PackedScene" uid="uid://6u1m71svqmc6" path="res://Scenes/PeggleBoard/peggle_ball_shooter.tscn" id="3_s3sbd"]
+[ext_resource type="AudioStream" uid="uid://b4s4giggdafay" path="res://Assets/Audio/SFX/Happy Bin.mp3" id="4_1uqbv"]
 [ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="4_ryebi"]
+[ext_resource type="AudioStream" uid="uid://cmvatd14ckwn7" path="res://Assets/Audio/SFX/Sad Bin.mp3" id="5_iotme"]
+[ext_resource type="AudioStream" uid="uid://u0u03y0b1pjx" path="res://Assets/Audio/SFX/Angry Bin.mp3" id="6_pr6su"]
 [ext_resource type="PackedScene" uid="uid://cyohg8tsod6lf" path="res://Scenes/PeggleBoard/PeggleBin/Bin.tscn" id="6_sxo5r"]
 [ext_resource type="Texture2D" uid="uid://d0h8k7ioy5flp" path="res://Assets/Art/Frame/Peggle_Frame_0.png" id="7_bnnyb"]
 [ext_resource type="Texture2D" uid="uid://bl4qhbvyqfhvd" path="res://Assets/Art/Frame/Peggle_Frame_1.png" id="8_7po2y"]
@@ -111,6 +114,10 @@ animations = [{
 editor_description = "A prototype peggleboard (with placeholder art)"
 script = ExtResource("1_g8rvb")
 peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLevel3"), NodePath("PegsLevel4"), NodePath("PegsLevel5")]
+peg_hit_sfx = ExtResource("3_42h65")
+cannon_fire_sfx = ExtResource("3_42h65")
+sfx_max_scale = 2.0
+bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), ExtResource("3_42h65"), ExtResource("6_pr6su")])
 
 [node name="PeggleBallShooter" parent="." unique_id=345197782 instance=ExtResource("3_s3sbd")]
 z_index = 1

@@ -124,8 +124,10 @@ func play(
 			if local_play_token != play_token:
 				return
 
+	var find_player: AudioStreamPlayer = _get_or_create_free_player()
+	find_player.pitch_scale = pitch_scale
 	_start_player(
-		_get_or_create_free_player(),
+		find_player,
 		audio,
 		volume_db,
 		safe_start_position,
