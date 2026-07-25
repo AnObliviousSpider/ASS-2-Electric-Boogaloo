@@ -8,7 +8,7 @@ extends Node
 
 @export_group("Game")
 
-@export var starting_ball_count: int = 20
+@export var starting_ball_count: int = 50
 
 
 @export_group("Peggle Board Transition")
