@@ -114,11 +114,8 @@ animations = [{
 [node name="PeggleBoard" type="Node2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels")]
 editor_description = "A prototype peggleboard (with placeholder art)"
 script = ExtResource("1_g8rvb")
-
-
 peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLevel3"), NodePath("PegsLevel4"), NodePath("PegsLevel5")]
 peg_hit_sfx = ExtResource("3_42h65")
-
 cannon_fire_sfx = ExtResource("3_42h65")
 sfx_max_scale = 2.0
 bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), ExtResource("3_42h65"), ExtResource("6_pr6su")])
@@ -448,6 +445,14 @@ autoplay = "default"
 frame_progress = 0.059644017
 metadata/_edit_lock_ = true
 
+[node name="Eye" type="AnimatedSprite2D" parent="." unique_id=865351097]
+position = Vector2(248, 19.000002)
+scale = Vector2(0.7, 0.7)
+sprite_frames = SubResource("SpriteFrames_pr6su")
+
+[node name="EyePupil" type="Sprite2D" parent="Eye" unique_id=253238988]
+texture = ExtResource("19_1uqbv")
+script = ExtResource("20_iotme")
 
 [node name="BounceOnce" type="StaticBody2D" parent="." unique_id=249566150]
 position = Vector2(243, 206)
@@ -464,7 +469,6 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce/Area2D" unique_id=2073638313]
 position = Vector2(5, -1)
 shape = SubResource("RectangleShape2D_1eppy")
-
 
 [connection signal="timeout" from="PeggleBallShooter/FlashCooldown" to="." method="_on_flash_cooldown_timeout"]
 [connection signal="body_entered" from="BounceOnce/Area2D" to="BounceOnce" method="_on_area_2d_body_entered"]
