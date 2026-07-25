@@ -16,6 +16,7 @@ var placeholder_text = "placeholder text: if you see this something went wrong!"
 func display_dialogue(dialogue: String) -> void:
 	dialogue_label.text = dialogue
 	animation_player.play("RESET")
+	animation_player.speed_scale = 50.0 / float(len(dialogue))
 	await _fade_in(fade_in_time)
 	SfxPlayer.play(on_text_audio)
 	create_tween().tween_property(dialogue_label, "visible_ratio", 1.0, dialogue_speed * len(dialogue_label.text))

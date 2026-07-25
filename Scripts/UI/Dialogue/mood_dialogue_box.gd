@@ -15,17 +15,17 @@ func _ready() -> void:
 		dialogue_box.on_display_audio = on_display_audio
 	if on_text_audio:
 		dialogue_box.on_text_audio = on_text_audio
+	EventBus.dialogue_mood_hide.connect(_on_hide)
 
 func _on_dialogue_mood_triggered(mood_index: int, level: int) -> void:
 	if not DialogueManager._dialogue_box_displayed:
-		DialogueManager.open_dialogue()
 		# Dialogue system for mood mode
 		var mood : String = GameData.emotions.keys()[mood_index]
 		if mood in DialogueManager.dialogue_moods.keys():
 			var dialogue : String = DialogueManager.dialogue_moods[mood].pick_random()
 			dialogue_box.display_dialogue(dialogue)
-			await EventBus.dialogue_next
-			dialogue_box.hide_dialogue()
-			DialogueManager.close_dialogue()
 		else:
 			printerr("Mood: ", mood, " not in dialogue_moods dictionary")
+
+func _on_hide() -> void:
+	dialogue_box.hide_dialogue()

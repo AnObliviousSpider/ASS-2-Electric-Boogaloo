@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://u0u03y0b1pjx"
+path="res://.godot/imported/Angry Bin.mp3-8dfbae2c9d1a995da3ae30378d7d0f60.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/Angry Bin.mp3"
+dest_files=["res://.godot/imported/Angry Bin.mp3-8dfbae2c9d1a995da3ae30378d7d0f60.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
