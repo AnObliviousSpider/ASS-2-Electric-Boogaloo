@@ -341,7 +341,7 @@ func _collect_pegs(
 	for child: Node in node.get_children():
 		if child.is_in_group(
 			"pegs"
-		):
+		) and not child.dummy:
 			all_pegs.append(
 				child
 			)
@@ -424,6 +424,7 @@ func get_progress_values() -> Vector2:
 			"get_claimed_turn"
 		):
 			continue
+			
 
 		var claimed_turn: int = int(
 			peg.call(
