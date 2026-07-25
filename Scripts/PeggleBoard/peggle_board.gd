@@ -53,9 +53,7 @@ var sfx_max_scale: float = 2.0
 # 2: Flirty
 # 3: Angry
 @export var bin_emotion_sfx: Array[AudioStream] = []
-@export var background_music: Array[AudioStream] = []
 
-var current_music_track: int = 0
 
 # PROGRESS BARS
 
@@ -335,10 +333,7 @@ func show_peg_level(
 		peg_levels[level_index]
 	)
 	
-	current_music_track = randi_range(0,len(background_music) - 1)
-	
-	if !MusicPlayer.is_playing(background_music[current_music_track]):
-		MusicPlayer.crossfade_to(background_music[current_music_track], 2.5)
+
 	
 	
 	refresh_pegs()
