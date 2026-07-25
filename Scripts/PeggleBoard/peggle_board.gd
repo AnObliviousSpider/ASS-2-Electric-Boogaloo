@@ -7,7 +7,7 @@ enum Turn {
 }
 
 
-const FULL_BAR_FRACTION: float = 0.75
+const FULL_BAR_FRACTION: float = 0.1
 const NO_PENDING_EMOTION: int = -1
 
 const FORCED_DEJECTED_LEVEL: int = 3
