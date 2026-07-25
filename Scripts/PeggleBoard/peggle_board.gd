@@ -25,15 +25,19 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 @export var STARTING_BALL_COUNT: int = 20
 
 
-
 # COLLISION INFORMATION
 # Layer 1: Walls
 # Layer 2: Pegs
 # Layer 3: Ball
 # Layer 4: Bin
 
-#random
-var rng = RandomNumberGenerator.new()
+
+# RANDOM
+
+var rng: RandomNumberGenerator = (
+	RandomNumberGenerator.new()
+)
+
 
 # PEG LEVELS
 # Assign PegsLevel1 through PegsLevel5 in order.
@@ -67,8 +71,12 @@ var sfx_max_scale: float = 2.0
 @export var progress_bar_duration: float = 0.75
 
 
+# SCENES
+
 @export_group("Scenes")
-@export var explosion_scene : PackedScene
+
+@export var explosion_scene: PackedScene
+
 
 @export_group("")
 
@@ -123,6 +131,7 @@ var current_turn: int = Turn.PLAYER
 var ball_in_play: bool = false
 var resolving_ball: bool = false
 var game_ended: bool = false
+
 var active_balls: Array[RigidBody2D] = []
 
 var pending_dialogue_emotion: int = (
@@ -168,6 +177,28 @@ func _ready() -> void:
 	cache_original_dialogue()
 	cache_original_bin_emotions()
 
+	# Level 1 always begins with story dialogue.
+	# Later levels are locked manually before their
+	# story dialogue is triggered.
+	if LevelManager.level == LevelManager.MIN_LEVEL:
+		cannon.lock_cannon()
+	else:
+		cannon.unlock_cannon()
+
+	if not EventBus.dialogue_level_triggered.is_connected(
+		_on_story_dialogue_started
+	):
+		EventBus.dialogue_level_triggered.connect(
+			_on_story_dialogue_started
+		)
+
+	if not DialogueManager.level_dialogue_closed.is_connected(
+		_on_story_dialogue_finished
+	):
+		DialogueManager.level_dialogue_closed.connect(
+			_on_story_dialogue_finished
+		)
+
 	if not endzone.body_entered.is_connected(
 		destroy_ball
 	):
@@ -181,10 +212,13 @@ func _ready() -> void:
 		EventBus.peg_hit_sound_update.connect(
 			play_peg_hit_sound
 		)
-	
-	PowerUpManager.trigger_power_up.connect(
+
+	if not PowerUpManager.trigger_power_up.is_connected(
 		_apply_power_up
-	)
+	):
+		PowerUpManager.trigger_power_up.connect(
+			_apply_power_up
+		)
 
 	for child: Node in bins.get_children():
 		if not child.has_signal(
@@ -208,19 +242,48 @@ func _ready() -> void:
 	)
 
 	reset_current_round()
-	
-	
+
+
+func _on_story_dialogue_started(
+	_level_number: int
+) -> void:
+	# Every story-dialogue chunk keeps the cannon
+	# locked. It remains locked between chunks.
+	cannon.lock_cannon()
+
+
+func _on_story_dialogue_finished() -> void:
+	# This signal is emitted only after every story
+	# chunk for the current level has finished.
+	cannon.unlock_cannon()
+
 
 func _apply_power_up() -> void:
-	if PowerUpManager.active_power_up == PowerUpManager.power_ups.ghost_ball:
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.ghost_ball
+	):
 		if current_turn == Turn.PLAYER:
 			is_ghost_ball = true
-	if PowerUpManager.active_power_up == PowerUpManager.power_ups.split_ball:
+
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.split_ball
+	):
 		is_split_ball = true
-	if PowerUpManager.active_power_up == PowerUpManager.power_ups.blast_ball:
+
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.blast_ball
+	):
 		is_blast_ball = true
-	if PowerUpManager.active_power_up == PowerUpManager.power_ups.bounce_ball:
+
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.bounce_ball
+	):
 		is_bounce_once = true
+
 
 func _process(
 	_delta: float
@@ -229,6 +292,9 @@ func _process(
 		return
 
 	if resolving_ball:
+		return
+
+	if cannon.is_cannon_locked():
 		return
 
 	if (
@@ -249,6 +315,9 @@ func _input(
 		return
 
 	if resolving_ball:
+		return
+
+	if cannon.is_cannon_locked():
 		return
 
 	if current_turn != Turn.PLAYER:
@@ -384,8 +453,6 @@ func update_level_three_override(
 	)
 
 	if level_number == FORCED_DEJECTED_LEVEL:
-		# Only short bin-response dialogue changes.
-		# Story dialogue remains untouched.
 		DialogueManager.dialogue_moods[
 			"Dejected"
 		] = [
@@ -398,7 +465,6 @@ func update_level_three_override(
 
 		return
 
-	# Restore normal responses after level three.
 	if not original_dejected_dialogue.is_empty():
 		DialogueManager.dialogue_moods[
 			"Dejected"
@@ -460,10 +526,7 @@ func show_peg_level(
 	active_peg_level = (
 		peg_levels[level_index]
 	)
-	
 
-	
-	
 	refresh_pegs()
 
 
@@ -587,6 +650,7 @@ func reset_current_round() -> void:
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
+
 	active_balls.clear()
 
 	pending_dialogue_emotion = (
@@ -700,10 +764,10 @@ func get_progress_percentage(
 
 	return clampf(
 		float(claimed_peg_count)
-		/ float(
-			pegs_required_for_full_bar
-		)
-		* 100.0,
+			/ float(
+				pegs_required_for_full_bar
+			)
+			* 100.0,
 		0.0,
 		100.0
 	)
@@ -761,6 +825,10 @@ func advance_to_next_peg_level() -> void:
 
 	reset_current_round()
 
+	# Prevent input before the story-dialogue
+	# trigger is processed.
+	cannon.lock_cannon()
+
 	game_ended = false
 
 	DialogueManager.play_level_dialogue_sequence(
@@ -781,6 +849,8 @@ func restart_current_peg_level() -> void:
 	)
 
 	reset_current_round()
+
+	cannon.lock_cannon()
 
 	game_ended = false
 
@@ -810,6 +880,8 @@ func end_game(
 
 	game_ended = true
 
+	cannon.lock_cannon()
+
 	await fade_out_board()
 
 	if scene_key == WIN_SCENE_KEY:
@@ -826,6 +898,11 @@ func end_game(
 
 
 func fire_ball() -> void:
+	# Hard protection even if another script
+	# calls fire_ball directly.
+	if cannon.is_cannon_locked():
+		return
+
 	if game_ended:
 		return
 
@@ -1188,7 +1265,6 @@ func finish_ball_resolution(
 
 	if game_ended:
 		resolving_ball = false
-
 		return
 
 	if GameData.balls_remaining <= 0:
@@ -1217,6 +1293,9 @@ func finish_ball_resolution(
 
 
 func start_ai_turn() -> void:
+	if cannon.is_cannon_locked():
+		return
+
 	if game_ended:
 		return
 
@@ -1230,21 +1309,27 @@ func start_ai_turn() -> void:
 
 	if all_pegs.is_empty():
 		finish_opponent_turn()
-
 		return
 
 	var target_peg := (
-		all_pegs[rng.randi_range(0, len(all_pegs) - 1)] as Node2D
+		all_pegs[
+			rng.randi_range(
+				0,
+				all_pegs.size() - 1
+			)
+		] as Node2D
 	)
 
 	if target_peg == null:
 		finish_opponent_turn()
-
 		return
 
 	await cannon.think_and_aim_at(
 		target_peg.global_position
 	)
+
+	if cannon.is_cannon_locked():
+		return
 
 	if game_ended:
 		return
@@ -1259,7 +1344,6 @@ func start_ai_turn() -> void:
 		target_peg
 	):
 		start_ai_turn()
-
 		return
 
 	fire_ball()
@@ -1269,7 +1353,10 @@ func _on_ball_body_entered(
 	current_ball: RigidBody2D,
 	_body: Node
 ) -> void:
-	if is_split_ball and current_turn == Turn.PLAYER:
+	if (
+		is_split_ball
+		and current_turn == Turn.PLAYER
+	):
 		is_split_ball = false
 
 		var turn_owner: int = int(
@@ -1303,14 +1390,40 @@ func _on_ball_body_entered(
 		active_balls.append(
 			spawned_split_ball
 		)
+
 		configure_ball(
 			spawned_split_ball,
 			turn_owner
 		)
-	if is_blast_ball and current_turn == Turn.PLAYER:
+
+	if (
+		is_blast_ball
+		and current_turn == Turn.PLAYER
+	):
 		is_blast_ball = false
-		
-		var explosion = explosion_scene.instantiate()
-		get_tree().root.add_child(explosion)
-		explosion.global_position = current_ball.global_position
-		explosion.ball = current_ball
+
+		if explosion_scene == null:
+			push_warning(
+				"No explosion scene was assigned."
+			)
+			return
+
+		var explosion: Node = (
+			explosion_scene.instantiate()
+		)
+
+		get_tree().root.add_child(
+			explosion
+		)
+
+		if explosion is Node2D:
+			(
+				explosion as Node2D
+			).global_position = (
+				current_ball.global_position
+			)
+
+		explosion.set(
+			"ball",
+			current_ball
+		)

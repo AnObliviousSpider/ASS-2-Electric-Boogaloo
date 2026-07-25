@@ -15,6 +15,11 @@ var _dialogue_input_locked: bool = false
 var _level_dialogue_sequence_running: bool = false
 
 
+# Stores the most recently resolved alignment.
+# This no longer controls every DialogueBox.
+var current_dialogue_alignment: String = "right"
+
+
 # Each level contains one or more dialogue chunks.
 #
 # Level 1:
@@ -29,7 +34,7 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
-				"text": "There you are! All the power in the universe, and you're still so hard to find?"
+				"text": "There you are! How can you erase most of the universe and still be so hard to find?"
 			},
 		],
 
@@ -57,7 +62,7 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
-				"text": "It's a special machine I made for you. A gift from me to you. It links our emotions, so you can understand me a bit better."
+				"text": "It's a special machine I made for you. It links our emotions, so you can understand me a bit better."
 			},
 			{
 				"align": "right",
@@ -69,15 +74,15 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "Every orb is a planet. Miss the emotion-link bins at the bottom, and that planet is gone. Hit the right emotion, and you get a power-up."
+				"text": "Every orb is a planet. Miss the emotion-link bins at the bottom, and that planet is gone."
 			},
 			{
 				"align": "right",
-				"text": "...And if we run out, it's over. A countdown to the end."
+				"text": "Hit the right emotion, and you get a power-up. ...And if we run out, it's over. A countdown to the end."
 			},
 		],
 	],
-	
+
 	2: [
 		[
 			{
@@ -181,9 +186,6 @@ var dialogue_level_sets: Dictionary = {
 
 
 # Contains the currently active flat dialogue chunk.
-#
-# The dialogue box can continue reading:
-# DialogueManager.dialogue_levels[level_number]
 var dialogue_levels: Dictionary = {}
 
 
@@ -243,21 +245,12 @@ func _ready() -> void:
 	_prepare_first_dialogue_sets()
 
 
-func _input(
-	event: InputEvent
-) -> void:
-	if not event.is_action_pressed(
-		"action_primary"
-	):
-		return
-
-	if not _dialogue_box_displayed:
-		return
-
-	if _dialogue_input_locked:
-		return
-
-	EventBus.dialogue_next.emit()
+# DialogueBox uses this before processing a click.
+func can_accept_dialogue_input() -> bool:
+	return (
+		_dialogue_box_displayed
+		and not _dialogue_input_locked
+	)
 
 
 func _prepare_first_dialogue_sets() -> void:
@@ -338,16 +331,75 @@ func _load_level_dialogue_set(
 	return true
 
 
+# Returns the alignment for one specific line.
+#
+# It does not emit a signal, so other existing
+# DialogueBox nodes remain unchanged.
+func get_alignment_for_dialogue_text(
+	dialogue_text: String
+) -> String:
+	var level_number: int = (
+		LevelManager.level
+	)
+
+	var active_dialogue: Array = dialogue_levels.get(
+		level_number,
+		[]
+	)
+
+	for entry_variant: Variant in active_dialogue:
+		if not entry_variant is Dictionary:
+			continue
+
+		var dialogue_entry: Dictionary = (
+			entry_variant as Dictionary
+		)
+
+		var entry_text: String = str(
+			dialogue_entry.get(
+				"text",
+				""
+			)
+		)
+
+		if entry_text != dialogue_text:
+			continue
+
+		var entry_alignment: String = str(
+			dialogue_entry.get(
+				"align",
+				"right"
+			)
+		)
+
+		entry_alignment = (
+			entry_alignment
+				.strip_edges()
+				.to_lower()
+		)
+
+		if entry_alignment != "left":
+			entry_alignment = "right"
+
+		current_dialogue_alignment = (
+			entry_alignment
+		)
+
+		return entry_alignment
+
+	# Mood dialogue and unknown dialogue use
+	# the right-side appearance.
+	current_dialogue_alignment = "right"
+
+	return "right"
+
+
 func _trigger_fresh_level_dialogue(
 	level_number: int
 ) -> void:
-	# Make sure the manager considers the old
-	# dialogue completely closed.
 	_dialogue_box_displayed = false
 	_dialogue_input_locked = true
 
-	# Give the dialogue UI time to finish any
-	# visibility or close logic.
 	await get_tree().process_frame
 
 	_dialogue_input_locked = false
@@ -374,11 +426,8 @@ func play_level_dialogue_set(
 		level_number
 	)
 
-	# Wait until this specific dialogue chunk closes.
 	await level_dialogue_set_closed
 
-	# Let the dialogue UI finish closing before
-	# anything else is started.
 	await get_tree().create_timer(
 		LEVEL_DIALOGUE_CHUNK_GAP
 	).timeout
@@ -392,18 +441,15 @@ func restart_level_dialogue_from_set(
 	if LevelManager.level != level_number:
 		return
 
-	# Cancel any old automatic sequence.
 	_level_dialogue_sequence_running = false
 
-	# Reset the dialogue manager to a fully closed state.
 	_dialogue_box_displayed = false
 	_dialogue_input_locked = true
 
-	# Clear the old active dialogue so the dialogue UI
-	# cannot keep the last entry from the previous set.
 	dialogue_levels[level_number] = []
 
-	# Let the old dialogue box fully process its close.
+	current_dialogue_alignment = "right"
+
 	await get_tree().process_frame
 	await get_tree().process_frame
 
@@ -420,8 +466,6 @@ func restart_level_dialogue_from_set(
 	):
 		return
 
-	# Start the loaded set as completely fresh
-	# level dialogue.
 	_dialogue_box_displayed = false
 	_dialogue_input_locked = false
 
@@ -429,7 +473,6 @@ func restart_level_dialogue_from_set(
 		level_number
 	)
 
-	# Wait until the restarted dialogue closes.
 	await level_dialogue_set_closed
 
 	await get_tree().create_timer(
@@ -479,8 +522,6 @@ func play_level_dialogue_sequence(
 
 	_level_dialogue_sequence_running = false
 
-	# The board appears only after all chunks
-	# in this sequence have finished.
 	level_dialogue_closed.emit()
 
 
