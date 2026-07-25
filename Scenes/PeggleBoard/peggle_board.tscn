@@ -344,23 +344,23 @@ position = Vector2(0, 29)
 
 [node name="Bin1" parent="Bins" unique_id=407736055 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(197, 184)
+position = Vector2(177, 184)
 emotion_sound = ExtResource("7_1uqbv")
 
 [node name="Bin2" parent="Bins" unique_id=212364139 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(227.00002, 184)
+position = Vector2(219, 184)
 emotion_sound = ExtResource("8_iotme")
 what_emotion_to_respond_with = 1
 
 [node name="Bin3" parent="Bins" unique_id=2044842428 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(260, 184)
+position = Vector2(267, 184)
 what_emotion_to_respond_with = 2
 
 [node name="Bin4" parent="Bins" unique_id=921239040 instance=ExtResource("6_sxo5r")]
 unique_name_in_owner = true
-position = Vector2(291, 184)
+position = Vector2(315, 185)
 emotion_sound = ExtResource("9_pr6su")
 what_emotion_to_respond_with = 3
 
