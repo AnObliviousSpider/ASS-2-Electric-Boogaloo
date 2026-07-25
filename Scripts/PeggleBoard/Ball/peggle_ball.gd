@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+#SCENES
+@export var ball_dot: PackedScene
 
 # TEXTURES
 
@@ -38,7 +40,10 @@ func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 			break
 
 
-
+func _on_dot_cooldown_timeout() -> void:
+	var dot_ins = ball_dot.instantiate()
+	get_tree().current_scene.add_child(dot_ins)  
+	dot_ins.global_position = (global_position)
 
 
 func ghost_ball() -> void:
