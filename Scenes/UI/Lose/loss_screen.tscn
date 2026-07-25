@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://b1ld20rur0pae"]
 
 [ext_resource type="Script" uid="uid://cbtuc3tf5jhpx" path="res://Scripts/UI/Lose/loss_screen.gd" id="1_b2ddn"]
+[ext_resource type="Texture2D" uid="uid://0rihn8cc2mos" path="res://Assets/Art/Background/Loss Screen Star.png" id="2_3gtk4"]
+[ext_resource type="AudioStream" uid="uid://dx08sm30svaqh" path="res://Assets/Audio/SFX/UI/new_game.wav" id="2_ptuly"]
+[ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="3_mjvqw"]
 [ext_resource type="FontFile" uid="uid://c0ti0iouqg1m2" path="res://Assets/Fonts/Ruler 9.ttf" id="4_fq71i"]
 
 [sub_resource type="Animation" id="Animation_b2ddn"]
@@ -65,6 +68,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_b2ddn")
+click_sound = ExtResource("2_ptuly")
+hover_sound = ExtResource("3_mjvqw")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=670976092]
 layout_mode = 1
@@ -75,7 +80,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Star" type="ColorRect" parent="." unique_id=2109423725]
+[node name="Star" type="TextureRect" parent="." unique_id=831952537]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
@@ -89,6 +94,7 @@ offset_right = 17.5
 offset_bottom = 17.5
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_3gtk4")
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1183512054]
@@ -98,10 +104,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1701448372]
 layout_mode = 2
@@ -114,17 +120,17 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.29000002, 0.29000002, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("4_fq71i")
-text = "And then, there were none......"
+text = "The final star was plucked from the sky..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RetryButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1668103217]
-modulate = Color(1, 1, 1, -1.135)
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-text = " Retry "
+text = "Retry in a different universe"
 
 [node name="MainMenuButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1883874265]
-modulate = Color(1, 1, 1, -1.1345384)
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 text = "Main Menu"
 
