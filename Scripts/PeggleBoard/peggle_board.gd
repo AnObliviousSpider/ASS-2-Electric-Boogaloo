@@ -64,6 +64,8 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 @onready var ball_bar: ProgressBar = $BallBar
 @onready var counting_label: Label = $CountingLabel
 
+@onready var bounce_once: StaticBody2D = $BounceOnce
+
 # SHOOTING
 @export var shoot_offset: Vector2 = Vector2.ZERO
 @export var shoot_strength: float = 100.0
@@ -94,6 +96,7 @@ var progress_tween: Tween
 # POWER-UPS
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
+var is_bounce_once: bool = false
 var is_ai_ball_smol = 2
 
 # SPAWNED BALLS
@@ -139,13 +142,8 @@ func _process(_delta: float) -> void:
 	if resolving_ball:
 		return
 
-	if (
-		current_turn == Turn.PLAYER
-		and not ball_in_play
-	):
-		aim_shooter_at(
-			get_global_mouse_position()
-		)
+	if current_turn == Turn.PLAYER and not ball_in_play:
+		aim_shooter_at(get_global_mouse_position())
 
 
 func _input(event: InputEvent) -> void:
@@ -608,7 +606,7 @@ func fire_ball(
 	if is_ghost_ball:
 		is_ghost_ball = false
 		new_ball.ghost_ball()
-	
+			
 	if is_ai_ball_smol == 2:
 		is_ai_ball_smol -= 1
 
@@ -619,6 +617,11 @@ func fire_ball(
 	else:
 		new_ball.scale = Vector2(1, 1)
 
+	if is_bounce_once == 1:
+		is_bounce_once=0
+		bounce_once.bounce_once()
+		
+			
 	new_ball.global_position = (
 		peggle_ball_firing_point.global_position
 			+ shoot_offset
@@ -654,6 +657,8 @@ func fire_ball(
 	)
 
 	ball_in_play = true
+	
+	
 
 	use_ball()
 	game_feel()

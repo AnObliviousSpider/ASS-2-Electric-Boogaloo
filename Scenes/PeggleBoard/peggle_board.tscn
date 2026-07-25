@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://bxfuodh2hfv5v" path="res://Assets/Art/Cannon/Eye_closed.png" id="18_df1sm"]
 [ext_resource type="Texture2D" uid="uid://cju084w7bqsk3" path="res://Assets/Art/Cannon/EyePupil.png" id="19_1uqbv"]
 [ext_resource type="Script" uid="uid://vmokh7ui80mb" path="res://Scripts/PeggleBoard/eye_pupil.gd" id="20_iotme"]
+[ext_resource type="Script" uid="uid://npmb044qwxjg" path="res://Scripts/PeggleBoard/bounce_once.gd" id="7_42h65"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s3sbd"]
 
@@ -136,6 +137,13 @@ animations = [{
 }]
 
 [node name="PeggleBoard" type="Node2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvs26"]
+size = Vector2(144, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
+size = Vector2(144, 9)
+
+[node name="PeggleBoard" type="Node2D" unique_id=1037463456]
 editor_description = "A prototype peggleboard (with placeholder art)"
 position = Vector2(0, 9)
 script = ExtResource("1_g8rvb")
@@ -479,7 +487,23 @@ sprite_frames = SubResource("SpriteFrames_pr6su")
 [node name="EyePupil" type="Sprite2D" parent="Eye" unique_id=253238988]
 texture = ExtResource("19_1uqbv")
 script = ExtResource("20_iotme")
+[node name="BounceOnce" type="StaticBody2D" parent="." unique_id=249566150]
+position = Vector2(237, 194)
+collision_layer = 16
+script = ExtResource("7_42h65")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce" unique_id=147314452]
+position = Vector2(5, 0)
+shape = SubResource("RectangleShape2D_cvs26")
+
+[node name="Area2D" type="Area2D" parent="BounceOnce" unique_id=1568000702]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceOnce/Area2D" unique_id=2073638313]
+position = Vector2(5, -1)
+shape = SubResource("RectangleShape2D_1eppy")
 
 [connection signal="timeout" from="PeggleBallShooter/FlashCooldown" to="." method="_on_flash_cooldown_timeout"]
+[connection signal="body_entered" from="BounceOnce/Area2D" to="BounceOnce" method="_on_area_2d_body_entered"]
 
 [editable path="PeggleBallShooter"]
