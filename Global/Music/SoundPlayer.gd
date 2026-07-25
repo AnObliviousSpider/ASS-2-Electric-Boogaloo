@@ -40,7 +40,8 @@ func play(
 	volume_db: float = 0.0,
 	start_position: float = 0.0,
 	crossfade: bool = false,
-	loop: Variant = null
+	loop: Variant = null,
+	pitch_scale: float = 1
 ) -> void:
 	if audio == null:
 		return
@@ -71,8 +72,10 @@ func play(
 			if local_play_token != play_token:
 				return
 
+	var find_player: AudioStreamPlayer = _get_or_create_free_player()
+	find_player.pitch_scale = pitch_scale
 	_start_player(
-		_get_or_create_free_player(),
+		find_player,
 		audio,
 		volume_db,
 		safe_start_position,
