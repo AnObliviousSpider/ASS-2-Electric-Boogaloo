@@ -17,3 +17,5 @@ signal balls_left_percentage_changed(
 signal celestial_body_explosion_triggered(
 	body_id: StringName
 )
+
+signal peg_hit_sound_update
