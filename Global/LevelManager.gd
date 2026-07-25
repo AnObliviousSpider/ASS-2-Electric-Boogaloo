@@ -8,7 +8,9 @@ const MAX_LEVEL: int = 5
 var level: int = MIN_LEVEL
 
 
-func set_level(new_level: int) -> void:
+func set_level(
+	new_level: int
+) -> void:
 	level = clampi(
 		new_level,
 		MIN_LEVEL,

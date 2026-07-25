@@ -25,7 +25,7 @@ extends Control
 @export var retry_loading_duration: float = 1.0
 
 func _ready() -> void:
-	dialogue_box.display_dialogue("What to try that again?")
+	dialogue_box.display_dialogue("Want to try that again?")
 	await get_tree().create_timer(3).timeout
 	retry_button.modulate 
 	var tween: Tween = create_tween()

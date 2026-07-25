@@ -3,124 +3,188 @@ extends Node
 
 signal dialogue_closed
 signal level_dialogue_closed
+signal level_dialogue_set_closed
+
+
+const LEVEL_DIALOGUE_CHUNK_GAP: float = 0.2
 
 
 var _dialogue_box_displayed: bool = false
 var _dialogue_input_locked: bool = false
 
+var _level_dialogue_sequence_running: bool = false
 
-var dialogue_levels: Dictionary = {
+
+# Each level contains one or more dialogue chunks.
+#
+# Level 1:
+# Chunk 0: First line before Li appears.
+# Chunk 1: Remaining lines from story set 1.
+# Chunk 2: Story set 2.
+#
+# Levels 2 to 5 currently contain one chunk each.
+var dialogue_level_sets: Dictionary = {
 	1: [
-		{
-			"align": "right",
-			"text": "Let's make a deal, then... This old machine is still here. You beat me five times. We delay the end for one more day."
-		},
-		{
-			"align": "left",
-			"text": "And if you win?"
-		},
-		{
-			"align": "right",
-			"text": "We play again. Each ball you lose is another star I pluck from the sky."
-		},
-		{
-			"align": "left",
-			"text": "Until there are no more stars?"
-		},
-		{
-			"align": "right",
-			"text": "You would still be here. For a few seconds."
-		},
+		# SET 1, FIRST DIALOGUE BOX
+		[
+			{
+				"align": "left",
+				"text": "There you are! All the power in the universe and you're still so hard to find?"
+			},
+		],
+
+		# SET 1, REMAINING DIALOGUE
+		[
+			{
+				"align": "right",
+				"text": "Yeah, I found a stray meteor drifting through the Xal'Thari sector. But I'm here now."
+			},
+			{
+				"align": "left",
+				"text": "I see. So... We can hang out now. Just for a bit?"
+			},
+			{
+				"align": "right",
+				"text": "We can play something in this Arcade I kept for you. How about that one over there? Until you win five times?"
+			},
+			{
+				"align": "left",
+				"text": "Okay. That one is new. how does that game work?"
+			},
+		],
+
+		# SET 2
+		[
+			{
+				"align": "right",
+				"text": "Well, this is a special machine I made for you. A gift, perhaps, from you to me."
+			},
+			{
+				"align": "right",
+				"text": "It links our emotions, so you can understand me. We take turns shooting orbs. Every peg you hit becomes yours, and vice versa."
+			},
+			{
+				"align": "left",
+				"text": "Any stakes? What happens if we run out of orbs?"
+			},
+			{
+				"align": "right",
+				"text": "Every orb is a planet. If you lose an orb by not hitting the emotion-link bins at the bottom, that planet is gone."
+			},
+			{
+				"align": "right",
+				"text": "...And if we run out, then it's over. A countdown to the end."
+			},
+		],
 	],
+
 	2: [
-		{
-			"align": "left",
-			"text": "There aren't that many planets left."
-		},
-		{
-			"align": "right",
-			"text": "I could start fishing for more in some black holes. Fun date idea, right?"
-		},
-		{
-			"align": "left",
-			"text": "Come on, there's got to be some way to keep this going... Right?"
-		},
-		{
-			"align": "right",
-			"text": "I could try cutting the planets in two... Wait, no. Then they would not work as balls."
-		},
-		{
-			"align": "left",
-			"text": "Well, we still have not been kicked out of the arcade yet. One more game?"
-		},
+		[
+			{
+				"align": "left",
+				"text": "There aren't that many planets left."
+			},
+			{
+				"align": "right",
+				"text": "I could start fishing for more in some black holes. Fun date idea, right?"
+			},
+			{
+				"align": "left",
+				"text": "Come on, there's got to be some way to keep this going... Right?"
+			},
+			{
+				"align": "right",
+				"text": "I could try cutting the planets in two... Wait, no. Then they would not work as balls."
+			},
+			{
+				"align": "left",
+				"text": "Well, we still have not been kicked out of the arcade yet. One more game?"
+			},
+		],
 	],
+
 	3: [
-		{
-			"align": "left",
-			"text": "UH, SO... I WISH YOU WOULD JUST STOP WITH THIS NONSENSE."
-		},
-		{
-			"align": "right",
-			"text": "You have no idea what you are talking about."
-		},
-		{
-			"align": "left",
-			"text": "YOU ALWAYS SAY THAT. WHY CAN'T YOU JUST STOP?"
-		},
-		{
-			"align": "right",
-			"text": "BECAUSE EVERYTHING WOULD END RIGHT NOW, AND I DO NOT WANT US TO END."
-		},
-		{
-			"align": "left",
-			"text": "...Oh, I see."
-		},
+		[
+			{
+				"align": "left",
+				"text": "UH, SO... I WISH YOU WOULD JUST STOP WITH THIS NONSENSE."
+			},
+			{
+				"align": "right",
+				"text": "You have no idea what you are talking about."
+			},
+			{
+				"align": "left",
+				"text": "YOU ALWAYS SAY THAT. WHY CAN'T YOU JUST STOP?"
+			},
+			{
+				"align": "right",
+				"text": "BECAUSE EVERYTHING WOULD END RIGHT NOW, AND I DO NOT WANT US TO END."
+			},
+			{
+				"align": "left",
+				"text": "...Oh, I see."
+			},
+		],
 	],
+
 	4: [
-		{
-			"align": "left",
-			"text": "Please... do not let this end..."
-		},
-		{
-			"align": "right",
-			"text": "Look, we both know I have to fulfil my purpose eventually..."
-		},
-		{
-			"align": "left",
-			"text": "There is nothing left after this."
-		},
-		{
-			"align": "right",
-			"text": "No matter what happens, I will always hold you in my hearts."
-		},
-		{
-			"align": "left",
-			"text": "If you are remembered, you are never dead. I guess I WILL be eternal within you."
-		},
+		[
+			{
+				"align": "left",
+				"text": "Please... do not let this end..."
+			},
+			{
+				"align": "right",
+				"text": "Look, we both know I have to fulfil my purpose eventually..."
+			},
+			{
+				"align": "left",
+				"text": "There is nothing left after this."
+			},
+			{
+				"align": "right",
+				"text": "No matter what happens, I will always hold you in my hearts."
+			},
+			{
+				"align": "left",
+				"text": "If you are remembered, you are never dead. I guess I WILL be eternal within you."
+			},
+		],
 	],
+
 	5: [
-		{
-			"align": "right",
-			"text": "Thank you for winning..."
-		},
-		{
-			"align": "left",
-			"text": "So that was it, then?"
-		},
-		{
-			"align": "right",
-			"text": "That was it. I guess we will just have to play again tomorrow."
-		},
-		{
-			"align": "left",
-			"text": "...What do we do when we play for the final world?"
-		},
-		{
-			"align": "right",
-			"text": "Enjoy it."
-		},
+		[
+			{
+				"align": "right",
+				"text": "Thank you for winning..."
+			},
+			{
+				"align": "left",
+				"text": "So that was it, then?"
+			},
+			{
+				"align": "right",
+				"text": "That was it. I guess we will just have to play again tomorrow."
+			},
+			{
+				"align": "left",
+				"text": "...What do we do when we play for the final world?"
+			},
+			{
+				"align": "right",
+				"text": "Enjoy it."
+			},
+		],
 	],
 }
+
+
+# Contains the currently active flat dialogue chunk.
+#
+# The dialogue box can continue reading:
+# DialogueManager.dialogue_levels[level_number]
+var dialogue_levels: Dictionary = {}
 
 
 var dialogue_moods: Dictionary = {
@@ -133,6 +197,7 @@ var dialogue_moods: Dictionary = {
 		"Do not worry about it. Things break all the time. Planets, stars and stuff.",
 		"Again! Again!",
 	],
+
 	"Flirty": [
 		"You made me think of another game we can play later.",
 		"I am surprised you could last this many rounds against me.",
@@ -144,6 +209,7 @@ var dialogue_moods: Dictionary = {
 		"Space monkeys are so fun when they are trained properly...",
 		"I would knock something random off the counter for you. Then scratch your furniture. Then... never mind.",
 	],
+
 	"Angry": [
 		"Ridiculous... There is no way you got that many.",
 		"Hey, stop messing around with those.",
@@ -151,6 +217,7 @@ var dialogue_moods: Dictionary = {
 		"The silent treatment? How mature of you.",
 		"What makes you think I wanted to hear that right now?",
 	],
+
 	"Dejected": [
 		"Do not think about it, my love. Just play.",
 		"Another globe gone, then.",
@@ -160,6 +227,7 @@ var dialogue_moods: Dictionary = {
 		"At least this will be a very chill reality...",
 		"Well, the cat is out of the bag now.",
 	],
+
 	"Missed": [
 		"Phew, I was foaming at the Meowth.",
 		"You didn't even leave a scratch!",
@@ -171,17 +239,249 @@ var dialogue_moods: Dictionary = {
 }
 
 
+func _ready() -> void:
+	_prepare_first_dialogue_sets()
+
+
 func _input(
 	event: InputEvent
 ) -> void:
-	if event.is_action_pressed(
+	if not event.is_action_pressed(
 		"action_primary"
 	):
-		if (
-			_dialogue_box_displayed
-			and not _dialogue_input_locked
-		):
-			EventBus.dialogue_next.emit()
+		return
+
+	if not _dialogue_box_displayed:
+		return
+
+	if _dialogue_input_locked:
+		return
+
+	EventBus.dialogue_next.emit()
+
+
+func _prepare_first_dialogue_sets() -> void:
+	for level_variant: Variant in dialogue_level_sets.keys():
+		var level_number: int = int(
+			level_variant
+		)
+
+		var level_sets: Array = dialogue_level_sets.get(
+			level_number,
+			[]
+		)
+
+		if level_sets.is_empty():
+			dialogue_levels[level_number] = []
+			continue
+
+		var first_set: Array = (
+			level_sets[0] as Array
+		)
+
+		dialogue_levels[level_number] = (
+			first_set.duplicate(
+				true
+			)
+		)
+
+
+func _get_level_dialogue_set(
+	level_number: int,
+	set_index: int
+) -> Array:
+	var level_sets: Array = dialogue_level_sets.get(
+		level_number,
+		[]
+	)
+
+	if level_sets.is_empty():
+		return []
+
+	if (
+		set_index < 0
+		or set_index >= level_sets.size()
+	):
+		push_warning(
+			"Invalid dialogue set index %s for level %s."
+			% [
+				set_index,
+				level_number,
+			]
+		)
+
+		return []
+
+	return (
+		level_sets[set_index] as Array
+	)
+
+
+func _load_level_dialogue_set(
+	level_number: int,
+	set_index: int
+) -> bool:
+	var dialogue_set: Array = _get_level_dialogue_set(
+		level_number,
+		set_index
+	)
+
+	if dialogue_set.is_empty():
+		return false
+
+	dialogue_levels[level_number] = (
+		dialogue_set.duplicate(
+			true
+		)
+	)
+
+	return true
+
+
+func _trigger_fresh_level_dialogue(
+	level_number: int
+) -> void:
+	# Make sure the manager considers the old
+	# dialogue completely closed.
+	_dialogue_box_displayed = false
+	_dialogue_input_locked = true
+
+	# Give the dialogue UI time to finish any
+	# visibility or close logic.
+	await get_tree().process_frame
+
+	_dialogue_input_locked = false
+
+	EventBus.dialogue_level_triggered.emit(
+		level_number
+	)
+
+
+func play_level_dialogue_set(
+	level_number: int,
+	set_index: int
+) -> void:
+	if LevelManager.level != level_number:
+		return
+
+	if not _load_level_dialogue_set(
+		level_number,
+		set_index
+	):
+		return
+
+	await _trigger_fresh_level_dialogue(
+		level_number
+	)
+
+	# Wait until this specific dialogue chunk closes.
+	await level_dialogue_set_closed
+
+	# Let the dialogue UI finish closing before
+	# anything else is started.
+	await get_tree().create_timer(
+		LEVEL_DIALOGUE_CHUNK_GAP
+	).timeout
+
+
+func restart_level_dialogue_from_set(
+	level_number: int,
+	set_index: int,
+	close_level_after: bool = true
+) -> void:
+	if LevelManager.level != level_number:
+		return
+
+	# Cancel any old automatic sequence.
+	_level_dialogue_sequence_running = false
+
+	# Reset the dialogue manager to a fully closed state.
+	_dialogue_box_displayed = false
+	_dialogue_input_locked = true
+
+	# Clear the old active dialogue so the dialogue UI
+	# cannot keep the last entry from the previous set.
+	dialogue_levels[level_number] = []
+
+	# Let the old dialogue box fully process its close.
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	await get_tree().create_timer(
+		LEVEL_DIALOGUE_CHUNK_GAP
+	).timeout
+
+	if LevelManager.level != level_number:
+		return
+
+	if not _load_level_dialogue_set(
+		level_number,
+		set_index
+	):
+		return
+
+	# Start the loaded set as completely fresh
+	# level dialogue.
+	_dialogue_box_displayed = false
+	_dialogue_input_locked = false
+
+	EventBus.dialogue_level_triggered.emit(
+		level_number
+	)
+
+	# Wait until the restarted dialogue closes.
+	await level_dialogue_set_closed
+
+	await get_tree().create_timer(
+		LEVEL_DIALOGUE_CHUNK_GAP
+	).timeout
+
+	if close_level_after:
+		level_dialogue_closed.emit()
+
+
+func play_level_dialogue_sequence(
+	level_number: int,
+	start_set_index: int = 0
+) -> void:
+	if _level_dialogue_sequence_running:
+		return
+
+	var level_sets: Array = dialogue_level_sets.get(
+		level_number,
+		[]
+	)
+
+	if level_sets.is_empty():
+		level_dialogue_closed.emit()
+		return
+
+	var safe_start_index: int = clampi(
+		start_set_index,
+		0,
+		level_sets.size()
+	)
+
+	_level_dialogue_sequence_running = true
+
+	for set_index: int in range(
+		safe_start_index,
+		level_sets.size()
+	):
+		if LevelManager.level != level_number:
+			_level_dialogue_sequence_running = false
+			return
+
+		await play_level_dialogue_set(
+			level_number,
+			set_index
+		)
+
+	_level_dialogue_sequence_running = false
+
+	# The board appears only after all chunks
+	# in this sequence have finished.
+	level_dialogue_closed.emit()
 
 
 func open_dialogue() -> void:
@@ -213,8 +513,8 @@ func force_close_dialogue() -> void:
 
 
 func open_level_dialogue() -> void:
-	_dialogue_input_locked = false
 	_dialogue_box_displayed = true
+	_dialogue_input_locked = false
 
 
 func close_level_dialogue() -> void:
@@ -222,4 +522,4 @@ func close_level_dialogue() -> void:
 	_dialogue_input_locked = false
 
 	dialogue_closed.emit()
-	level_dialogue_closed.emit()
+	level_dialogue_set_closed.emit()
