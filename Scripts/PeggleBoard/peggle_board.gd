@@ -142,6 +142,10 @@ func _ready() -> void:
 	EventBus.peg_hit_sound_update.connect(
 		play_peg_hit_sound
 	)
+	
+	PowerUpManager.trigger_power_up.connect(
+		_apply_power_up
+	)
 
 	# Connect every emotion bin directly
 	# to the Peggle board.
@@ -161,6 +165,11 @@ func _ready() -> void:
 
 	reset_current_round()
 
+func _apply_power_up() -> void:
+	if PowerUpManager.active_power_up == PowerUpManager.power_ups.ghost_ball:
+		is_ghost_ball = true
+	if PowerUpManager.active_power_up == PowerUpManager.power_ups.split_ball:
+		is_split_ball = true
 
 func _process(
 	_delta: float

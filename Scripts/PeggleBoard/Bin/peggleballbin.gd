@@ -220,6 +220,10 @@ func _on_body_entered(
 		) == true
 	):
 		return
+		
+	if bin_active:
+		# Give power-up.
+		PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values().pick_random())
 
 	# Tell the Peggle board which ball entered
 	# and which emotion this bin represents.
@@ -245,7 +249,3 @@ func _on_body_entered(
 	GameData.current_emotion = (
 		what_emotion_to_respond_with
 	)
-
-	if bin_active:
-		# Give power-up.
-		pass
