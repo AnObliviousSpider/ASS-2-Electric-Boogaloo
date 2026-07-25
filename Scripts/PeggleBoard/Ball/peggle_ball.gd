@@ -86,6 +86,9 @@ func _on_dot_cooldown_timeout() -> void:
 		global_position
 	)
 
+func _physics_process(delta: float) -> void:
+	if global_position.y > 1500:
+		queue_free()
 
 func ghost_ball() -> void:
 	# Collide with walls and other balls,
