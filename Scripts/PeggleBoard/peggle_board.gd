@@ -22,6 +22,7 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 @export var STARTING_BALL_COUNT: int = 20
 
 
+
 # COLLISION INFORMATION
 # Layer 1: Walls
 # Layer 2: Pegs
@@ -117,6 +118,7 @@ var current_turn: int = Turn.PLAYER
 var ball_in_play: bool = false
 var resolving_ball: bool = false
 var game_ended: bool = false
+var active_balls: Array[RigidBody2D] = []
 
 var pending_dialogue_emotion: int = (
 	NO_PENDING_EMOTION
@@ -189,6 +191,8 @@ func _ready() -> void:
 	)
 
 	reset_current_round()
+	
+	
 
 func _apply_power_up() -> void:
 	if PowerUpManager.active_power_up == PowerUpManager.power_ups.ghost_ball:
@@ -329,7 +333,10 @@ func show_peg_level(
 	active_peg_level = (
 		peg_levels[level_index]
 	)
+	
 
+	
+	
 	refresh_pegs()
 
 
@@ -453,6 +460,7 @@ func reset_current_round() -> void:
 	current_turn = Turn.PLAYER
 	ball_in_play = false
 	resolving_ball = false
+	active_balls.clear()
 
 	pending_dialogue_emotion = (
 		NO_PENDING_EMOTION
@@ -565,10 +573,10 @@ func get_progress_percentage(
 
 	return clampf(
 		float(claimed_peg_count)
-			/ float(
-				pegs_required_for_full_bar
-			)
-			* 100.0,
+		/ float(
+			pegs_required_for_full_bar
+		)
+		* 100.0,
 		0.0,
 		100.0
 	)
@@ -713,6 +721,9 @@ func fire_ball() -> void:
 	if fired_ball == null:
 		return
 
+	fired_ball.contact_monitor = true
+	fired_ball.max_contacts_reported = 4
+
 	fired_ball.body_entered.connect(
 		func(body: Node) -> void:
 			_on_ball_body_entered(
@@ -761,6 +772,10 @@ func fire_ball() -> void:
 	configure_ball(
 		fired_ball,
 		current_turn
+	)
+
+	active_balls.append(
+		fired_ball
 	)
 
 	ball_in_play = true
@@ -991,12 +1006,14 @@ func resolve_ball(
 		)
 	)
 
+	if body is RigidBody2D:
+		active_balls.erase(
+			body as RigidBody2D
+		)
+
 	pegs_hit = 0
 
 	body.queue_free()
-
-	ball_in_play = false
-	resolving_ball = true
 
 	if should_refund:
 		refund_ball()
@@ -1018,9 +1035,13 @@ func resolve_ball(
 			percentage_left
 		)
 
-	finish_ball_resolution(
-		finished_turn
-	)
+	if active_balls.is_empty():
+		ball_in_play = false
+		resolving_ball = true
+
+		finish_ball_resolution(
+			finished_turn
+		)
 
 
 func finish_ball_resolution(
@@ -1128,6 +1149,20 @@ func _on_ball_body_entered(
 		if spawned_split_ball == null:
 			return
 
+		spawned_split_ball.contact_monitor = true
+		spawned_split_ball.max_contacts_reported = 4
+
+		spawned_split_ball.body_entered.connect(
+			func(hit_body: Node) -> void:
+				_on_ball_body_entered(
+					spawned_split_ball,
+					hit_body
+				)
+		)
+
+		active_balls.append(
+			spawned_split_ball
+		)
 		configure_ball(
 			spawned_split_ball,
 			turn_owner
