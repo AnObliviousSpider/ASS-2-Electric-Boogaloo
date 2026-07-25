@@ -22,6 +22,7 @@ const END_SCREEN_TRANSITION_DURATION: float = 0.2
 @export var STARTING_BALL_COUNT: int = 20
 
 
+
 # COLLISION INFORMATION
 # Layer 1: Walls
 # Layer 2: Pegs
@@ -189,6 +190,8 @@ func _ready() -> void:
 	)
 
 	reset_current_round()
+	
+	
 
 func _apply_power_up() -> void:
 	if PowerUpManager.active_power_up == PowerUpManager.power_ups.ghost_ball:
@@ -329,7 +332,10 @@ func show_peg_level(
 	active_peg_level = (
 		peg_levels[level_index]
 	)
+	
 
+	
+	
 	refresh_pegs()
 
 
