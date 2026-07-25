@@ -141,9 +141,10 @@ size = Vector2(180, 10)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1eppy"]
 size = Vector2(180, 14)
 
-[node name="PeggleBoard" type="Node2D" unique_id=1037463456]
+[node name="PeggleBoard" type="Node2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels")]
 editor_description = "A prototype peggleboard (with placeholder art)"
 script = ExtResource("1_g8rvb")
+peg_levels = [NodePath("PegsLevel1"), NodePath("PegsLevel2"), NodePath("PegsLevel3"), NodePath("PegsLevel4"), NodePath("PegsLevel5")]
 ai_win_sfx = ExtResource("4_iotme")
 peg_hit_sfx = ExtResource("4_pr6su")
 bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iotme"), null, ExtResource("6_pr6su")])
