@@ -94,6 +94,7 @@ var progress_tween: Tween
 # POWER-UPS
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
+var is_ai_ball_smol = 2
 
 # SPAWNED BALLS
 var new_ball: RigidBody2D
@@ -607,6 +608,16 @@ func fire_ball(
 	if is_ghost_ball:
 		is_ghost_ball = false
 		new_ball.ghost_ball()
+	
+	if is_ai_ball_smol == 2:
+		is_ai_ball_smol -= 1
+
+	elif is_ai_ball_smol == 1:
+		is_ai_ball_smol -= 1
+		new_ball.scale = Vector2(5, 5)
+
+	else:
+		new_ball.scale = Vector2(1, 1)
 
 	new_ball.global_position = (
 		peggle_ball_firing_point.global_position
