@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bnlnffrdc3nty"]
+
+[ext_resource type="PackedScene" uid="uid://kdyyhi2j2nne" path="res://Scenes/PeggleBoard/Pegs/normal_peg.tscn" id="1_5cp0i"]
+
+[node name="PegsLevel2" type="Node2D" unique_id=1651858098]
+visible = false
+
+[node name="PegglePeg" parent="." unique_id=1411103836 instance=ExtResource("1_5cp0i")]
+position = Vector2(188.00002, 73)
+
+[node name="PegglePeg2" parent="." unique_id=1987070364 instance=ExtResource("1_5cp0i")]
+position = Vector2(197.00002, 89.00001)
+
+[node name="PegglePeg3" parent="." unique_id=2005490179 instance=ExtResource("1_5cp0i")]
+position = Vector2(210, 105)
+
+[node name="PegglePeg4" parent="." unique_id=202031986 instance=ExtResource("1_5cp0i")]
+position = Vector2(293, 72)
+
+[node name="PegglePeg5" parent="." unique_id=41684291 instance=ExtResource("1_5cp0i")]
+position = Vector2(283, 89)
+
+[node name="PegglePeg6" parent="." unique_id=447276740 instance=ExtResource("1_5cp0i")]
+position = Vector2(273, 103.00001)
+
+[node name="PegglePeg7" parent="." unique_id=225112414 instance=ExtResource("1_5cp0i")]
+position = Vector2(255, 133)
+
+[node name="PegglePeg8" parent="." unique_id=798254928 instance=ExtResource("1_5cp0i")]
+position = Vector2(229, 131)
+
+[node name="PegglePeg9" parent="." unique_id=1113656551 instance=ExtResource("1_5cp0i")]
+position = Vector2(196.00002, 155)
+
+[node name="PegglePeg10" parent="." unique_id=746433085 instance=ExtResource("1_5cp0i")]
+position = Vector2(288, 156)
+
+[node name="PegglePeg11" parent="." unique_id=1019050780 instance=ExtResource("1_5cp0i")]
+position = Vector2(208, 170)
+
+[node name="PegglePeg12" parent="." unique_id=306452072 instance=ExtResource("1_5cp0i")]
+position = Vector2(271, 169)
