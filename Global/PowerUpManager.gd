@@ -7,6 +7,7 @@ enum power_ups {
 	ghost_ball,
 	split_ball,
 	blast_ball,
+	bounce_ball,
 }
 
 var active_power_up : power_ups

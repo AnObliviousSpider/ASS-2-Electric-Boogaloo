@@ -218,7 +218,7 @@ func _on_body_entered(
 			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[0]) # ghost ball
 		if what_emotion_to_respond_with == 2:
 			# 	"Flirty",
-			pass
+			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[3]) # bounce ball
 		if what_emotion_to_respond_with == 3:
 			# 	"Angry"
 			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[2]) # blast ball

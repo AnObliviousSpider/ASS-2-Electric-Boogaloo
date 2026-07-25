@@ -198,6 +198,8 @@ func _apply_power_up() -> void:
 		is_split_ball = true
 	if PowerUpManager.active_power_up == PowerUpManager.power_ups.blast_ball:
 		is_blast_ball = true
+	if PowerUpManager.active_power_up == PowerUpManager.power_ups.bounce_ball:
+		is_bounce_once = true
 
 func _process(
 	_delta: float
