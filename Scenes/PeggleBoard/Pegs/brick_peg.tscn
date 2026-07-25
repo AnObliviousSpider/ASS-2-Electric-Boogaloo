@@ -1,12 +1,21 @@
 [gd_scene format=3 uid="uid://4bxgldxkkafv"]
 
 [ext_resource type="Script" uid="uid://be5urohynxkmf" path="res://Scenes/PeggleBoard/Pegs/brick_peg.gd" id="1_uhobn"]
+[ext_resource type="Texture2D" uid="uid://bvbusyv20jwsn" path="res://Assets/Art/Game/PeggleBoard/unclaimed-brick-24x8.png" id="2_kvk4r"]
 [ext_resource type="Texture2D" uid="uid://cr4hdaahgsl0q" path="res://Assets/Art/Game/PeggleBoard/blue-brick-24x8.png" id="2_pbfyx"]
+[ext_resource type="Texture2D" uid="uid://8pm2v5opv788" path="res://Assets/Art/Game/PeggleBoard/blue-brick-hit-24x8.png" id="4_o4pbr"]
+[ext_resource type="Texture2D" uid="uid://cv437hby3qycj" path="res://Assets/Art/Game/PeggleBoard/pink-brick-24x8.png" id="5_2aqr7"]
+[ext_resource type="Texture2D" uid="uid://cpi01gwe3p2b3" path="res://Assets/Art/Game/PeggleBoard/pink-brick-hit-24x8.png" id="6_5cxjg"]
 
 [node name="BrickPeg" type="StaticBody2D" unique_id=564660912 groups=["breakable_blocks", "pegs"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_uhobn")
+texture_unclaimed = ExtResource("2_kvk4r")
+texture_player = ExtResource("2_pbfyx")
+texture_player_hit = ExtResource("4_o4pbr")
+texture_ai = ExtResource("5_2aqr7")
+texture_ai_hit = ExtResource("6_5cxjg")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=45122073]
 
