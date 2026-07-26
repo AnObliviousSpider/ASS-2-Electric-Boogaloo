@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://ud12vp4hg7tp"]
+
+[ext_resource type="Shader" uid="uid://n2fodqwdxyf2" path="res://Shaders/Credits/starry_credits.gdshader" id="1_mm7ke"]
+[ext_resource type="Script" uid="uid://bstbefiheen87" path="res://Lockers/Programmers/Sanket/sanket_easter_egg.gd" id="1_nsn2y"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nsn2y"]
+shader = ExtResource("1_mm7ke")
+shader_parameter/animation_speed = 0.010000000475
+shader_parameter/swirl_strength = 0.0
+shader_parameter/swirl_scale = 1.2030000333925
+shader_parameter/nebula_strength = 0.75
+shader_parameter/star_amount = 0.30800001463
+shader_parameter/star_brightness = 1.15
+shader_parameter/swirl_centre = Vector2(0.5, 0.5)
+shader_parameter/background_colour = Color(0.05098, 0.12941, 0.27843, 1)
+shader_parameter/colour_1 = Color(0.80784, 0.47451, 0.82353, 1)
+shader_parameter/colour_2 = Color(0.95686, 0.87451, 0.7451, 1)
+shader_parameter/colour_3 = Color(1, 0.5098, 0.74118, 1)
+shader_parameter/colour_4 = Color(0.7451, 0.79608, 0.92157, 1)
+
+[node name="SanketEasterEgg" type="Node2D" unique_id=1621419469]
+script = ExtResource("1_nsn2y")
+
+[node name="bg" type="ColorRect" parent="." unique_id=867668477]
+material = SubResource("ShaderMaterial_nsn2y")
+offset_right = 960.0
+offset_bottom = 1560.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=132979175]
+offset_right = 481.0
+offset_bottom = 265.0
+text = "
+== Team 10 was here ==
+
+*wakes up* *looks around in confusion*
+What is this place? Some kind of facility?
+Checks clothes for any hints, finds a tag on top pocket.
+
+Wait what? what is this? A S S?
+Am I in Team ASS LLC? Light's turned on.
+
+A voice from a wall speaker: \"Hi @user? Hope you had a good night sleep.\"
+
+\"WhAT!? What do you mean?\"
+Voice: \"I know what you've been trying to do in here at Team ASS LLC\"
+
+\"NO! I just..\" panics
+\"I just though it would be funny to add something in here.\"
+
+Voice: \"How DARE YOU!\"
+
+\"Please let me go, I won't do it again. I promise!!\"
+
+Voice: \"Well, how about this, if you complete this game, I might let you leave.\"
+
+\"...\"
+
+Voice: \"What! Scared already?\"
+
+\"I'll do it.\"
+
+Voice: \"Hahahaha... these guys are too easy!\"
+
+
+
+PRESS [BACKSPACE] TO GO BACK TO MENU
+"
+horizontal_alignment = 1
