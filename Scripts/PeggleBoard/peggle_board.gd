@@ -263,6 +263,10 @@ func _ready() -> void:
 				"ball_caught",
 				catch_ball
 			)
+	
+	for level in peg_levels:
+		for child in level.get_children():
+			child.connect("claim_changed", animate_progress_bars)
 
 	setup_ball_counter()
 
@@ -271,6 +275,8 @@ func _ready() -> void:
 	)
 
 	reset_current_round()
+	
+	
 
 
 func setup_progress_bar_colours() -> void:
