@@ -18,12 +18,18 @@ extends Control
 # Loading duration when returning to the main menu.
 @export var menu_loading_duration: float = 2.0
 
+#Credits
+@export var credits_scene: String = "credits"
+@export var credits_transition_duration: float = 1.0
+
 
 # CHILD NODES
 @onready var main_margin: MarginContainer = $MainMargin
 @onready var color_rect_vignette: ColorRect = $ColorRectVignette
 @onready var animation_player_vignette: AnimationPlayer = $AnimationPlayerVignette
 @onready var animation_player_buttons: AnimationPlayer = $AnimationPlayerButtons
+
+
 
 func _ready() -> void:
 	main_margin.visible = false
@@ -38,6 +44,7 @@ func vignette_transition() ->void:
 	#animation_player_vignette.play("vignette_transition")
 	#await animation_player_vignette.animation_finished
 	animation_player_buttons.play("fade_in_text")
+	await get_tree().create_timer(0.05).timeout
 	main_margin.visible = true
 
 # Replay the level the player just won.
@@ -66,3 +73,10 @@ func get_retry_level_scene() -> String:
 
 	# If GameData has nothing, use the fallback from the Inspector.
 	return fallback_level_scene
+
+
+func _on_credits_button_pressed() -> void:
+	SceneManager.go(
+		credits_scene,
+		credits_transition_duration
+	)

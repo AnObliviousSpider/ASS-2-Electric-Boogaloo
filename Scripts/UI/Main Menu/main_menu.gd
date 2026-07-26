@@ -12,6 +12,7 @@ extends Control
 @export var credits_scene: String = "credits"
 
 
+
 @export_group("Scene Transitions")
 
 @export var new_game_transition_duration: float = 1.0
