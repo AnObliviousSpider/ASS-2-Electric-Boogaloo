@@ -231,11 +231,6 @@ func _on_body_entered(
 		what_emotion_to_respond_with
 	)
 
-	if emotion_sound != null:
-		SfxPlayer.play(
-			emotion_sound
-		)
-
 	animation_player.play(
 		"ball_caught"
 	)
