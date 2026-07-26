@@ -248,7 +248,7 @@ func _on_new_game_button_pressed() -> void:
 	)
 
 	GameData.start_new_game(
-		20
+		50
 	)
 
 	LevelManager.set_level(

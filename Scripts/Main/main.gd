@@ -85,10 +85,10 @@ func _ready() -> void:
 	)
 
 	if not DialogueManager.level_dialogue_closed.is_connected(
-		fade_in_peggle_board
+		_on_level_dialogue_closed
 	):
 		DialogueManager.level_dialogue_closed.connect(
-			fade_in_peggle_board
+			_on_level_dialogue_closed
 		)
 
 	peggle_board.modulate.a = 0.0
@@ -138,6 +138,24 @@ func _unhandled_input(
 	)
 
 	get_viewport().set_input_as_handled()
+
+
+func _on_level_dialogue_closed() -> void:
+	# The final win sequence sets game_ended before
+	# opening its post-level dialogue. Do not fade
+	# the board back in when that dialogue closes.
+	if (
+		LevelManager.level
+		== LevelManager.MAX_LEVEL
+		and bool(
+			peggle_board.get(
+				"game_ended"
+			)
+		)
+	):
+		return
+
+	fade_in_peggle_board()
 
 
 func _update_level_music() -> void:
@@ -280,9 +298,10 @@ func fade_out_peggle_board() -> void:
 
 	peggle_board.show()
 
-	board_fade_tween = create_tween()
+	var fade_tween: Tween = create_tween()
+	board_fade_tween = fade_tween
 
-	board_fade_tween.tween_property(
+	fade_tween.tween_property(
 		peggle_board,
 		"modulate:a",
 		0.0,
@@ -293,6 +312,12 @@ func fade_out_peggle_board() -> void:
 		Tween.EASE_IN
 	)
 
-	await board_fade_tween.finished
+	await fade_tween.finished
+
+	# Another transition may have replaced this
+	# tween while it was running.
+	if board_fade_tween != fade_tween:
+		return
 
 	peggle_board.hide()
+	board_fade_tween = null

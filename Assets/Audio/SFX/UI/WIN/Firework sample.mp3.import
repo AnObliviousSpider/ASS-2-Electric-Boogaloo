@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bkvukfuf7krqv"
+path="res://.godot/imported/Firework sample.mp3-8fba1e209d0a8c66b0f53584ea1b58b7.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/UI/WIN/Firework sample.mp3"
+dest_files=["res://.godot/imported/Firework sample.mp3-8fba1e209d0a8c66b0f53584ea1b58b7.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

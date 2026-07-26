@@ -4,6 +4,9 @@ extends StaticBody2D
 
 signal claim_changed
 
+@export_category("Gameplay")
+@export var max_hits: int = 2
+
 @export var texture_unclaimed: Texture2D
 @export var texture_player: Texture2D
 @export var texture_player_hit: Texture2D
@@ -51,23 +54,28 @@ func _update_uvs() -> void:
 
 	var tex_size: Vector2 = tex.get_size()
 	var points: PackedVector2Array = visual_polygon.polygon
-
-	var min_p: Vector2 = points[0]
-	var max_p: Vector2 = points[0]
-	for p: Vector2 in points:
-		min_p = min_p.min(p)
-		max_p = max_p.max(p)
-
-	var bounds_size: Vector2 = max_p - min_p
-	if bounds_size.x == 0.0 or bounds_size.y == 0.0:
-		return
-
 	var uvs: PackedVector2Array = PackedVector2Array()
 	uvs.resize(points.size())
 
-	for i: int in points.size():
-		var norm: Vector2 = (points[i] - min_p) / bounds_size
-		uvs[i] = norm * tex_size
+	if points.size() == 4:
+		uvs[0] = Vector2(0.0, 0.0)
+		uvs[1] = Vector2(tex_size.x, 0.0)
+		uvs[2] = Vector2(tex_size.x, tex_size.y)
+		uvs[3] = Vector2(0.0, tex_size.y)
+	else:
+		var min_p: Vector2 = points[0]
+		var max_p: Vector2 = points[0]
+		for p: Vector2 in points:
+			min_p = min_p.min(p)
+			max_p = max_p.max(p)
+
+		var bounds_size: Vector2 = max_p - min_p
+		if bounds_size.x == 0.0 or bounds_size.y == 0.0:
+			return
+
+		for i: int in points.size():
+			var norm: Vector2 = (points[i] - min_p) / bounds_size
+			uvs[i] = norm * tex_size
 
 	visual_polygon.uv = uvs
 
@@ -89,12 +97,18 @@ func change_peg_colour(body: Node2D) -> void:
 
 	if claimed_turn == new_claimed_turn:
 		hit_count += 1
-		is_vanished = true
-		hit_area.set_deferred("monitoring", false)
-		collision_polygon.set_deferred("disabled", true)
 
-		await _play_hit_feedback(ball_owner)
-		visible = false
+		if hit_count >= max_hits:
+			is_vanished = true
+			hit_area.set_deferred("monitoring", false)
+			collision_polygon.set_deferred("disabled", true)
+
+			await _play_hit_feedback(ball_owner)
+			visible = false
+			claim_changed.emit()
+			return
+
+		_play_hit_feedback(ball_owner)
 		claim_changed.emit()
 		return
 
