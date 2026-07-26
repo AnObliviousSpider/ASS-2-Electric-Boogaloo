@@ -808,23 +808,52 @@ func _spawn_ball(
 		instance as RigidBody2D
 	)
 
-	get_tree().current_scene.add_child(
+	spawned_ball.mass = ball_mass
+	spawned_ball.gravity_scale = ball_gravity_scale
+
+	# Split balls can be requested from a physics
+	# collision callback. Adding a physics body there
+	# causes a flushing-queries error, so finish the
+	# spawn once the callback has safely ended.
+	get_tree().current_scene.call_deferred(
+		"add_child",
 		spawned_ball
 	)
+
+	call_deferred(
+		"_finish_ball_spawn",
+		spawned_ball,
+		spawn_position,
+		direction
+	)
+
+	return spawned_ball
+
+
+func _finish_ball_spawn(
+	spawned_ball: RigidBody2D,
+	spawn_position: Vector2,
+	direction: Vector2
+) -> void:
+	if not is_instance_valid(spawned_ball):
+		return
+
+	# The deferred add_child call is queued first,
+	# but keep this safe if the order ever changes.
+	if not spawned_ball.is_inside_tree():
+		await spawned_ball.tree_entered
+
+	if not is_instance_valid(spawned_ball):
+		return
 
 	spawned_ball.global_position = (
 		spawn_position
 	)
 
-	spawned_ball.mass = ball_mass
-	spawned_ball.gravity_scale = ball_gravity_scale
-
 	spawned_ball.apply_central_impulse(
 		shoot_strength
 			* direction.normalized()
 	)
-
-	return spawned_ball
 
 
 func apply_fire_effects() -> void:

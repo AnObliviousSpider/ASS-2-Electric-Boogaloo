@@ -90,11 +90,6 @@ var sfx_max_scale: float = 2.0
 )
 
 
-# GLOBE LAUNCHER
-
-@onready var globe_launcher: GlobeLauncher = (
-	$GlobeLauncher
-)
 
 
 # BALL REMOVAL NODES
@@ -118,7 +113,7 @@ var sfx_max_scale: float = 2.0
 	$ProgressBar2
 )
 
-@onready var counting_label: Label = (
+@onready var counting_label: CountdownDisplay = (
 	$CountingLabel
 )
 
@@ -142,6 +137,9 @@ var active_balls: Array[RigidBody2D] = []
 var pending_dialogue_emotion: int = (
 	NO_PENDING_EMOTION
 )
+
+var pending_shot_was_refunded: bool = false
+var pending_resolution_position: Vector2 = Vector2.ZERO
 
 
 # LEVEL THREE OVERRIDE STATE
@@ -367,20 +365,18 @@ func setup_ball_counter() -> void:
 func use_ball() -> void:
 	GameData.use_ball()
 
-	update_ball_counter()
-
 
 func refund_ball() -> void:
 	GameData.refund_ball()
 
-	update_ball_counter()
-
 
 func update_ball_counter() -> void:
 	# The BallBar progress bar has been removed.
-	# Only the numeric ball count remains.
-	counting_label.text = str(
-		GameData.balls_remaining
+	# Synchronise the countdown without playing
+	# its dramatic loss animation.
+	counting_label.set_count_immediate(
+		GameData.balls_remaining,
+		GameData.maximum_ball_count
 	)
 
 
@@ -669,6 +665,11 @@ func reset_current_round() -> void:
 	pending_dialogue_emotion = (
 		NO_PENDING_EMOTION
 	)
+
+	pending_shot_was_refunded = false
+	pending_resolution_position = Vector2.ZERO
+
+	update_ball_counter()
 
 
 func get_progress_values() -> Vector2:
@@ -959,10 +960,13 @@ func fire_ball() -> void:
 	if fired_ball == null:
 		return
 
-	# Player and AI shots both use fire_ball(),
-	# so both trigger the globe animation.
-	if globe_launcher != null:
-		globe_launcher.play_launch_animation()
+	# Begin one combined resolution for this
+	# shot and any extra balls it creates.
+	pending_shot_was_refunded = false
+	pending_resolution_position = (
+		fired_ball.global_position
+	)
+
 
 	fired_ball.contact_monitor = true
 	fired_ball.max_contacts_reported = 4
@@ -1259,6 +1263,10 @@ func resolve_ball(
 		)
 	)
 
+	pending_resolution_position = (
+		body.global_position
+	)
+
 	if body is RigidBody2D:
 		active_balls.erase(
 			body as RigidBody2D
@@ -1269,7 +1277,11 @@ func resolve_ball(
 	body.queue_free()
 
 	if should_refund:
-		refund_ball()
+		# A split shot still costs only one ball,
+		# so it can only refund that ball once.
+		if not pending_shot_was_refunded:
+			pending_shot_was_refunded = true
+			refund_ball()
 	else:
 		var percentage_left: float = 0.0
 
@@ -1296,14 +1308,27 @@ func resolve_ball(
 		%Reset.hide()
 
 		finish_ball_resolution(
-			finished_turn
+			finished_turn,
+			pending_shot_was_refunded,
+			pending_resolution_position
 		)
 
 
 func finish_ball_resolution(
-	finished_turn: int
+	finished_turn: int,
+	was_refunded: bool,
+	resolved_ball_position: Vector2
 ) -> void:
 	await get_tree().process_frame
+
+	if was_refunded:
+		await counting_label.play_refund_relief()
+	else:
+		await counting_label.play_countdown_loss(
+			GameData.balls_remaining,
+			GameData.maximum_ball_count,
+			resolved_ball_position
+		)
 
 	await animate_progress_bars()
 
@@ -1499,6 +1524,9 @@ func debug_win_current_level() -> void:
 	pending_dialogue_emotion = (
 		NO_PENDING_EMOTION
 	)
+
+	pending_shot_was_refunded = false
+	pending_resolution_position = Vector2.ZERO
 
 	EventBus.dialogue_mood_hide.emit()
 

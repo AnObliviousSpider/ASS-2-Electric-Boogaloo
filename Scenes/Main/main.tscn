@@ -23,7 +23,8 @@ z_index = -2
 
 [node name="PeggleBoard" parent="World2D" unique_id=1037463456 instance=ExtResource("2_qw60k")]
 unique_name_in_owner = true
-z_index = 1
+position = Vector2(10, 0)
+scale = Vector2(0.8, 0.8)
 
 [node name="Li" parent="World2D" unique_id=476922062 instance=ExtResource("5_y3v7k")]
 z_index = -2
