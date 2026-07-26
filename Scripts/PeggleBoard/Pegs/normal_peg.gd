@@ -6,12 +6,13 @@ signal claim_changed
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var peg_sprite: AnimatedSprite2D = $Sprite2D
 
+@export var max_hits: int = 2
+@export var destroy: bool = false
+@export var dummy: bool = false
+
 var claimed_turn: int = -1
 var hit_count: int = 0
 var is_vanished: bool = false
-
-@export var destroy: bool = false
-@export var dummy: bool = false
 
 var starting_sprite_scale: Vector2
 var starting_sprite_rotation: float
@@ -48,17 +49,23 @@ func change_peg_colour(body: Node2D) -> void:
 
 	if claimed_turn == new_claimed_turn:
 		hit_count += 1
-		is_vanished = true
 
-		hit_area.set_deferred("monitoring", false)
-		collision_shape.set_deferred("disabled", true)
+		if hit_count >= max_hits:
+			is_vanished = true
+
+			hit_area.set_deferred("monitoring", false)
+			collision_shape.set_deferred("disabled", true)
+
+			play_hit_animation()
+
+			if scale_tween != null and scale_tween.is_valid():
+				await scale_tween.finished
+
+			visible = false
+			claim_changed.emit()
+			return
 
 		play_hit_animation()
-
-		if scale_tween != null and scale_tween.is_valid():
-			await scale_tween.finished
-
-		visible = false
 		claim_changed.emit()
 		return
 

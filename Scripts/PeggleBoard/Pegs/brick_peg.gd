@@ -4,6 +4,9 @@ extends StaticBody2D
 
 signal claim_changed
 
+@export_category("Gameplay")
+@export var max_hits: int = 2
+
 @export var texture_unclaimed: Texture2D
 @export var texture_player: Texture2D
 @export var texture_player_hit: Texture2D
@@ -89,12 +92,18 @@ func change_peg_colour(body: Node2D) -> void:
 
 	if claimed_turn == new_claimed_turn:
 		hit_count += 1
-		is_vanished = true
-		hit_area.set_deferred("monitoring", false)
-		collision_polygon.set_deferred("disabled", true)
 
-		await _play_hit_feedback(ball_owner)
-		visible = false
+		if hit_count >= max_hits:
+			is_vanished = true
+			hit_area.set_deferred("monitoring", false)
+			collision_polygon.set_deferred("disabled", true)
+
+			await _play_hit_feedback(ball_owner)
+			visible = false
+			claim_changed.emit()
+			return
+
+		_play_hit_feedback(ball_owner)
 		claim_changed.emit()
 		return
 
