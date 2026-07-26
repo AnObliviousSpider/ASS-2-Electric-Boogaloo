@@ -25,8 +25,8 @@
 [ext_resource type="AudioStream" uid="uid://qkp2gjgmlt5y" path="res://Assets/Audio/SFX/GAME/Angry Bin.mp3" id="17_7btb8"]
 [ext_resource type="Texture2D" uid="uid://7pthl3t8g2yh" path="res://Assets/Art/UI/charge_bar_human_fill.png" id="17_82xy0"]
 [ext_resource type="Texture2D" uid="uid://bgekqgu4x8em8" path="res://Assets/Art/UI/charge_bar_monster_under (1).png" id="18_7btb8"]
-[ext_resource type="Texture2D" uid="uid://dep3ch4an16qi" path="res://Assets/Art/UI/charge_bar_monster_fill.png" id="19_np4uh"]
 [ext_resource type="Texture2D" uid="uid://n7agj84fq07g" path="res://Scenes/PeggleBoard/PeggleBin/Wide-Pixel_Frame.png" id="22_pr6su"]
+[ext_resource type="Texture2D" uid="uid://cgl26qbtth63c" path="res://Assets/Art/UI/charge_bar_monster_under (11).png" id="25_e0blb"]
 [ext_resource type="PackedScene" uid="uid://bamr2pxmxajr0" path="res://Scenes/CountingBall/counting_label.tscn" id="31_7pgve"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s3sbd"]
@@ -233,6 +233,7 @@ offset_top = 46.0
 offset_right = 331.0
 offset_bottom = 227.0
 scale = Vector2(0.5, 0.5)
+value = 40.0
 fill_mode = 3
 texture_under = ExtResource("16_7pgve")
 texture_progress = ExtResource("17_82xy0")
@@ -244,9 +245,10 @@ offset_top = 22.999994
 offset_right = 756.0
 offset_bottom = 693.0
 scale = Vector2(0.2, 0.2)
+value = 100.0
 fill_mode = 3
 texture_under = ExtResource("18_7btb8")
-texture_progress = ExtResource("19_np4uh")
+texture_progress = ExtResource("25_e0blb")
 
 [node name="TextureRect" type="ColorRect" parent="." unique_id=254345196]
 z_index = -1
