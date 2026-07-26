@@ -1480,6 +1480,7 @@ func _on_ball_body_entered(
 	if (
 		is_blast_ball
 		and current_turn == Turn.PLAYER
+		and _body.is_in_group("pegs")
 	):
 		is_blast_ball = false
 
