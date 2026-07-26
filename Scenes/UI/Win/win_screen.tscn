@@ -2,11 +2,15 @@
 
 [ext_resource type="Script" uid="uid://sq7kqme160i8" path="res://Scripts/UI/Win/win_screen.gd" id="1_dwgyp"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="2_gkoo6"]
-[ext_resource type="FontFile" uid="uid://c0ti0iouqg1m2" path="res://Assets/Fonts/Ruler 9.ttf" id="2_hwpyl"]
 [ext_resource type="Shader" uid="uid://dfd5ker22kjm0" path="res://Shaders/Background/win_screen_vignette.gdshader" id="4_m1ifn"]
 [ext_resource type="PackedScene" uid="uid://dnhbqo6syh8vy" path="res://Scenes/UI/Win/rocket.tscn" id="5_i3tof"]
-[ext_resource type="PackedScene" uid="uid://dp32pvxcaoih1" path="res://Scenes/UI/Win/fireworks0.tscn" id="6_pughb"]
+[ext_resource type="Texture2D" uid="uid://ib7ygiy8bonn" path="res://Assets/Art/UI/win_screen/This was truly.png" id="6_snhcl"]
 [ext_resource type="PackedScene" uid="uid://bjb1luoo6odev" path="res://Scenes/UI/Win/fireworks1.tscn" id="7_fdu34"]
+[ext_resource type="Texture2D" uid="uid://bne85p3j7etq0" path="res://Assets/Art/MainMenu/Logo.png" id="7_paa3n"]
+[ext_resource type="Texture2D" uid="uid://dq73elai83not" path="res://Assets/Art/UI/win_screen/MainMenu_Button_Green.png" id="8_snhcl"]
+[ext_resource type="Texture2D" uid="uid://hgei8m00u317" path="res://Assets/Art/UI/win_screen/MainMenu_Button_Pink.png" id="9_paa3n"]
+[ext_resource type="Texture2D" uid="uid://24r8q7hj262w" path="res://Assets/Art/UI/win_screen/Retry_Button_Green.png" id="10_qy267"]
+[ext_resource type="Texture2D" uid="uid://dekpl5sxlsm1g" path="res://Assets/Art/UI/win_screen/Retry_Button_Pink.png" id="11_sd1v1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m1ifn"]
 shader = ExtResource("2_gkoo6")
@@ -111,6 +115,126 @@ _data = {
 &"vignette_transition": SubResource("Animation_i3tof")
 }
 
+[sub_resource type="Gradient" id="Gradient_1kc1o"]
+offsets = PackedFloat32Array(0.45783132, 0.7710843, 0.9939759)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 0.087500006, 0.087500006, 0.087500006, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_715ky"]
+gradient = SubResource("Gradient_1kc1o")
+width = 258
+height = 258
+fill = 1
+fill_from = Vector2(0.47826087, 0.42608696)
+
+[sub_resource type="Animation" id="Animation_qy267"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MainMargin/MarginContainer/VBoxContainer/ThisWasTruly:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MainMargin/MarginContainer/VBoxContainer/ThisWasTruly/Title:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MainMargin/MarginContainer/VBoxContainer/MainMenuButton:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MainMargin/MarginContainer/VBoxContainer/RetryButton:self_modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_sd1v1"]
+resource_name = "fade_in_text"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MainMargin/MarginContainer/VBoxContainer/ThisWasTruly:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MainMargin/MarginContainer/VBoxContainer/ThisWasTruly/Title:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.1, 2.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MainMargin/MarginContainer/VBoxContainer/MainMenuButton:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.2, 3.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MainMargin/MarginContainer/VBoxContainer/RetryButton:self_modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 3.3, 4.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vgtuh"]
+_data = {
+&"RESET": SubResource("Animation_qy267"),
+&"fade_in_text": SubResource("Animation_sd1v1")
+}
+
 [node name="WinScreen" type="Control" unique_id=355279895]
 z_index = 120
 layout_mode = 3
@@ -144,8 +268,20 @@ rocket_speed = 150.0
 position = Vector2(236, 435)
 rocket_speed = 200.0
 
-[node name="Fireworks" parent="." unique_id=1540646596 instance=ExtResource("6_pughb")]
-position = Vector2(47, 194)
+[node name="Fireworks" parent="." unique_id=1540646596 instance=ExtResource("7_fdu34")]
+position = Vector2(280, 145)
+
+[node name="Fireworks3" parent="." unique_id=421694936 instance=ExtResource("7_fdu34")]
+position = Vector2(403, 239)
+
+[node name="Fireworks4" parent="." unique_id=854485368 instance=ExtResource("7_fdu34")]
+position = Vector2(264, 232)
+
+[node name="Fireworks5" parent="." unique_id=862907805 instance=ExtResource("7_fdu34")]
+position = Vector2(333, 74)
+
+[node name="Fireworks6" parent="." unique_id=1440692753 instance=ExtResource("7_fdu34")]
+position = Vector2(67, 138)
 
 [node name="Fireworks2" parent="." unique_id=546961624 instance=ExtResource("7_fdu34")]
 position = Vector2(426, 72)
@@ -169,10 +305,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -80.0
-offset_right = 63.0
-offset_bottom = 80.0
+offset_left = -162.0
+offset_top = -240.0
+offset_right = 348.0
+offset_bottom = 132.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 16
@@ -189,26 +325,62 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainMargin/MarginContainer" unique_id=1528118905]
 layout_mode = 2
+theme_override_constants/separation = -10
 alignment = 1
 
-[node name="Label" type="Label" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=453607391]
-custom_minimum_size = Vector2(0, 50)
+[node name="ThisWasTruly" type="TextureRect" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=745234841]
+custom_minimum_size = Vector2(250, 200)
 layout_mode = 2
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("2_hwpyl")
-text = "YOU WIN"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_transform_enabled = true
+offset_transform_position = Vector2(-20, 90)
+texture = ExtResource("6_snhcl")
+expand_mode = 3
 
-[node name="MainMenuButton" type="Button" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=1493167629]
-layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "Main Menu"
+[node name="Title" type="TextureRect" parent="MainMargin/MarginContainer/VBoxContainer/ThisWasTruly" unique_id=1288802719]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 35.5
+offset_right = 342.0
+offset_bottom = 149.5
+texture = ExtResource("7_paa3n")
+expand_mode = 5
 
-[node name="RetryButton" type="Button" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=122173869]
+[node name="NeonLight" type="PointLight2D" parent="MainMargin/MarginContainer/VBoxContainer/ThisWasTruly/Title" unique_id=1678789180]
+unique_name_in_owner = true
+position = Vector2(138.5, -480)
+scale = Vector2(0.3, 0.3)
+color = Color(0.32941177, 0.80784315, 0.654902, 1)
+energy = 0.1
+texture = SubResource("GradientTexture2D_715ky")
+texture_scale = 8.01
+
+[node name="NeonLight2" type="PointLight2D" parent="MainMargin/MarginContainer/VBoxContainer/ThisWasTruly/Title" unique_id=1253655952]
+unique_name_in_owner = true
+position = Vector2(179.5, -402)
+scale = Vector2(0.3, 0.3)
+color = Color(1, 0.50980395, 0.7411765, 1)
+energy = 0.1
+texture = SubResource("GradientTexture2D_715ky")
+texture_scale = 9.88
+
+[node name="MainMenuButton" type="TextureButton" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=590174715]
+custom_maximum_size = Vector2(250, 60)
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "Retry"
+texture_normal = ExtResource("8_snhcl")
+texture_pressed = ExtResource("8_snhcl")
+texture_hover = ExtResource("9_paa3n")
+stretch_mode = 5
+
+[node name="RetryButton" type="TextureButton" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=1730887193]
+custom_maximum_size = Vector2(250, 60)
+layout_mode = 2
+texture_normal = ExtResource("10_qy267")
+texture_pressed = ExtResource("10_qy267")
+texture_hover = ExtResource("11_sd1v1")
+stretch_mode = 5
+
+[node name="AnimationPlayerButtons" type="AnimationPlayer" parent="." unique_id=1551053371]
+libraries/ = SubResource("AnimationLibrary_vgtuh")
 
 [connection signal="pressed" from="MainMargin/MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
 [connection signal="pressed" from="MainMargin/MarginContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
