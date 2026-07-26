@@ -136,41 +136,9 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-<<<<<<< Updated upstream
 texture_normal = ExtResource("14_3105r")
 ignore_texture_size = true
 stretch_mode = 5
-=======
-text = "Sound"
-
-[node name="DisplaySettingsButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=1883571894]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Display
-"
-
-[node name="KeyConfigurationButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=511694962]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Controls
-"
-
-[node name="DebugButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=494420119]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Debug Menu <3"
-
-[node name="BackButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=2046775153]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Back"
->>>>>>> Stashed changes
 
 [node name="ContentRoot" type="Control" parent="MainMargin/MainLayout" unique_id=440447840]
 unique_name_in_owner = true
