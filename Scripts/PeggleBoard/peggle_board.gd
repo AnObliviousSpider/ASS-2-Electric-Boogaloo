@@ -813,11 +813,13 @@ func play_final_win_sequence() -> void:
 
 	cannon.lock_cannon()
 
+	# Remove the Peggle board before the final
+	# post-level dialogue begins.
+	await fade_out_board()
+
 	await DialogueManager.play_post_win_dialogue(
 		LevelManager.level
 	)
-
-	await fade_out_board()
 
 	SceneManager.go(
 		WIN_SCENE_KEY,
@@ -964,7 +966,7 @@ func fire_ball() -> void:
 		is_ghost_ball = false
 		# play ghost ball soundFX
 		SfxPlayer.play(ghost_ball_sfx)
-			
+
 		if fired_ball.has_method(
 			"ghost_ball"
 		):
@@ -984,10 +986,10 @@ func fire_ball() -> void:
 
 	if is_bounce_once:
 		is_bounce_once = false
-		
+
 		# play bounce soundFX
 		SfxPlayer.play(bounce_ball_sfx)
-	
+
 		if bounce_once.has_method(
 			"bounce_once"
 		):
@@ -1352,7 +1354,7 @@ func _on_ball_body_entered(
 		and current_turn == Turn.PLAYER
 	):
 		is_split_ball = false
-		
+
 		# play split ball soundFX
 		SfxPlayer.play(split_ball_sfx)
 

@@ -363,9 +363,11 @@ wall_sections = [NodePath("Wall/WallSection0"), NodePath("Wall/WallSection1"), N
 position = Vector2(240, 135)
 
 [node name="Space" type="Sprite2D" parent="Space" unique_id=1386287443]
+z_index = -2
 texture = ExtResource("2_xlcn0")
 
 [node name="Rock" type="Sprite2D" parent="Space" unique_id=1991316417]
+z_index = 1
 texture = ExtResource("3_vg7xi")
 
 [node name="SmallStars0" type="Sprite2D" parent="Space" unique_id=935392494]
@@ -395,29 +397,34 @@ texture = ExtResource("11_33o0y")
 [node name="BGplanets" parent="." unique_id=659573808 instance=ExtResource("12_25qui")]
 
 [node name="ArcadiaSign" type="AnimatedSprite2D" parent="." unique_id=394302245]
+z_index = 1
 position = Vector2(380, 29)
 sprite_frames = SubResource("SpriteFrames_715ky")
 autoplay = "default"
 frame_progress = 0.3592222
 
 [node name="ArcadiaSign2" type="AnimatedSprite2D" parent="." unique_id=1121671074]
+z_index = 1
 position = Vector2(232, 27)
 sprite_frames = SubResource("SpriteFrames_715ky")
 autoplay = "default"
 frame_progress = 0.61903983
 
 [node name="ArcadiaSign3" type="AnimatedSprite2D" parent="." unique_id=1073525296]
+z_index = 1
 position = Vector2(84, 27)
 sprite_frames = SubResource("SpriteFrames_715ky")
 autoplay = "default"
 frame_progress = 0.14966103
 
 [node name="WallSection4" type="Sprite2D" parent="." unique_id=1555157344]
+z_index = 1
 material = SubResource("ShaderMaterial_vg7xi")
 position = Vector2(240, 135)
 texture = ExtResource("6_4jtjy")
 
 [node name="Wall" type="Node2D" parent="." unique_id=1753275390]
+z_index = 1
 position = Vector2(240, 135)
 
 [node name="WallSection0" type="Sprite2D" parent="Wall" unique_id=843115485]
@@ -441,12 +448,14 @@ material = SubResource("ShaderMaterial_lu21n")
 texture = ExtResource("7_xlcn0")
 
 [node name="DiscoLight" type="AnimatedSprite2D" parent="." unique_id=390176031]
+z_index = 1
 position = Vector2(241, 136)
 sprite_frames = SubResource("SpriteFrames_prkih")
 autoplay = "default"
 frame_progress = 0.1396939
 
 [node name="TableObjects" type="Node2D" parent="." unique_id=1792009377]
+z_index = 1
 position = Vector2(240, 135)
 
 [node name="Table" type="Sprite2D" parent="TableObjects" unique_id=294470704]
@@ -457,3 +466,12 @@ texture = ExtResource("10_4jtjy")
 
 [node name="Object" type="Sprite2D" parent="TableObjects" unique_id=2119468468]
 texture = ExtResource("11_xlcn0")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1695100500]
+z_index = 2
+offset_left = -121.0
+offset_top = -129.0
+offset_right = -81.0
+offset_bottom = -89.0
+scale = Vector2(19.019238, 14.059758)
+color = Color(0, 0, 0, 0.16862746)
