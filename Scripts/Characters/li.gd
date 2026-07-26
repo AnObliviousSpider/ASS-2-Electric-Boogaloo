@@ -18,7 +18,7 @@ const CHIMERA_FORM: StringName = &"chimera"
 )
 
 
-@export_group("Transition")
+@export_group("Animation Transition")
 
 @export var fade_out_duration: float = 0.08
 @export var fade_in_duration: float = 0.10
@@ -30,7 +30,7 @@ const CHIMERA_FORM: StringName = &"chimera"
 
 
 var return_animation: StringName = &"idle_human"
-var current_form: StringName = HUMAN_FORM
+var target_animation: StringName = &"idle_human"
 
 var transition_tween: Tween
 var transition_request: int = 0
@@ -51,22 +51,20 @@ func _ready() -> void:
 			return_to_idle
 		)
 
+	if not EventBus.dialogue_line_emotion_triggered.is_connected(
+		_on_dialogue_line_emotion_triggered
+	):
+		EventBus.dialogue_line_emotion_triggered.connect(
+			_on_dialogue_line_emotion_triggered
+		)
+
 	configure_animation_loops()
 
-	# Start directly in human form.
-	current_form = HUMAN_FORM
-	position = human_position
-
-	animated_sprite.modulate.a = 0.0
+	animated_sprite.modulate.a = 1.0
 
 	play_animation_now(
 		&"idle_human",
-		true
-	)
-
-	fade_sprite_to(
-		1.0,
-		fade_in_duration
+		false
 	)
 
 
@@ -75,28 +73,16 @@ func _exit_tree() -> void:
 
 
 func configure_animation_loops() -> void:
-	var emotion_animations: Array[StringName] = [
+	var animations: Array[StringName] = [
 		&"angry_chimera",
 		&"dejected_chimera",
 		&"human_flirty",
 		&"human_happy",
-	]
-
-	for animation_name: StringName in emotion_animations:
-		if animated_sprite.sprite_frames.has_animation(
-			animation_name
-		):
-			animated_sprite.sprite_frames.set_animation_loop(
-				animation_name,
-				true
-			)
-
-	var idle_animations: Array[StringName] = [
 		&"idle_human",
 		&"idle_chimera",
 	]
 
-	for animation_name: StringName in idle_animations:
+	for animation_name: StringName in animations:
 		if animated_sprite.sprite_frames.has_animation(
 			animation_name
 		):
@@ -104,6 +90,22 @@ func configure_animation_loops() -> void:
 				animation_name,
 				true
 			)
+
+
+func _on_dialogue_line_emotion_triggered(
+	alignment: StringName,
+	emotion_index: int
+) -> void:
+	if alignment != &"right":
+		return
+
+	if emotion_index == EventBus.IDLE_EMOTION_INDEX:
+		return_to_idle()
+		return
+
+	change_animation(
+		emotion_index
+	)
 
 
 func change_animation(
@@ -158,13 +160,6 @@ func change_animation(
 				% emotion_name
 			)
 
-			return_animation = &"idle_human"
-
-			request_animation(
-				return_animation,
-				false
-			)
-
 
 func play_emotion_animation(
 	emotion_animation: StringName,
@@ -176,22 +171,6 @@ func play_emotion_animation(
 		push_warning(
 			"Li emotion animation does not exist: %s"
 			% emotion_animation
-		)
-
-		return_animation = idle_animation
-
-		request_animation(
-			idle_animation,
-			false
-		)
-		return
-
-	if not animated_sprite.sprite_frames.has_animation(
-		idle_animation
-	):
-		push_warning(
-			"Li idle animation does not exist: %s"
-			% idle_animation
 		)
 		return
 
@@ -223,26 +202,18 @@ func request_animation(
 		)
 		return
 
-	var requested_form: StringName = (
-		get_animation_form(
-			animation_name
-		)
-	)
-
-	if requested_form.is_empty():
-		push_warning(
-			"Li animation does not specify a form: %s"
-			% animation_name
-		)
+	# Do not restart or fade when the requested
+	# animation is already active.
+	if target_animation == animation_name:
 		return
 
+	target_animation = animation_name
 	transition_request += 1
 
 	var request_id: int = transition_request
 
 	transition_to_animation(
 		animation_name,
-		requested_form,
 		restart_animation,
 		request_id
 	)
@@ -250,13 +221,11 @@ func request_animation(
 
 func transition_to_animation(
 	animation_name: StringName,
-	requested_form: StringName,
 	restart_animation: bool,
 	request_id: int
 ) -> void:
 	stop_transition_tween()
 
-	# Fade out the current animation.
 	transition_tween = create_tween()
 
 	transition_tween.tween_property(
@@ -275,16 +244,11 @@ func transition_to_animation(
 	if request_id != transition_request:
 		return
 
-	# Change the form, position and animation
-	# while the character is invisible.
-	current_form = requested_form
-
 	play_animation_now(
 		animation_name,
 		restart_animation
 	)
 
-	# Fade the new animation back in.
 	transition_tween = create_tween()
 
 	transition_tween.tween_property(
@@ -309,44 +273,10 @@ func play_animation_now(
 
 	if restart_animation:
 		animated_sprite.stop()
-		animated_sprite.animation = animation_name
 		animated_sprite.frame = 0
-
-		animated_sprite.play(
-			animation_name
-		)
-		return
-
-	if animated_sprite.animation == animation_name:
-		if not animated_sprite.is_playing():
-			animated_sprite.play(
-				animation_name
-			)
-
-		return
 
 	animated_sprite.play(
 		animation_name
-	)
-
-
-func fade_sprite_to(
-	target_alpha: float,
-	duration: float
-) -> void:
-	stop_transition_tween()
-
-	transition_tween = create_tween()
-
-	transition_tween.tween_property(
-		animated_sprite,
-		"modulate:a",
-		target_alpha,
-		duration
-	).set_trans(
-		Tween.TRANS_QUAD
-	).set_ease(
-		Tween.EASE_OUT
 	)
 
 
@@ -363,16 +293,16 @@ func stop_transition_tween() -> void:
 func get_animation_form(
 	animation_name: StringName
 ) -> StringName:
-	var animation_name_string: String = str(
+	var animation_text: String = str(
 		animation_name
 	).to_lower()
 
-	if animation_name_string.contains(
+	if animation_text.contains(
 		"chimera"
 	):
 		return CHIMERA_FORM
 
-	if animation_name_string.contains(
+	if animation_text.contains(
 		"human"
 	):
 		return HUMAN_FORM
@@ -383,13 +313,9 @@ func get_animation_form(
 func set_form_position(
 	animation_name: StringName
 ) -> void:
-	var animation_form: StringName = (
-		get_animation_form(
-			animation_name
-		)
-	)
-
-	match animation_form:
+	match get_animation_form(
+		animation_name
+	):
 		CHIMERA_FORM:
 			position = chimera_position
 
