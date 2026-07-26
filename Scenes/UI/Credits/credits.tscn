@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://cddsmdy1w5yk" path="res://Scripts/UI/Credits/CreditsSceneScript.gd" id="1_nrxth"]
 [ext_resource type="Shader" uid="uid://n2fodqwdxyf2" path="res://Shaders/Credits/starry_credits.gdshader" id="2_4lu3d"]
 [ext_resource type="PackedScene" uid="uid://6ygx4fc342gq" path="res://Scenes/UI/Credits/credits_person.tscn" id="2_nrxth"]
+[ext_resource type="Texture2D" uid="uid://b6lfqd8ss31w1" path="res://Assets/Art/Credits/Mc_is_roy.png" id="4_gk7wk"]
+[ext_resource type="Texture2D" uid="uid://c61kdbb16sfk2" path="res://Assets/Art/Credits/Vinny.png" id="5_84qk0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c8hcs"]
 shader = ExtResource("2_4lu3d")
@@ -116,6 +118,15 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/Person11" unique_id=208784280]
+layout_mode = 0
+offset_left = -64.0
+offset_top = 64.0
+offset_right = 1319.1036
+offset_bottom = 790.1294
+scale = Vector2(0.09227007, 0.09227007)
+texture = ExtResource("4_gk7wk")
+
 [node name="Person12" parent="scroll" unique_id=802270838 instance=ExtResource("2_nrxth")]
 offset_left = 45.0
 offset_top = 78.0
@@ -200,10 +211,10 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Person8" parent="scroll" unique_id=1964564914 instance=ExtResource("2_nrxth")]
-offset_left = 85.0
-offset_top = 1068.0
-offset_right = 85.0
-offset_bottom = 1068.0
+offset_left = 8.0
+offset_top = 1070.0
+offset_right = 8.0
+offset_bottom = 1070.0
 scale = Vector2(0.737383, 0.73061717)
 card_title = "Corey Hall (para)"
 card_description = "Game Design, Arts, Narrative Design and Concepts"
@@ -223,6 +234,15 @@ title_font_size = 24
 description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/Person2" unique_id=891283348]
+layout_mode = 0
+offset_left = -70.0
+offset_top = 39.999992
+offset_right = 1417.0
+offset_bottom = 712.0
+scale = Vector2(0.098408595, 0.098408595)
+texture = ExtResource("5_84qk0")
 
 [node name="Header3" type="Label" parent="scroll" unique_id=830466436]
 anchors_preset = 5
@@ -398,10 +418,10 @@ show_picture = true
 metadata/_edit_use_anchors_ = true
 
 [node name="Person20" parent="scroll/smallgroup" unique_id=1450042017 instance=ExtResource("2_nrxth")]
-offset_left = 109.49868
-offset_top = 472.2955
-offset_right = 109.49868
-offset_bottom = 472.2955
+offset_left = 35.620056
+offset_top = 474.93402
+offset_right = 35.620056
+offset_bottom = 474.93402
 card_title = "TonizzBlob"
 card_description = "Arts, Game Design"
 title_font_size = 24
@@ -471,10 +491,10 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Justtext8" parent="scroll/smallgroup" unique_id=2088205422 instance=ExtResource("2_nrxth")]
-offset_left = 383.905
-offset_top = 674.14246
-offset_right = 383.905
-offset_bottom = 674.14246
+offset_left = 387.8628
+offset_top = 474.93402
+offset_right = 387.8628
+offset_bottom = 474.93402
 card_title = "Cube512"
 card_description = "Music, Visual Artist"
 title_font_size = 24
@@ -495,10 +515,10 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Justtext10" parent="scroll/smallgroup" unique_id=2089653020 instance=ExtResource("2_nrxth")]
-offset_left = 295.5145
-offset_top = 1073.8787
-offset_right = 295.5145
-offset_bottom = 1073.8787
+offset_left = 294.19522
+offset_top = 1019.78894
+offset_right = 294.19522
+offset_bottom = 1019.78894
 card_title = "error_404_skill_not_found"
 card_description = "Arts"
 title_font_size = 24
@@ -626,18 +646,6 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 
-[node name="Justtext22" parent="scroll/smallgroup" unique_id=301518211 instance=ExtResource("2_nrxth")]
-offset_left = 383.90497
-offset_top = 873.3509
-offset_right = 383.90497
-offset_bottom = 873.3509
-card_title = "paramonium"
-card_description = "Arts, Game Design, Narrative Design"
-title_font_size = 24
-description_font_size = 8
-picture_y_offset = 27.0
-show_picture = true
-
 [node name="Justtext23" parent="scroll/smallgroup" unique_id=2139035989 instance=ExtResource("2_nrxth")]
 offset_left = 35.62005
 offset_top = 922.1636
@@ -657,18 +665,6 @@ offset_right = 208.44328
 offset_bottom = 922.1636
 card_title = "shwubbanub"
 card_description = "Programmer"
-title_font_size = 24
-description_font_size = 8
-picture_y_offset = 27.0
-show_picture = true
-
-[node name="Justtext25" parent="scroll/smallgroup" unique_id=296623134 instance=ExtResource("2_nrxth")]
-offset_left = 383.905
-offset_top = 922.1636
-offset_right = 383.905
-offset_bottom = 922.1636
-card_title = "skythe7000"
-card_description = "insert description"
 title_font_size = 24
 description_font_size = 8
 picture_y_offset = 27.0
@@ -711,10 +707,10 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Justtext29" parent="scroll/smallgroup" unique_id=1823644813 instance=ExtResource("2_nrxth")]
-offset_left = 35.620056
-offset_top = 1021.1082
-offset_right = 35.620056
-offset_bottom = 1021.1082
+offset_left = 383.905
+offset_top = 672.82324
+offset_right = 383.905
+offset_bottom = 672.82324
 card_title = "verdantverity_"
 card_description = "Arts, Music"
 title_font_size = 24
@@ -723,10 +719,10 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Justtext30" parent="scroll/smallgroup" unique_id=358631129 instance=ExtResource("2_nrxth")]
-offset_left = 208.44328
-offset_top = 1019.7889
-offset_right = 208.44328
-offset_bottom = 1019.7889
+offset_left = 383.905
+offset_top = 873.3509
+offset_right = 383.905
+offset_bottom = 873.3509
 card_title = "xae__"
 card_description = "Game Design, Narrative Design"
 title_font_size = 24
@@ -736,9 +732,9 @@ show_picture = true
 
 [node name="Justtext31" parent="scroll/smallgroup" unique_id=865677676 instance=ExtResource("2_nrxth")]
 offset_left = 383.90503
-offset_top = 1019.78894
+offset_top = 922.16364
 offset_right = 383.90503
-offset_bottom = 1019.78894
+offset_bottom = 922.16364
 card_title = "himarepro"
 card_description = "Arts"
 title_font_size = 24
@@ -747,10 +743,10 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Justtext32" parent="scroll/smallgroup" unique_id=109582101 instance=ExtResource("2_nrxth")]
-offset_left = 121.37201
-offset_top = 1075.1979
-offset_right = 121.37201
-offset_bottom = 1075.1979
+offset_left = 120.052765
+offset_top = 1019.7889
+offset_right = 120.052765
+offset_bottom = 1019.7889
 card_title = "Cyaniide"
 card_description = "Programmer, Arts, Game Design"
 title_font_size = 24
