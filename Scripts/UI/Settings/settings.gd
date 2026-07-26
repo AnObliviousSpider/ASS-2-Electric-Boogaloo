@@ -2,11 +2,11 @@ extends Control
 
 # Settings menu. BUT MUCH shorter
 
-@onready var sound_settings_button: Button = %SoundSettingsButton
-@onready var display_settings_button: Button = %DisplaySettingsButton
-@onready var key_configuration_button: Button = %KeyConfigurationButton
-@onready var debug_button: Button = %DebugButton
-@onready var back_button: Button = %BackButton
+@onready var sound_settings_button: TextureButton = %SoundSettingsButton
+@onready var display_settings_button: TextureButton = %DisplaySettingsButton
+@onready var key_configuration_button: TextureButton = %KeyConfigurationButton
+@onready var debug_button: TextureButton = %DebugButton
+@onready var back_button: TextureButton = %BackButton
 
 @onready var content_root: Control = %ContentRoot
 
@@ -136,7 +136,7 @@ func _setup_pages() -> void:
 		_set_panel_state(debug_panel, false)
 
 	for page: Dictionary in pages:
-		var button: Button = page["button"] as Button
+		var button: TextureButton = page["button"] as TextureButton
 		var panel: Control = page["panel"] as Control
 
 		button.focus_mode = Control.FOCUS_ALL
@@ -160,7 +160,7 @@ func _show_starting_panel() -> void:
 # Handles clicking a category button.
 func _on_page_button_pressed(target_index: int) -> void:
 	if focus_clicked_category_button:
-		var button: Button = pages[target_index]["button"] as Button
+		var button: TextureButton = pages[target_index]["button"] as TextureButton
 		button.grab_focus()
 
 	show_settings_panel(target_index)
@@ -294,7 +294,7 @@ func _get_rotation_direction(from_index: int, to_index: int) -> int:
 # Updates the category button colours.
 func _update_active_button_visuals() -> void:
 	for index: int in range(pages.size()):
-		var button: Button = pages[index]["button"] as Button
+		var button: TextureButton = pages[index]["button"] as TextureButton
 
 		if not use_active_button_visuals:
 			button.modulate = Color.WHITE
@@ -434,7 +434,7 @@ func volume_to_slider_value(volume: float) -> float:
 # Connects all normal menu buttons.
 func _connect_buttons() -> void:
 	for index: int in range(pages.size()):
-		var button: Button = pages[index]["button"] as Button
+		var button: TextureButton = pages[index]["button"] as TextureButton
 		button.pressed.connect(_on_page_button_pressed.bind(index))
 
 	back_button.pressed.connect(_go_to_scene.bind(main_menu_scene))

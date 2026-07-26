@@ -6,6 +6,15 @@
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="3_dkbde"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_hx2sp"]
 [ext_resource type="Script" uid="uid://sytxw8s1a7fi" path="res://Scripts/UI/Settings/key_configuration_panel.gd" id="6_hx2sp"]
+[ext_resource type="Texture2D" uid="uid://djs2f8j13tbkk" path="res://Assets/Art/UI/Sound_Button_Green.png" id="6_whg33"]
+[ext_resource type="Texture2D" uid="uid://b36p7722bxknc" path="res://Assets/Art/UI/Sound_Button_Pink.png" id="7_qpe14"]
+[ext_resource type="Texture2D" uid="uid://1bi1l3a7rhdg" path="res://Assets/Art/UI/Display_Button_Green.png" id="8_3105r"]
+[ext_resource type="Texture2D" uid="uid://ct70plndxsgpx" path="res://Assets/Art/UI/Display_Button_Pink.png" id="9_obd2o"]
+[ext_resource type="Texture2D" uid="uid://d3go6byy12h5r" path="res://Assets/Art/UI/Controls_Button_Green.png" id="10_3csdn"]
+[ext_resource type="Texture2D" uid="uid://bmteacuarq32w" path="res://Assets/Art/UI/Controls_Button_Pink.png" id="11_54j6f"]
+[ext_resource type="Texture2D" uid="uid://dfntqy2g24gcs" path="res://Assets/Art/UI/Back_Button_Green.png" id="12_f1wh3"]
+[ext_resource type="Texture2D" uid="uid://8p311m4ng60i" path="res://Assets/Art/UI/Back_Button_Pink.png" id="13_7nkbm"]
+[ext_resource type="Texture2D" uid="uid://ccll5skq0o6uf" path="res://Assets/Art/UI/Debug_Button_Placeholder.png" id="14_3105r"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_btyfq"]
 random_pitch = 1.0293022
@@ -34,7 +43,6 @@ offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dfq54")
-show_debug_button = true
 panel_land_sound = ExtResource("2_7yuyr")
 click_sound = ExtResource("2_n8st6")
 hover_sound = SubResource("AudioStreamRandomizer_btyfq")
@@ -71,49 +79,61 @@ theme_override_constants/separation = 16
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 
-[node name="LeftMenu" type="VBoxContainer" parent="MainMargin/MainLayout/LeftColumn" unique_id=1032533555]
+[node name="LeftMenu" type="VBoxContainer" parent="MainMargin/MainLayout/LeftColumn" unique_id=2075327823]
 custom_minimum_size = Vector2(128, 0)
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -48.0
-offset_right = 91.0
-offset_bottom = 48.0
-grow_vertical = 2
-theme_override_constants/separation = 8
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 238.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_constants/separation = -20
+alignment = 1
 
-[node name="SoundSettingsButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=2119214072]
+[node name="SoundSettingsButton" type="TextureButton" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=744146641]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+texture_normal = ExtResource("6_whg33")
+texture_hover = ExtResource("7_qpe14")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="DisplaySettingsButton" type="TextureButton" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=1888787114]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+texture_normal = ExtResource("8_3105r")
+texture_hover = ExtResource("9_obd2o")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="KeyConfigurationButton" type="TextureButton" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=5175014]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+texture_normal = ExtResource("10_3csdn")
+texture_hover = ExtResource("11_54j6f")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BackButton" type="TextureButton" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=99028146]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+texture_normal = ExtResource("12_f1wh3")
+texture_hover = ExtResource("13_7nkbm")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="DebugButton" type="TextureButton" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=598073489]
+unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-text = "Sound"
-
-[node name="DisplaySettingsButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=1883571894]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Display
-"
-
-[node name="KeyConfigurationButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=511694962]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Controls
-"
-
-[node name="DebugButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=494420119]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Debug Menu <3"
-
-[node name="BackButton" type="Button" parent="MainMargin/MainLayout/LeftColumn/LeftMenu" unique_id=2046775153]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-text = "Back"
+texture_normal = ExtResource("14_3105r")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="ContentRoot" type="Control" parent="MainMargin/MainLayout" unique_id=440447840]
 unique_name_in_owner = true
