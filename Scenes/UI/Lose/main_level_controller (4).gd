@@ -8,8 +8,6 @@ const MUSIC_STATE_LEVEL_3_LOW: StringName = &"level_3_low"
 const MUSIC_STATE_LEVEL_4: StringName = &"level_4"
 const MUSIC_STATE_LEVEL_4_LOW: StringName = &"level_4_low"
 
-const TRY_AGAIN_SCENE_KEY: String = "try_again_screen"
-
 
 @export_group("Scenes")
 
@@ -102,12 +100,6 @@ func _ready() -> void:
 
 	_update_level_music()
 
-	# Level 1 uses its special character
-	# introduction controller. Reloaded later
-	# levels need their dialogue started here.
-	if LevelManager.level > LevelManager.MIN_LEVEL:
-		_start_current_level_dialogue.call_deferred()
-
 
 func _process(
 	_delta: float
@@ -118,18 +110,12 @@ func _process(
 func _unhandled_input(
 	event: InputEvent
 ) -> void:
+	if not enable_debug_win:
+		return
+
 	if not OS.has_feature(
 		"editor"
 	):
-		return
-
-	if event.is_action_pressed(
-		"debug_fail"
-	):
-		_debug_fail_current_level()
-		return
-
-	if not enable_debug_win:
 		return
 
 	if not event.is_action_pressed(
@@ -152,47 +138,6 @@ func _unhandled_input(
 	)
 
 	get_viewport().set_input_as_handled()
-
-
-func _debug_fail_current_level() -> void:
-	if bool(
-		peggle_board.get(
-			"game_ended"
-		)
-	):
-		return
-
-	if not peggle_board.has_method(
-		"end_game"
-	):
-		push_warning(
-			"PeggleBoard does not have end_game()."
-		)
-		return
-
-	# Use the normal failure flow. LevelManager
-	# and GameData are left unchanged.
-	peggle_board.call(
-		"end_game",
-		TRY_AGAIN_SCENE_KEY
-	)
-
-	get_viewport().set_input_as_handled()
-
-
-func _start_current_level_dialogue() -> void:
-	if bool(
-		DialogueManager._dialogue_box_displayed
-	):
-		return
-
-	# PeggleBoard has already selected the level
-	# matching LevelManager.level in its _ready().
-	# Its dialogue signal locks the cannon, and
-	# closing the dialogue fades the board in.
-	DialogueManager.play_level_dialogue_sequence(
-		LevelManager.level
-	)
 
 
 func _on_level_dialogue_closed() -> void:

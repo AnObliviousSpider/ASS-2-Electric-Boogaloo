@@ -1,6 +1,16 @@
 extends Node
 
 
+# Gameplay-only character animation signals.
+# These never open, advance, or close dialogue.
+signal bin_emotion_triggered(
+	emotion_index: int
+)
+
+signal bin_emotion_cleared
+
+
+# Dialogue signals.
 signal dialogue_mood_triggered(
 	mood_index: int,
 	dialogue_level: int
@@ -14,6 +24,8 @@ signal dialogue_level_triggered(
 
 signal dialogue_next
 
+
+# Gameplay signals.
 signal balls_left_percentage_changed(
 	percentage: float
 )
@@ -23,5 +35,4 @@ signal celestial_body_explosion_triggered(
 )
 
 signal peg_hit_sound_update
-
 signal reset_button_pressed

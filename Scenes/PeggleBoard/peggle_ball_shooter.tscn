@@ -96,6 +96,7 @@ animations = [{
 [node name="PeggleBallShooter" type="Node2D" unique_id=1839521812]
 script = ExtResource("1_hdkc6")
 ball_scene = ExtResource("2_vr734")
+trajectory_max_length = 20.0
 cannon_fire_sfx = ExtResource("2_5gmk5")
 
 [node name="PeggleBallBarrel" type="Sprite2D" parent="." unique_id=1449746995]

@@ -103,7 +103,8 @@ func _input(
 
 
 func display_dialogue(
-	dialogue: String
+	dialogue: String,
+	on_text_audio_override : AudioStream = null
 ) -> void:
 	# This changes only this DialogueBox.
 	# Other boxes no longer receive a global signal.
@@ -149,7 +150,12 @@ func display_dialogue(
 		dialogue_is_printing = false
 		return
 
-	if on_text_audio != null:
+	if on_text_audio_override:
+		#SfxPlayer.play(
+			#on_text_audio_override
+		#)
+		_start_dialogue_audio(on_text_audio_override)
+	elif on_text_audio != null:
 		SfxPlayer.play(
 			on_text_audio
 		)
@@ -168,6 +174,14 @@ func display_dialogue(
 		CONNECT_ONE_SHOT
 	)
 
+func _start_dialogue_audio(on_text_audio_override: AudioStream) -> void:
+	while dialogue_is_printing:
+		if on_text_audio_override:
+			SfxPlayer.play(on_text_audio_override)
+		elif on_text_audio:
+			SfxPlayer.play(on_text_audio)
+
+		await get_tree().create_timer(0.08).timeout
 
 func finish_dialogue_printing() -> void:
 	if not dialogue_is_printing:

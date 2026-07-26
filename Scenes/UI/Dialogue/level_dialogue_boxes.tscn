@@ -2,6 +2,18 @@
 
 [ext_resource type="Script" uid="uid://cna3ryn6ec0ms" path="res://Scripts/UI/Dialogue/level_dialogue_boxes.gd" id="1_wplp3"]
 [ext_resource type="PackedScene" uid="uid://dolco1fwrh34t" path="res://Scenes/UI/Dialogue/dialogue_box.tscn" id="2_rlpcs"]
+[ext_resource type="AudioStream" uid="uid://b0aqrnmih1sf3" path="res://Assets/Audio/SFX/GAME/Player Talking_Pitched_up_1.wav" id="2_xvwqh"]
+[ext_resource type="AudioStream" uid="uid://dpebg42r1mxvk" path="res://Assets/Audio/SFX/GAME/partner talking.wav" id="3_bll3t"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_egt4u"]
+random_pitch = 1.3348398
+streams_count = 1
+stream_0/stream = ExtResource("2_xvwqh")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_xvwqh"]
+random_pitch = 1.7817973
+streams_count = 1
+stream_0/stream = ExtResource("3_bll3t")
 
 [node name="LevelDialogueBoxes" type="Control" unique_id=1661028365 node_paths=PackedStringArray("dialogue_boxes")]
 layout_mode = 3
@@ -13,6 +25,8 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_wplp3")
+on_player_audio = SubResource("AudioStreamRandomizer_egt4u")
+on_partner_audio = SubResource("AudioStreamRandomizer_xvwqh")
 dialogue_boxes = [NodePath("DialogueVBox/DialogueBox1"), NodePath("DialogueVBox/DialogueBox2"), NodePath("DialogueVBox/DialogueBox3"), NodePath("DialogueVBox/DialogueBox4"), NodePath("DialogueVBox/DialogueBox5")]
 
 [node name="DialogueVBox" type="VBoxContainer" parent="." unique_id=1605336348]

@@ -89,9 +89,9 @@ var rng: RandomNumberGenerator = (
 @export var meter_fill: AudioStream
 @export var peg_hit_sfx: AudioStream
 
-@export var bounce_ball_sfx : AudioStream
-@export var ghost_ball_sfx : AudioStream
-@export var split_ball_sfx : AudioStream
+@export var bounce_ball_sfx: AudioStream
+@export var ghost_ball_sfx: AudioStream
+@export var split_ball_sfx: AudioStream
 
 @export_range(1.0, 4.0, 0.1)
 var sfx_max_scale: float = 2.0
@@ -126,8 +126,6 @@ var sfx_max_scale: float = 2.0
 @onready var cannon: PeggleCannon = (
 	$PeggleBallShooter
 )
-
-
 
 
 # BALL REMOVAL NODES
@@ -202,7 +200,9 @@ var is_ai_ball_smol: int = 0
 
 
 func _ready() -> void:
-	EventBus.reset_button_pressed.connect(_on_reset_button_pressed)
+	EventBus.reset_button_pressed.connect(
+		_on_reset_button_pressed
+	)
 
 	setup_progress_bar_colours()
 
@@ -280,8 +280,6 @@ func _ready() -> void:
 
 
 func setup_progress_bar_colours() -> void:
-	# Tint only the filling texture.
-	# The under and over textures stay unchanged.
 	player_progress_bar.tint_progress = (
 		cannon.player_trajectory_dot_colour
 	)
@@ -294,14 +292,10 @@ func setup_progress_bar_colours() -> void:
 func _on_story_dialogue_started(
 	_level_number: int
 ) -> void:
-	# Every story-dialogue chunk keeps the cannon
-	# locked. It remains locked between chunks.
 	cannon.lock_cannon()
 
 
 func _on_story_dialogue_finished() -> void:
-	# This signal is emitted only after every story
-	# chunk for the current level has finished.
 	cannon.unlock_cannon()
 
 
@@ -399,9 +393,6 @@ func refund_ball() -> void:
 
 
 func update_ball_counter() -> void:
-	# The BallBar progress bar has been removed.
-	# Synchronise the countdown without playing
-	# its dramatic loss animation.
 	counting_label.set_count_immediate(
 		GameData.balls_remaining,
 		GameData.maximum_ball_count
@@ -488,7 +479,6 @@ func show_peg_level(
 		push_error(
 			"No peg level nodes were assigned."
 		)
-
 		return
 
 	var level_index: int = clampi(
@@ -819,11 +809,11 @@ func play_final_win_sequence() -> void:
 
 	cannon.lock_cannon()
 
+	await fade_out_board()
+
 	await DialogueManager.play_post_win_dialogue(
 		LevelManager.level
 	)
-
-	await fade_out_board()
 
 	SceneManager.go(
 		WIN_SCENE_KEY,
@@ -937,7 +927,6 @@ func fire_ball() -> void:
 		end_game(
 			LOSS_SCENE_KEY
 		)
-
 		return
 
 	var fired_ball: RigidBody2D = (
@@ -947,13 +936,10 @@ func fire_ball() -> void:
 	if fired_ball == null:
 		return
 
-	# Begin one combined resolution for this
-	# shot and any extra balls it creates.
 	pending_shot_was_refunded = false
 	pending_resolution_position = (
 		fired_ball.global_position
 	)
-
 
 	fired_ball.contact_monitor = true
 	fired_ball.max_contacts_reported = 4
@@ -968,9 +954,12 @@ func fire_ball() -> void:
 
 	if is_ghost_ball:
 		is_ghost_ball = false
-		# play ghost ball soundFX
-		SfxPlayer.play(ghost_ball_sfx)
-			
+
+		if ghost_ball_sfx != null:
+			SfxPlayer.play(
+				ghost_ball_sfx
+			)
+
 		if fired_ball.has_method(
 			"ghost_ball"
 		):
@@ -990,10 +979,12 @@ func fire_ball() -> void:
 
 	if is_bounce_once:
 		is_bounce_once = false
-		
-		# play bounce soundFX
-		SfxPlayer.play(bounce_ball_sfx)
-	
+
+		if bounce_ball_sfx != null:
+			SfxPlayer.play(
+				bounce_ball_sfx
+			)
+
 		if bounce_once.has_method(
 			"bounce_once"
 		):
@@ -1017,7 +1008,9 @@ func fire_ball() -> void:
 	ball_in_play = true
 
 	%Reset.hide()
-	%Reset.get_node("Cooldown").start()
+	%Reset.get_node(
+		"Cooldown"
+	).start()
 
 	use_ball()
 
@@ -1131,14 +1124,11 @@ func catch_ball(
 		true
 	)
 
-	var sound_index: int = (
-		bin_emotion
-	)
+	var sound_index: int = bin_emotion
 
 	if (
 		sound_index >= 0
-		and sound_index
-		< bin_emotion_sfx.size()
+		and sound_index < bin_emotion_sfx.size()
 	):
 		var emotion_sound: AudioStream = (
 			bin_emotion_sfx[sound_index]
@@ -1160,6 +1150,10 @@ func destroy_ball(
 
 
 func finish_opponent_turn() -> void:
+	# Return both characters to their appropriate
+	# idle animations when control returns.
+	EventBus.bin_emotion_cleared.emit()
+
 	current_turn = Turn.PLAYER
 	resolving_ball = false
 
@@ -1210,8 +1204,6 @@ func resolve_ball(
 	body.queue_free()
 
 	if should_refund:
-		# A split shot still costs only one ball,
-		# so it can only refund that ball once.
 		if not pending_shot_was_refunded:
 			pending_shot_was_refunded = true
 			refund_ball()
@@ -1237,7 +1229,10 @@ func resolve_ball(
 		ball_in_play = false
 		resolving_ball = true
 
-		%Reset.get_node("Cooldown").stop()
+		%Reset.get_node(
+			"Cooldown"
+		).stop()
+
 		%Reset.hide()
 
 		finish_ball_resolution(
@@ -1275,7 +1270,6 @@ func finish_ball_resolution(
 		end_game(
 			LOSS_SCENE_KEY
 		)
-
 		return
 
 	await cannon.play_turn_swap()
@@ -1358,9 +1352,11 @@ func _on_ball_body_entered(
 		and current_turn == Turn.PLAYER
 	):
 		is_split_ball = false
-		
-		# play split ball soundFX
-		SfxPlayer.play(split_ball_sfx)
+
+		if split_ball_sfx != null:
+			SfxPlayer.play(
+				split_ball_sfx
+			)
 
 		var turn_owner: int = int(
 			current_ball.get_meta(
@@ -1402,7 +1398,9 @@ func _on_ball_body_entered(
 	if (
 		is_blast_ball
 		and current_turn == Turn.PLAYER
-		and _body.is_in_group("pegs")
+		and _body.is_in_group(
+			"pegs"
+		)
 	):
 		is_blast_ball = false
 
@@ -1471,9 +1469,12 @@ func debug_win_current_level() -> void:
 	else:
 		play_final_win_sequence()
 
-func _on_reset_button_pressed():
-	for ball in active_balls:
-		if is_instance_valid(ball):
+
+func _on_reset_button_pressed() -> void:
+	for ball: RigidBody2D in active_balls:
+		if is_instance_valid(
+			ball
+		):
 			ball.queue_free()
 
 	active_balls.clear()

@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://7pthl3t8g2yh" path="res://Assets/Art/UI/charge_bar_human_fill.png" id="17_82xy0"]
 [ext_resource type="Texture2D" uid="uid://bgekqgu4x8em8" path="res://Assets/Art/UI/charge_bar_monster_under (1).png" id="18_7btb8"]
 [ext_resource type="Texture2D" uid="uid://n7agj84fq07g" path="res://Scenes/PeggleBoard/PeggleBin/Wide-Pixel_Frame.png" id="22_pr6su"]
+[ext_resource type="Texture2D" uid="uid://0aoao3srdbhk" path="res://Assets/peggle_board_background2.png" id="26_w34gu"]
 [ext_resource type="Texture2D" uid="uid://cgl26qbtth63c" path="res://Assets/Art/UI/charge_bar_monster_under (11).png" id="25_e0blb"]
 [ext_resource type="PackedScene" uid="uid://bamr2pxmxajr0" path="res://Scenes/CountingBall/counting_label.tscn" id="31_7pgve"]
 
@@ -138,6 +139,7 @@ position = Vector2(287, 70)
 scale = Vector2(0.7, 0.7)
 minimum_turn_angle = -55.0
 maximum_turn_angle = 55.0
+trajectory_max_length = 40.0
 cannon_fire_sfx = null
 
 [node name="PeggleBallAnimationPlayer" parent="PeggleBallShooter" index="1" unique_id=336605750]
@@ -249,14 +251,16 @@ fill_mode = 3
 texture_under = ExtResource("18_7btb8")
 texture_progress = ExtResource("25_e0blb")
 
-[node name="TextureRect" type="ColorRect" parent="." unique_id=254345196]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1624074807]
+modulate = Color(0.099985994, 0.099985994, 0.099985994, 1)
 z_index = -1
 offset_left = 176.0
 offset_top = 281.0
 offset_right = 239.24258
 offset_bottom = 320.99997
 scale = Vector2(3.4628568, -5.1028585)
-color = Color(0, 0, 0, 0.67058825)
+texture = ExtResource("26_w34gu")
+expand_mode = 1
 
 [node name="Frame" type="AnimatedSprite2D" parent="." unique_id=1632152543]
 position = Vector2(286.99997, 180)
