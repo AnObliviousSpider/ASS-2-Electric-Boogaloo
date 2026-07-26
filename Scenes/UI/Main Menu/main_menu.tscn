@@ -4,6 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://brlsii31k4pcw" path="res://Assets/Audio/SFX/UI/menu_click.wav" id="2_4pqbp"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_mrfpk"]
 [ext_resource type="AudioStream" uid="uid://dx08sm30svaqh" path="res://Assets/Audio/SFX/UI/new_game.wav" id="3_4pqbp"]
+[ext_resource type="AudioStream" uid="uid://cfxdwshb6ylp0" path="res://Assets/Audio/OST/Final/EgyptianTrapBeat_final.wav" id="5_8d3ud"]
 [ext_resource type="AudioStream" uid="uid://drv3jjtq1d13a" path="res://Assets/Audio/SFX/u_g0akwz8ml1-sonido-de-luz-de-neon-194458.mp3" id="5_jp6cc"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_wtern"]
 [ext_resource type="Script" uid="uid://dysgrw1rcoajh" path="res://Scripts/UI/Settings/snake.gd" id="6_1kc1o"]
@@ -66,6 +67,8 @@ script = ExtResource("1_o14dv")
 click_sound = ExtResource("2_4pqbp")
 hover_sound = SubResource("AudioStreamRandomizer_h5u6l")
 new_game_sound = ExtResource("3_4pqbp")
+arcade_music = ExtResource("5_8d3ud")
+arcade_bop_bpm = 103.0
 button_hover_scale = Vector2(1.06, 1.06)
 button_hover_duration = 0.3
 button_move_distance = 10.0
@@ -205,6 +208,14 @@ position = Vector2(371, 205.00003)
 scale = Vector2(0.19999999, 0.19999999)
 texture = ExtResource("17_lhp0w")
 
+[node name="HoverOutline" type="Sprite2D" parent="Island/Arcade" unique_id=1929589669]
+visible = false
+modulate = Color(0.16862746, 0.6431373, 0.6509804, 1)
+show_behind_parent = true
+z_index = -1
+scale = Vector2(1.04, 1.04)
+texture = ExtResource("17_lhp0w")
+
 [node name="Logo" type="Sprite2D" parent="." unique_id=1098353411]
 position = Vector2(243.5, 46)
 scale = Vector2(0.3, 0.3)
@@ -225,6 +236,18 @@ color = Color(1, 0.50980395, 0.7411765, 1)
 energy = 0.1
 texture = SubResource("GradientTexture2D_715ky")
 texture_scale = 9.88
+
+[node name="DiscoLayer" type="CanvasLayer" parent="." unique_id=1313514775]
+layer = 50
+
+[node name="DiscoOverlay" type="ColorRect" parent="DiscoLayer" unique_id=170030326]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/NewGameButton" to="." method="_on_new_game_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/CreditsButton" to="." method="_on_load_pressed"]
