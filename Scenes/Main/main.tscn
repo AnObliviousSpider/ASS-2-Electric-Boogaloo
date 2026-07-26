@@ -47,3 +47,4 @@ visible = false
 z_index = 100
 
 [node name="Reset" parent="UIlayer" unique_id=1834230713 instance=ExtResource("10_imbg2")]
+unique_name_in_owner = true
