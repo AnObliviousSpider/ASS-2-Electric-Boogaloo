@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bl7vnl8pn4drs"
+path="res://.godot/imported/PlaceHolderCombo v2.mp3-ff85d1121e2edb27fee0875a2c130704.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/SFX/GAME/PlaceHolderCombo v2.mp3"
+dest_files=["res://.godot/imported/PlaceHolderCombo v2.mp3-ff85d1121e2edb27fee0875a2c130704.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

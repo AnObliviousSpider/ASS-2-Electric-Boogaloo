@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c4o6gk4wosikm" path="res://Scripts/PeggleBoard/Ball/ball_explosion.gd" id="1_ltmvt"]
 [ext_resource type="Texture2D" uid="uid://6nowch8l0g5w" path="res://Assets/Art/Background/Planets/blue_planet_placeholder.png" id="1_uux7y"]
-[ext_resource type="AudioStream" uid="uid://o20hn1hs38f6" path="res://Assets/Audio/SFX/GAME/angry_bin.mp3" id="2_e3q02"]
+[ext_resource type="AudioStream" uid="uid://bf5deko1b82e" path="res://Assets/Audio/SFX/GAME/PlaceHolderFireball.mp3" id="2_e3q02"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hfg1r"]
 radius = 35.0
