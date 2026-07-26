@@ -23,7 +23,7 @@ grow_horizontal = 0
 text = "Reset Peggle"
 
 [node name="Cooldown" type="Timer" parent="." unique_id=1558528957]
-wait_time = 5.0
+wait_time = 20.0
 
 [connection signal="pressed" from="ResetBtn" to="." method="_on_reset_btn_pressed"]
 [connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]
