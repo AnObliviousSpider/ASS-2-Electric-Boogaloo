@@ -55,6 +55,10 @@ var rng: RandomNumberGenerator = (
 @export var meter_fill: AudioStream
 @export var peg_hit_sfx: AudioStream
 
+@export var bounce_ball_sfx : AudioStream
+@export var ghost_ball_sfx : AudioStream
+@export var split_ball_sfx : AudioStream
+
 @export_range(1.0, 4.0, 0.1)
 var sfx_max_scale: float = 2.0
 
@@ -168,7 +172,7 @@ var progress_tween: Tween
 
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
-var is_blast_ball: bool = false
+var is_blast_ball: bool = true
 var is_bounce_once: bool = false
 
 # Number of upcoming AI balls that
@@ -981,7 +985,9 @@ func fire_ball() -> void:
 
 	if is_ghost_ball:
 		is_ghost_ball = false
-
+		# play ghost ball soundFX
+		SfxPlayer.play(ghost_ball_sfx)
+			
 		if fired_ball.has_method(
 			"ghost_ball"
 		):
@@ -1001,7 +1007,10 @@ func fire_ball() -> void:
 
 	if is_bounce_once:
 		is_bounce_once = false
-
+		
+		# play bounce soundFX
+		SfxPlayer.play(bounce_ball_sfx)
+	
 		if bounce_once.has_method(
 			"bounce_once"
 		):
@@ -1427,6 +1436,9 @@ func _on_ball_body_entered(
 		and current_turn == Turn.PLAYER
 	):
 		is_split_ball = false
+		
+		# play split ball soundFX
+		SfxPlayer.play(split_ball_sfx)
 
 		var turn_owner: int = int(
 			current_ball.get_meta(
