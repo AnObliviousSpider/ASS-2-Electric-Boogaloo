@@ -13,7 +13,7 @@ extends Control
 
 @export var on_display_audio: AudioStream
 @export var on_text_audio: AudioStream
-
+@export var on_text_audio_override_partner: AudioStream
 
 @export_group("Dialogue Box Textures")
 
@@ -151,10 +151,9 @@ func display_dialogue(
 		return
 
 	if on_text_audio_override:
-		#SfxPlayer.play(
-			#on_text_audio_override
-		#)
 		_start_dialogue_audio(on_text_audio_override)
+	elif on_text_audio_override_partner:
+		_start_dialogue_audio(on_text_audio_override_partner)
 	elif on_text_audio != null:
 		SfxPlayer.play(
 			on_text_audio

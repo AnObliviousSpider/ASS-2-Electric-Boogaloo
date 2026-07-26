@@ -3,6 +3,12 @@
 [ext_resource type="Script" uid="uid://cnvtpab2w8vvj" path="res://Scripts/UI/Try Again/try_again_screen.gd" id="1_j1m55"]
 [ext_resource type="PackedScene" uid="uid://dolco1fwrh34t" path="res://Scenes/UI/Dialogue/dialogue_box.tscn" id="2_6uj0t"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_axtcm"]
+[ext_resource type="AudioStream" uid="uid://dpebg42r1mxvk" path="res://Assets/Audio/SFX/GAME/partner talking.wav" id="4_axtcm"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_axtcm"]
+random_pitch = 1.7817973
+streams_count = 1
+stream_0/stream = ExtResource("4_axtcm")
 
 [node name="TryAgainScreen" type="Control" unique_id=890772856]
 z_index = 121
@@ -54,5 +60,6 @@ offset_top = -79.0
 offset_right = 99.0
 offset_bottom = -29.0
 fade_in_time = 1.0
+on_text_audio_override_partner = SubResource("AudioStreamRandomizer_axtcm")
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
