@@ -116,7 +116,7 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
-				"emotion": "Idle",
+				"emotion": "Happy",
 				"text": "Uh... we could start fishing in black holes again? Did that not work that one time?"
 			},
 			{
@@ -126,17 +126,17 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "left",
-				"emotion": "Idle",
+				"emotion": "Dejected",
 				"text": "What if you cut the planets in half?"
 			},
 			{
 				"align": "right",
-				"emotion": "Idle",
+				"emotion": "Dejected",
 				"text": "They would not bounce as well."
 			},
 			{
 				"align": "left",
-				"emotion": "Flirty",
+				"emotion": "Dejected",
 				"text": "Okay... a few more games, then?"
 			},
 		],
@@ -227,7 +227,7 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"emotion": "Idle",
+				"emotion": "Dejected",
 				"text": "..."
 			},
 		],
@@ -319,7 +319,7 @@ var post_win_dialogue_sets: Dictionary = {
 		},
 		{
 			"align": "right",
-			"emotion": "Dejected",
+			"emotion": "Idle",
 			"text": "Enjoy it."
 		},
 	],
