@@ -23,6 +23,7 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
+				"emotion": "Angry",
 				"text": "There you are! How can you erase most of the universe and still be so hard to find?"
 			},
 		],
@@ -31,18 +32,22 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
+				"emotion": "Idle",
 				"text": "I found a stray meteor drifting through the Xal Thari sector that just had to go. But I am here now."
 			},
 			{
 				"align": "left",
+				"emotion": "Flirty",
 				"text": "I see. So... can we hang out for a while?"
 			},
 			{
 				"align": "right",
+				"emotion": "Happy",
 				"text": "We could play something in the arcade I kept for you. How about that one, until you win five times?"
 			},
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "Okay. That one is new. How does it work?"
 			},
 		],
@@ -51,22 +56,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
+				"emotion": "Flirty",
 				"text": "It is a special machine I made for you. It links our emotions, so you can understand me a bit better."
 			},
 			{
 				"align": "right",
+				"emotion": "Idle",
 				"text": "We take turns shooting orbs. Every peg you hit becomes yours, and vice versa, until one of us owns three quarters of the board."
 			},
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "Any stakes? What happens if we run out of orbs?"
 			},
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "Every orb is a planet. Miss the emotion link bins at the bottom, and that planet is gone."
 			},
 			{
 				"align": "right",
+				"emotion": "Idle",
 				"text": "Hit the right emotion and you get a power up. And if we run out, it is over. A countdown to the end."
 			},
 		],
@@ -77,22 +87,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "So, what happens if I win every round?"
 			},
 			{
 				"align": "right",
+				"emotion": "Flirty",
 				"text": "Then we get to spend one more day together."
 			},
 			{
 				"align": "left",
+				"emotion": "Angry",
 				"text": "Only one more? Why not longer?!"
 			},
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "Because my very existence means I have to keep ending things."
 			},
 			{
 				"align": "left",
+				"emotion": "Dejected",
 				"text": "I know, but there has to be some way to keep this going..."
 			},
 		],
@@ -101,22 +116,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "Uh... we could start fishing in black holes again? Did that not work that one time?"
 			},
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "There are not any left."
 			},
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "What if you cut the planets in half?"
 			},
 			{
 				"align": "right",
+				"emotion": "Idle",
 				"text": "They would not bounce as well."
 			},
 			{
 				"align": "left",
+				"emotion": "Flirty",
 				"text": "Okay... a few more games, then?"
 			},
 		],
@@ -127,22 +147,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
+				"emotion": "Dejected",
 				"text": "So many more planets are gone now..."
 			},
 			{
 				"align": "right",
+				"emotion": "Angry",
 				"text": "It is not as though your family was on any of those."
 			},
 			{
 				"align": "left",
+				"emotion": "Angry",
 				"text": "You cannot say things like that."
 			},
 			{
 				"align": "right",
+				"emotion": "Angry",
 				"text": "Why not? They have been gone for eons."
 			},
 			{
 				"align": "left",
+				"emotion": "Angry",
 				"text": "Because... I wish... YOU WOULD JUST STOP WITH THIS NONSENSE!"
 			},
 		],
@@ -151,22 +176,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
+				"emotion": "Angry",
 				"text": "That is not how this works. You should know that."
 			},
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "This cannot be stopped. Not by you. Not by me. It is inevitable."
 			},
 			{
 				"align": "left",
+				"emotion": "Angry",
 				"text": "THEN WHY NOT JUST END IT ALREADY?"
 			},
 			{
 				"align": "right",
+				"emotion": "Angry",
 				"text": "BECAUSE I AM NOT READY TO SAY GOODBYE YET."
 			},
 			{
 				"align": "left",
+				"emotion": "Dejected",
 				"text": "..."
 			},
 		],
@@ -177,22 +207,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
+				"emotion": "Dejected",
 				"text": "Hey, so... I am not ready to say goodbye yet either."
 			},
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "...I suppose I just do not know what will be left after this."
 			},
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "Everything will be gone. Everyone will be dead. We will not be able to talk anymore."
 			},
 			{
 				"align": "left",
+				"emotion": "Dejected",
 				"text": "Oh... I did not think you actually cared."
 			},
 			{
 				"align": "right",
+				"emotion": "Idle",
 				"text": "..."
 			},
 		],
@@ -201,22 +236,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "Soon, everything will be gone. Everyone will be dead."
 			},
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "..."
 			},
 			{
 				"align": "right",
+				"emotion": "Flirty",
 				"text": "But you will remain. I will not let you disappear."
 			},
 			{
 				"align": "left",
+				"emotion": "Dejected",
 				"text": "...But that is so cruel."
 			},
 			{
 				"align": "right",
+				"emotion": "Dejected",
 				"text": "I just do not want to be alone."
 			},
 		],
@@ -227,22 +267,27 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "So, if I win this round, we get another day?"
 			},
 			{
 				"align": "right",
+				"emotion": "Happy",
 				"text": "And I will not have to erase anything else today."
 			},
 			{
 				"align": "left",
+				"emotion": "Idle",
 				"text": "Are you sure?"
 			},
 			{
 				"align": "right",
+				"emotion": "Happy",
 				"text": "Yes. Thank you for not losing all the planets yet."
 			},
 			{
 				"align": "left",
+				"emotion": "Flirty",
 				"text": "Thank you for telling me how you felt."
 			},
 		],
@@ -254,22 +299,27 @@ var post_win_dialogue_sets: Dictionary = {
 	5: [
 		{
 			"align": "right",
+			"emotion": "Idle",
 			"text": "Maybe we can play something else until tomorrow."
 		},
 		{
 			"align": "left",
+			"emotion": "Happy",
 			"text": "That would be nice."
 		},
 		{
 			"align": "right",
+			"emotion": "Flirty",
 			"text": "Every second we spend together is nice."
 		},
 		{
 			"align": "left",
+			"emotion": "Dejected",
 			"text": "But what do we do when we play for the final world?"
 		},
 		{
 			"align": "right",
+			"emotion": "Dejected",
 			"text": "Enjoy it."
 		},
 	],
@@ -490,6 +540,42 @@ func get_alignment_for_dialogue_text(
 
 		current_dialogue_alignment = (
 			entry_alignment
+		)
+
+		var emotion_name: String = str(
+			dialogue_entry.get(
+				"emotion",
+				"Idle"
+			)
+		)
+
+		var emotion_index: int = (
+			EventBus.IDLE_EMOTION_INDEX
+		)
+
+		if emotion_name.to_lower() != "idle":
+			if not GameData.emotions.has(
+				emotion_name
+			):
+				push_warning(
+					"Unknown dialogue emotion: %s"
+					% emotion_name
+				)
+
+				emotion_name = "Happy"
+
+			emotion_index = int(
+				GameData.emotions.get(
+					emotion_name,
+					0
+				)
+			)
+
+		EventBus.dialogue_line_emotion_triggered.emit(
+			StringName(
+				entry_alignment
+			),
+			emotion_index
 		)
 
 		return entry_alignment
