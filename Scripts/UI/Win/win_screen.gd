@@ -22,6 +22,7 @@ extends Control
 @onready var main_margin: MarginContainer = $MainMargin
 @onready var color_rect_vignette: ColorRect = $ColorRectVignette
 @onready var animation_player_vignette: AnimationPlayer = $AnimationPlayerVignette
+@onready var animation_player_buttons: AnimationPlayer = $AnimationPlayerButtons
 
 func _ready() -> void:
 	main_margin.visible = false
@@ -31,10 +32,11 @@ func _ready() -> void:
 
 ## Play the vignette transition
 func vignette_transition() ->void:
-	color_rect_vignette.visible = true
-	animation_player_vignette.speed_scale = 0.8
-	animation_player_vignette.play("vignette_transition")
-	await animation_player_vignette.animation_finished
+	#color_rect_vignette.visible = true
+	#animation_player_vignette.speed_scale = 0.8
+	#animation_player_vignette.play("vignette_transition")
+	#await animation_player_vignette.animation_finished
+	animation_player_buttons.play("fade_in_text")
 	main_margin.visible = true
 
 # Replay the level the player just won.
