@@ -11,25 +11,12 @@ const LEVEL_DIALOGUE_CHUNK_GAP: float = 0.2
 
 var _dialogue_box_displayed: bool = false
 var _dialogue_input_locked: bool = false
-
 var _level_dialogue_sequence_running: bool = false
 
 
-# Stores the most recently resolved alignment.
-# Each DialogueBox still applies its own alignment
-# locally and remains visually unchanged afterwards.
 var current_dialogue_alignment: String = "right"
 
 
-# These are the conversations that play before
-# each level begins.
-#
-# Levels 2 to 4 contain two sets. Calling
-# play_level_dialogue_sequence() plays set 1,
-# then set 2, before emitting level_dialogue_closed.
-#
-# Level 5 contains only its pre-game conversation.
-# Its post-win conversation is stored separately.
 var dialogue_level_sets: Dictionary = {
 	1: [
 		# INTRO: FIRST ISOLATED LINE
@@ -44,7 +31,7 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
-				"text": "I found a stray meteor drifting through the Xal'Thari sector that just had to go. But I'm here now."
+				"text": "I found a stray meteor drifting through the Xal Thari sector that just had to go. But I am here now."
 			},
 			{
 				"align": "left",
@@ -56,7 +43,7 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "left",
-				"text": "Okay. That one's new. How does it work?"
+				"text": "Okay. That one is new. How does it work?"
 			},
 		],
 
@@ -64,7 +51,7 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
-				"text": "It's a special machine I made for you. It links our emotions, so you can understand me a bit better."
+				"text": "It is a special machine I made for you. It links our emotions, so you can understand me a bit better."
 			},
 			{
 				"align": "right",
@@ -76,11 +63,11 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "Every orb is a planet. Miss the emotion-link bins at the bottom, and that planet is gone."
+				"text": "Every orb is a planet. Miss the emotion link bins at the bottom, and that planet is gone."
 			},
 			{
 				"align": "right",
-				"text": "Hit the right emotion and you get a power-up. And if we run out, it's over. A countdown to the end."
+				"text": "Hit the right emotion and you get a power up. And if we run out, it is over. A countdown to the end."
 			},
 		],
 	],
@@ -114,11 +101,11 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
-				"text": "Uh... we could start fishing in black holes again? Didn't that work that one time?"
+				"text": "Uh... we could start fishing in black holes again? Did that not work that one time?"
 			},
 			{
 				"align": "right",
-				"text": "There aren't any left."
+				"text": "There are not any left."
 			},
 			{
 				"align": "left",
@@ -126,7 +113,7 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "They wouldn't bounce as well."
+				"text": "They would not bounce as well."
 			},
 			{
 				"align": "left",
@@ -144,15 +131,15 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "It's not as though your family was on any of those."
+				"text": "It is not as though your family was on any of those."
 			},
 			{
 				"align": "left",
-				"text": "You can't say things like that."
+				"text": "You cannot say things like that."
 			},
 			{
 				"align": "right",
-				"text": "Why not? They've been gone for eons."
+				"text": "Why not? They have been gone for eons."
 			},
 			{
 				"align": "left",
@@ -164,11 +151,11 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "right",
-				"text": "That's not how this works. You should know that."
+				"text": "That is not how this works. You should know that."
 			},
 			{
 				"align": "right",
-				"text": "This cannot be stopped. Not by you. Not by me. It's inevitable."
+				"text": "This cannot be stopped. Not by you. Not by me. It is inevitable."
 			},
 			{
 				"align": "left",
@@ -190,19 +177,19 @@ var dialogue_level_sets: Dictionary = {
 		[
 			{
 				"align": "left",
-				"text": "Hey, so... I'm not ready to say goodbye yet either."
+				"text": "Hey, so... I am not ready to say goodbye yet either."
 			},
 			{
 				"align": "right",
-				"text": "...I suppose I just don't know what will be left after this."
+				"text": "...I suppose I just do not know what will be left after this."
 			},
 			{
 				"align": "right",
-				"text": "Everything will be gone. Everyone will be dead. We won't be able to talk anymore."
+				"text": "Everything will be gone. Everyone will be dead. We will not be able to talk anymore."
 			},
 			{
 				"align": "left",
-				"text": "Oh... I didn't think you actually cared."
+				"text": "Oh... I did not think you actually cared."
 			},
 			{
 				"align": "right",
@@ -222,21 +209,21 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "But you'll remain. I won't let you disappear."
+				"text": "But you will remain. I will not let you disappear."
 			},
 			{
 				"align": "left",
-				"text": "...But that's so cruel."
+				"text": "...But that is so cruel."
 			},
 			{
 				"align": "right",
-				"text": "I just don't want to be alone."
+				"text": "I just do not want to be alone."
 			},
 		],
 	],
 
 	5: [
-		# LEVEL 5: PRE-GAME SET
+		# LEVEL 5: PRE GAME SET
 		[
 			{
 				"align": "left",
@@ -244,7 +231,7 @@ var dialogue_level_sets: Dictionary = {
 			},
 			{
 				"align": "right",
-				"text": "And I won't have to erase anything else today."
+				"text": "And I will not have to erase anything else today."
 			},
 			{
 				"align": "left",
@@ -263,9 +250,6 @@ var dialogue_level_sets: Dictionary = {
 }
 
 
-# Dialogue that plays only after winning its level.
-# This is kept separate so it does not play before
-# the final round begins.
 var post_win_dialogue_sets: Dictionary = {
 	5: [
 		{
@@ -292,7 +276,6 @@ var post_win_dialogue_sets: Dictionary = {
 }
 
 
-# Contains the currently active flat dialogue set.
 var dialogue_levels: Dictionary = {}
 
 
@@ -339,11 +322,11 @@ var dialogue_moods: Dictionary = {
 
 	"Missed": [
 		"Phew, I was foaming at the Meowth.",
-		"You didn't even leave a scratch!",
-		"Uhhhh... meee-ow?",
-		"I shudder to imagine how you'll one-up that!",
+		"You did not even leave a scratch!",
+		"Uhhhh... meee ow?",
+		"I shudder to imagine how you will one up that!",
 		"Beat that, kitten!",
-		"You think I should diversify my puns? I'm starting to think I'm all bark and no bite!",
+		"You think I should diversify my puns? I am starting to think I am all bark and no bite!",
 	],
 }
 
@@ -459,9 +442,6 @@ func _load_post_win_dialogue_set(
 	return true
 
 
-# Returns the alignment for one specific line.
-# It does not emit a global signal, so existing
-# dialogue boxes retain their original appearance.
 func get_alignment_for_dialogue_text(
 	dialogue_text: String
 ) -> String:
@@ -514,8 +494,6 @@ func get_alignment_for_dialogue_text(
 
 		return entry_alignment
 
-	# Mood dialogue and unknown text use the
-	# right-side appearance.
 	current_dialogue_alignment = "right"
 
 	return "right"
@@ -652,9 +630,6 @@ func play_level_dialogue_sequence(
 	level_dialogue_closed.emit()
 
 
-# Plays dialogue stored in post_win_dialogue_sets.
-# It does not emit level_dialogue_closed because
-# gameplay must not resume after the final ending.
 func play_post_win_dialogue(
 	level_number: int
 ) -> void:
