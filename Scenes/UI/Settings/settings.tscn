@@ -17,6 +17,9 @@
 [ext_resource type="Texture2D" uid="uid://dfntqy2g24gcs" path="res://Assets/Art/UI/Back_Button_Green.png" id="12_f1wh3"]
 [ext_resource type="Texture2D" uid="uid://8p311m4ng60i" path="res://Assets/Art/UI/Back_Button_Pink.png" id="13_7nkbm"]
 [ext_resource type="Texture2D" uid="uid://ccll5skq0o6uf" path="res://Assets/Art/UI/Debug_Button_Placeholder.png" id="14_3105r"]
+[ext_resource type="Texture2D" uid="uid://7c4lncfnd5v4" path="res://Assets/Art/UI/ResetAudioSettings_Button_Green.png" id="17_54j6f"]
+[ext_resource type="Texture2D" uid="uid://cn0q5yom5jl8" path="res://Assets/Art/UI/ResetControls_Button_Green.png" id="19_f1wh3"]
+[ext_resource type="Script" uid="uid://dlk8u8bfb6trc" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/enhancer.gd" id="20_7nkbm"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_btyfq"]
 random_pitch = 1.0293022
@@ -152,7 +155,6 @@ layout_mode = 2
 
 [node name="SoundSettingsPanel" type="PanelContainer" parent="MainMargin/MainLayout/ContentRoot" unique_id=138489164]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -241,14 +243,23 @@ max_value = 1.0
 step = 0.01
 value = 0.9
 
-[node name="ResetSettingsButton" type="Button" parent="MainMargin/MainLayout/ContentRoot/SoundSettingsPanel/SoundMargin/SoundVBox" unique_id=1446305660]
+[node name="ResetSettingsButton" type="TextureButton" parent="MainMargin/MainLayout/ContentRoot/SoundSettingsPanel/SoundMargin/SoundVBox" unique_id=2081832725]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-text = "Reset Audio Settings"
+offset_transform_enabled = true
+offset_transform_scale = Vector2(2, 2)
+texture_normal = ExtResource("17_54j6f")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Button_enhancer" type="Node" parent="MainMargin/MainLayout/ContentRoot/SoundSettingsPanel/SoundMargin/SoundVBox/ResetSettingsButton" unique_id=1527607830]
+script = ExtResource("20_7nkbm")
+metadata/_custom_type_script = "uid://dlk8u8bfb6trc"
 
 [node name="DisplaySettingsPanel" type="PanelContainer" parent="MainMargin/MainLayout/ContentRoot" unique_id=409786948]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -282,7 +293,6 @@ text = "FullScreen"
 
 [node name="KeyConfigurationPanel" type="PanelContainer" parent="MainMargin/MainLayout/ContentRoot" unique_id=772705768]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -326,11 +336,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ResetControlsButton" type="Button" parent="MainMargin/MainLayout/ContentRoot/KeyConfigurationPanel/KeyMargin/KeyBindVBox" unique_id=1972290230]
+[node name="ResetControlsButton" type="TextureButton" parent="MainMargin/MainLayout/ContentRoot/KeyConfigurationPanel/KeyMargin/KeyBindVBox" unique_id=1549329865]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(270, 32)
 layout_mode = 2
-text = "Reset Controls
-"
+offset_transform_enabled = true
+offset_transform_scale = Vector2(2, 2)
+texture_normal = ExtResource("19_f1wh3")
+texture_hover = ExtResource("19_f1wh3")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Button_enhancer" type="Node" parent="MainMargin/MainLayout/ContentRoot/KeyConfigurationPanel/KeyMargin/KeyBindVBox/ResetControlsButton" unique_id=559606180]
+script = ExtResource("20_7nkbm")
+metadata/_custom_type_script = "uid://dlk8u8bfb6trc"
 
 [node name="DebugPanel" type="PanelContainer" parent="MainMargin/MainLayout/ContentRoot" unique_id=1316341291]
 unique_name_in_owner = true

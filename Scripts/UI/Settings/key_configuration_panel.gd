@@ -7,7 +7,7 @@ extends Control
 
 @onready var controls_list: VBoxContainer = %ControlsList
 @onready var rebind_prompt_label: Label = %RebindPromptLabel
-@onready var reset_controls_button: Button = %ResetControlsButton
+@onready var reset_controls_button: BaseButton = %ResetControlsButton
 
 @export_group("Layout")
 @export var action_label_min_width: float = 86.0
@@ -48,7 +48,7 @@ func _ready() -> void:
 	rebind_prompt_label.visible = not hide_prompt_when_not_rebinding
 	_apply_smaller_font(rebind_prompt_label)
 
-	reset_controls_button.text = reset_button_text
+	#reset_controls_button.text = reset_button_text
 	reset_controls_button.focus_mode = Control.FOCUS_ALL
 	_apply_smaller_font(reset_controls_button)
 	reset_controls_button.pressed.connect(_on_reset_controls_button_pressed)

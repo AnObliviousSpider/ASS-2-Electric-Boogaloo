@@ -20,7 +20,7 @@ extends Control
 @onready var sfx_slider: HSlider = %SFXSlider
 
 @onready var fullscreen_button: BaseButton = %FullscreenButton
-@onready var reset_settings_button: Button = %ResetSettingsButton
+@onready var reset_settings_button: BaseButton = %ResetSettingsButton
 @onready var delete_save_button: Button = %DeleteSaveButton
 @onready var win_button: Button = %WinButton
 @onready var lose_button: Button = %LoseButton
