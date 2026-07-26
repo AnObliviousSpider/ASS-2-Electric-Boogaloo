@@ -4,4 +4,4 @@ extends RigidBody2D
 @export var rocket_speed: float
 
 func _ready() -> void:
-    apply_impulse(Vector2.UP * rocket_speed)
+	apply_impulse(Vector2.UP * rocket_speed)
