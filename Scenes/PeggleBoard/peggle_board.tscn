@@ -138,6 +138,7 @@ position = Vector2(287, 70)
 scale = Vector2(0.7, 0.7)
 minimum_turn_angle = -55.0
 maximum_turn_angle = 55.0
+trajectory_max_length = 40.0
 cannon_fire_sfx = null
 
 [node name="PeggleBallAnimationPlayer" parent="PeggleBallShooter" index="1" unique_id=336605750]

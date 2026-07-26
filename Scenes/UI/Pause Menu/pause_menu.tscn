@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://dafxpj0c1t616"]
 
 [ext_resource type="Script" uid="uid://es66sk8nxklc" path="res://Scripts/UI/Pause Menu/pause_menu.gd" id="1_2cja2"]
-[ext_resource type="AudioStream" uid="uid://brlsii31k4pcw" path="res://Assets/Audio/SFX/UI/menu_click.wav" id="2_r2i2h"]
+[ext_resource type="AudioStream" uid="uid://ku001br8ti4k" path="res://Assets/Audio/SFX/UI/Click.mp3" id="3_o8ah4"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="3_oykix"]
-[ext_resource type="AudioStream" uid="uid://dx08sm30svaqh" path="res://Assets/Audio/SFX/UI/new_game.wav" id="4_oykix"]
+[ext_resource type="AudioStream" uid="uid://bbn6cge56i0hp" path="res://Assets/Audio/SFX/UI/Volume Slider.mp3" id="4_o8ah4"]
+[ext_resource type="AudioStream" uid="uid://ud5eliunhjxf" path="res://Assets/Audio/SFX/UI/Cancel.mp3" id="5_t0skr"]
 
 [node name="PauseMenu" type="Control" unique_id=624797746]
 process_mode = 3
@@ -15,9 +16,10 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2cja2")
 button_hover_sound = ExtResource("3_oykix")
-button_click_sound = ExtResource("2_r2i2h")
-slider_hover_sound = ExtResource("3_oykix")
-slider_grab_sound = ExtResource("4_oykix")
+button_click_sound = ExtResource("3_o8ah4")
+slider_hover_sound = ExtResource("4_o8ah4")
+slider_grab_sound = ExtResource("4_o8ah4")
+back_button_click_sound = ExtResource("5_t0skr")
 slider_visual_edge_padding = 0.07
 
 [node name="Panel" type="ColorRect" parent="." unique_id=1717142974]
@@ -90,8 +92,8 @@ vertical_alignment = 1
 
 [node name="MasterSlider" type="HSlider" parent="VBoxContainer2/CenterContainer/MarginContainer/VBoxContainer2/VBoxContainer/MasterHBox" unique_id=259316989]
 unique_name_in_owner = true
-clip_contents = true
 custom_minimum_size = Vector2(50, 0)
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
@@ -112,8 +114,8 @@ vertical_alignment = 1
 
 [node name="MusicSlider" type="HSlider" parent="VBoxContainer2/CenterContainer/MarginContainer/VBoxContainer2/VBoxContainer/MusicHBox" unique_id=1547624416]
 unique_name_in_owner = true
-clip_contents = true
 custom_minimum_size = Vector2(50, 0)
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
@@ -134,8 +136,8 @@ vertical_alignment = 1
 
 [node name="SFXSlider" type="HSlider" parent="VBoxContainer2/CenterContainer/MarginContainer/VBoxContainer2/VBoxContainer/SFXHBox" unique_id=270873452]
 unique_name_in_owner = true
-clip_contents = true
 custom_minimum_size = Vector2(50, 0)
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
