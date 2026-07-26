@@ -5,6 +5,21 @@
 [ext_resource type="PackedScene" uid="uid://6ygx4fc342gq" path="res://Scenes/UI/Credits/credits_person.tscn" id="2_nrxth"]
 [ext_resource type="Texture2D" uid="uid://b6lfqd8ss31w1" path="res://Assets/Art/Credits/Mc_is_roy.png" id="4_gk7wk"]
 [ext_resource type="Texture2D" uid="uid://c61kdbb16sfk2" path="res://Assets/Art/Credits/Vinny.png" id="5_84qk0"]
+[ext_resource type="Texture2D" uid="uid://bnage1vetmmnj" path="res://Assets/Art/Credits/Pioneer pfp.PNG" id="6_m83qi"]
+[ext_resource type="Texture2D" uid="uid://sgub2ff54vds" path="res://Assets/Art/Credits/ChinChillin.png" id="7_30b0m"]
+[ext_resource type="Texture2D" uid="uid://udvusvaavstv" path="res://Assets/Art/Credits/ChristmasSpecter.jpg" id="8_t6mmk"]
+[ext_resource type="Texture2D" uid="uid://htmimvpbj2ry" path="res://Assets/Art/Credits/Blobfish.png" id="9_ih0og"]
+[ext_resource type="Texture2D" uid="uid://cnsr1j7ev8k0e" path="res://Assets/Art/Credits/Lightning.jpg" id="10_rpgm3"]
+[ext_resource type="Texture2D" uid="uid://cmf324kl8d5qo" path="res://Assets/Art/Credits/Skythe.png" id="11_2cn43"]
+[ext_resource type="Texture2D" uid="uid://6bi3qvyoria6" path="res://Assets/Art/Credits/Deseph.png" id="12_a6bmd"]
+[ext_resource type="Texture2D" uid="uid://cjqwrwt8sarwd" path="res://Assets/Art/Credits/DiemSephyrsam.png" id="13_ex7my"]
+[ext_resource type="Texture2D" uid="uid://t0vui6yafno5" path="res://Assets/Art/Credits/DistortedPixels.png" id="14_mh1kg"]
+[ext_resource type="Texture2D" uid="uid://bgurl80u88ttc" path="res://Assets/Art/Credits/Emgee.png" id="15_ym3t8"]
+[ext_resource type="Texture2D" uid="uid://dyw7jxwj26har" path="res://Assets/Art/Credits/Kethon.png" id="16_wht85"]
+[ext_resource type="Texture2D" uid="uid://ckjfigqf8lgox" path="res://Assets/Art/Credits/Qrazy.png" id="17_e4mae"]
+[ext_resource type="Texture2D" uid="uid://csn5np3cxq71" path="res://Assets/Art/Credits/para.png" id="18_0g4si"]
+[ext_resource type="Texture2D" uid="uid://ml088bol6v5a" path="res://Assets/Art/Credits/Cube.png" id="19_fpcxe"]
+[ext_resource type="Texture2D" uid="uid://dcvvblqobsx8h" path="res://Assets/Art/Credits/Krish.png" id="20_pdyn2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c8hcs"]
 shader = ExtResource("2_4lu3d")
@@ -210,19 +225,6 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 
-[node name="Person8" parent="scroll" unique_id=1964564914 instance=ExtResource("2_nrxth")]
-offset_left = 8.0
-offset_top = 1070.0
-offset_right = 8.0
-offset_bottom = 1070.0
-scale = Vector2(0.737383, 0.73061717)
-card_title = "Corey Hall (para)"
-card_description = "Game Design, Arts, Narrative Design and Concepts"
-title_font_size = 24
-description_font_size = 8
-picture_y_offset = 27.0
-show_picture = true
-
 [node name="Person2" parent="scroll" unique_id=2128764956 instance=ExtResource("2_nrxth")]
 offset_left = -1.0
 offset_top = 432.0
@@ -274,6 +276,15 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person4" unique_id=1883237159]
+layout_mode = 0
+offset_left = -42.216553
+offset_top = 38.25879
+offset_right = 603.78345
+offset_bottom = 678.2588
+scale = Vector2(0.13433796, 0.13433796)
+texture = ExtResource("6_m83qi")
+
 [node name="Person13" parent="scroll/smallgroup" unique_id=1463776512 instance=ExtResource("2_nrxth")]
 offset_left = 207.12401
 offset_top = -76.517136
@@ -286,6 +297,15 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person13" unique_id=1708943875]
+layout_mode = 0
+offset_left = -60.68602
+offset_top = 40.897102
+offset_right = 1037.314
+offset_bottom = 655.8971
+scale = Vector2(0.112844795, 0.112844795)
+texture = ExtResource("7_30b0m")
 
 [node name="Person14" parent="scroll/smallgroup" unique_id=1043576054 instance=ExtResource("2_nrxth")]
 offset_left = 383.90503
@@ -300,6 +320,15 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person14" unique_id=1827030097]
+layout_mode = 0
+offset_left = -25.066004
+offset_top = 36.939312
+offset_right = 3484.934
+offset_bottom = 6276.9395
+scale = Vector2(0.0123340925, 0.0123340925)
+texture = ExtResource("8_t6mmk")
+
 [node name="Person15" parent="scroll/smallgroup" unique_id=857997428 instance=ExtResource("2_nrxth")]
 offset_left = 35.620026
 offset_top = 60.68603
@@ -312,6 +341,15 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person15" unique_id=1638026680]
+layout_mode = 0
+offset_left = -44.854866
+offset_top = 39.577835
+offset_right = 562.14514
+offset_bottom = 646.5778
+scale = Vector2(0.14939114, 0.14939114)
+texture = ExtResource("9_ih0og")
 
 [node name="Person7" parent="scroll/smallgroup" unique_id=999351639 instance=ExtResource("2_nrxth")]
 offset_left = 207.12401
@@ -326,6 +364,15 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person7" unique_id=827552588]
+layout_mode = 0
+offset_left = -23.746702
+offset_top = 40.8971
+offset_right = 633.2533
+offset_bottom = 1222.8971
+scale = Vector2(0.07440151, 0.07440151)
+texture = ExtResource("10_rpgm3")
+
 [node name="Person21" parent="scroll/smallgroup" unique_id=1649308559 instance=ExtResource("2_nrxth")]
 offset_left = 383.90503
 offset_top = 63.324524
@@ -338,6 +385,15 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person21" unique_id=1834359160]
+layout_mode = 0
+offset_left = -38.258614
+offset_top = 39.577835
+offset_right = 161.7414
+offset_bottom = 239.57784
+scale = Vector2(0.42165816, 0.42165816)
+texture = ExtResource("11_2cn43")
 
 [node name="Person5" parent="scroll/smallgroup" unique_id=1543798135 instance=ExtResource("2_nrxth")]
 offset_left = 35.62005
@@ -352,6 +408,15 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person5" unique_id=1925126882]
+layout_mode = 0
+offset_left = -46.174194
+offset_top = 39.577637
+offset_right = 600.8258
+offset_bottom = 681.57764
+scale = Vector2(0.14327899, 0.14327899)
+texture = ExtResource("12_a6bmd")
+
 [node name="Person16" parent="scroll/smallgroup" unique_id=83982525 instance=ExtResource("2_nrxth")]
 offset_left = 207.12401
 offset_top = 197.8892
@@ -364,6 +429,15 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person16" unique_id=1229866029]
+layout_mode = 0
+offset_left = -84.43271
+offset_top = 36.93931
+offset_right = 1835.5673
+offset_bottom = 1116.9393
+scale = Vector2(0.08707281, 0.08707281)
+texture = ExtResource("13_ex7my")
 
 [node name="Person17" parent="scroll/smallgroup" unique_id=672805195 instance=ExtResource("2_nrxth")]
 offset_left = 383.90503
@@ -378,6 +452,15 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person17" unique_id=129389008]
+layout_mode = 0
+offset_left = -52.77049
+offset_top = 36.939312
+offset_right = 694.2295
+offset_bottom = 643.93933
+scale = Vector2(0.14322476, 0.14322476)
+texture = ExtResource("14_mh1kg")
+
 [node name="Person18" parent="scroll/smallgroup" unique_id=725999304 instance=ExtResource("2_nrxth")]
 offset_left = 35.620026
 offset_top = 335.09235
@@ -390,6 +473,15 @@ description_font_size = 8
 picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person18" unique_id=113046689]
+layout_mode = 0
+offset_left = -44.854862
+offset_top = 36.93931
+offset_right = 572.14514
+offset_bottom = 636.93933
+scale = Vector2(0.15331718, 0.15331718)
+texture = ExtResource("15_ym3t8")
 
 [node name="Person6" parent="scroll/smallgroup" unique_id=1699491492 instance=ExtResource("2_nrxth")]
 offset_left = 204.48549
@@ -404,6 +496,15 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person6" unique_id=1384272082]
+layout_mode = 0
+offset_left = -40.897102
+offset_top = 38.258575
+offset_right = 421.1029
+offset_bottom = 576.25854
+scale = Vector2(0.17903386, 0.17903386)
+texture = ExtResource("16_wht85")
+
 [node name="Person19" parent="scroll/smallgroup" unique_id=190199873 instance=ExtResource("2_nrxth")]
 offset_left = 386.54352
 offset_top = 335.09235
@@ -417,11 +518,20 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person19" unique_id=1865704744]
+layout_mode = 0
+offset_left = -31.66227
+offset_top = 38.258575
+offset_right = 350.33774
+offset_bottom = 575.25854
+scale = Vector2(0.17347406, 0.17347406)
+texture = ExtResource("17_e4mae")
+
 [node name="Person20" parent="scroll/smallgroup" unique_id=1450042017 instance=ExtResource("2_nrxth")]
-offset_left = 35.620056
-offset_top = 474.93402
-offset_right = 35.620056
-offset_bottom = 474.93402
+offset_left = 36.939316
+offset_top = 473.61475
+offset_right = 36.939316
+offset_bottom = 473.61475
 card_title = "TonizzBlob"
 card_description = "Arts, Game Design"
 title_font_size = 24
@@ -430,11 +540,79 @@ picture_y_offset = 27.0
 show_picture = true
 metadata/_edit_use_anchors_ = true
 
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person20" unique_id=78627217]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Person8" parent="scroll/smallgroup" unique_id=1376507791 instance=ExtResource("2_nrxth")]
+offset_left = 207.12408
+offset_top = 474.93408
+offset_right = 207.12408
+offset_bottom = 474.93408
+scale = Vector2(1.0210187, 1.0116504)
+card_title = "Corey Hall (para)"
+card_description = "Game Design, Arts, Narrative Design and Concepts"
+title_font_size = 24
+description_font_size = 8
+picture_y_offset = 27.0
+show_picture = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Person8" unique_id=418007564]
+layout_mode = 0
+offset_left = -38.763165
+offset_top = 40.426117
+offset_right = 41.236835
+offset_bottom = 120.42612
+texture = ExtResource("18_0g4si")
+
+[node name="Justtext8" parent="scroll/smallgroup" unique_id=2088205422 instance=ExtResource("2_nrxth")]
+offset_left = 387.8628
+offset_top = 474.93408
+offset_right = 387.8628
+offset_bottom = 474.93408
+card_title = "Cube512"
+card_description = "Music, Visual Artist"
+title_font_size = 24
+description_font_size = 8
+picture_y_offset = 27.0
+show_picture = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Justtext8" unique_id=2093178120]
+layout_mode = 0
+offset_left = -46.174145
+offset_top = 36.939316
+offset_right = 1953.8258
+offset_bottom = 2036.9393
+scale = Vector2(0.045613162, 0.045613162)
+texture = ExtResource("19_fpcxe")
+
+[node name="Justtext16" parent="scroll/smallgroup" unique_id=499703431 instance=ExtResource("2_nrxth")]
+offset_left = 207.12405
+offset_top = 618.7335
+offset_right = 207.12405
+offset_bottom = 618.7335
+card_title = "krish_74"
+card_description = "Programmer, Game Design, Narrative Design"
+title_font_size = 24
+description_font_size = 8
+picture_y_offset = 27.0
+show_picture = true
+
+[node name="TextureRect" type="TextureRect" parent="scroll/smallgroup/Justtext16" unique_id=1977551377]
+layout_mode = 0
+offset_left = -36.93921
+offset_top = 39.578125
+offset_right = 705.0608
+offset_bottom = 639.5781
+scale = Vector2(0.10951458, 0.10951458)
+texture = ExtResource("20_pdyn2")
+
 [node name="Justtext" parent="scroll/smallgroup" unique_id=1807868889 instance=ExtResource("2_nrxth")]
 offset_left = 35.62005
-offset_top = 620.05273
+offset_top = 1019.7889
 offset_right = 35.62005
-offset_bottom = 620.05273
+offset_bottom = 1019.7889
 card_title = "_sofa_soda"
 card_description = "Game Design"
 title_font_size = 24
@@ -444,9 +622,9 @@ show_picture = true
 
 [node name="Justtext2" parent="scroll/smallgroup" unique_id=971335198 instance=ExtResource("2_nrxth")]
 offset_left = 207.12401
-offset_top = 624.01056
+offset_top = 1021.1082
 offset_right = 207.12401
-offset_bottom = 624.01056
+offset_bottom = 1021.1082
 card_title = "19hydroarchoness_69248"
 card_description = "Arts, Game Design, Narrative Design"
 title_font_size = 24
@@ -455,10 +633,10 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Justtext3" parent="scroll/smallgroup" unique_id=1306248538 instance=ExtResource("2_nrxth")]
-offset_left = 383.90503
-offset_top = 620.05273
-offset_right = 383.90503
-offset_bottom = 620.05273
+offset_left = 383.905
+offset_top = 1019.7889
+offset_right = 383.905
+offset_bottom = 1019.7889
 card_title = "andytampan"
 card_description = "Arts"
 title_font_size = 24
@@ -479,24 +657,12 @@ picture_y_offset = 27.0
 show_picture = true
 
 [node name="Justtext6" parent="scroll/smallgroup" unique_id=722469544 instance=ExtResource("2_nrxth")]
-offset_left = 207.12401
-offset_top = 672.8232
-offset_right = 207.12401
-offset_bottom = 672.8232
+offset_left = 383.90506
+offset_top = 774.4063
+offset_right = 383.90506
+offset_bottom = 774.4063
 card_title = "Bionic Mango"
 card_description = "Programmer"
-title_font_size = 24
-description_font_size = 8
-picture_y_offset = 27.0
-show_picture = true
-
-[node name="Justtext8" parent="scroll/smallgroup" unique_id=2088205422 instance=ExtResource("2_nrxth")]
-offset_left = 387.8628
-offset_top = 474.93402
-offset_right = 387.8628
-offset_bottom = 474.93402
-card_title = "Cube512"
-card_description = "Music, Visual Artist"
 title_font_size = 24
 description_font_size = 8
 picture_y_offset = 27.0
@@ -516,9 +682,9 @@ show_picture = true
 
 [node name="Justtext10" parent="scroll/smallgroup" unique_id=2089653020 instance=ExtResource("2_nrxth")]
 offset_left = 294.19522
-offset_top = 1019.78894
+offset_top = 1075.198
 offset_right = 294.19522
-offset_bottom = 1019.78894
+offset_bottom = 1075.198
 card_title = "error_404_skill_not_found"
 card_description = "Arts"
 title_font_size = 24
@@ -569,18 +735,6 @@ offset_right = 207.12401
 offset_bottom = 773.08704
 card_title = "kaas_cheese_04868"
 card_description = "Game Design, Narrative Design"
-title_font_size = 24
-description_font_size = 8
-picture_y_offset = 27.0
-show_picture = true
-
-[node name="Justtext16" parent="scroll/smallgroup" unique_id=499703431 instance=ExtResource("2_nrxth")]
-offset_left = 383.90497
-offset_top = 773.08704
-offset_right = 383.90497
-offset_bottom = 773.08704
-card_title = "krish_74"
-card_description = "Programmer, Game Design, Narrative Design"
 title_font_size = 24
 description_font_size = 8
 picture_y_offset = 27.0
@@ -744,9 +898,9 @@ show_picture = true
 
 [node name="Justtext32" parent="scroll/smallgroup" unique_id=109582101 instance=ExtResource("2_nrxth")]
 offset_left = 120.052765
-offset_top = 1019.7889
+offset_top = 1073.8785
 offset_right = 120.052765
-offset_bottom = 1019.7889
+offset_bottom = 1073.8785
 card_title = "Cyaniide"
 card_description = "Programmer, Arts, Game Design"
 title_font_size = 24
