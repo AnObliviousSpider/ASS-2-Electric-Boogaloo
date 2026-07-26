@@ -1,7 +1,115 @@
 [gd_scene format=3 uid="uid://b0uxgncbmbt55"]
 
 [ext_resource type="Script" uid="uid://sq7kqme160i8" path="res://Scripts/UI/Win/win_screen.gd" id="1_dwgyp"]
+[ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="2_gkoo6"]
 [ext_resource type="FontFile" uid="uid://c0ti0iouqg1m2" path="res://Assets/Fonts/Ruler 9.ttf" id="2_hwpyl"]
+[ext_resource type="Shader" uid="uid://dfd5ker22kjm0" path="res://Shaders/Background/win_screen_vignette.gdshader" id="4_m1ifn"]
+[ext_resource type="PackedScene" uid="uid://dnhbqo6syh8vy" path="res://Scenes/UI/Win/rocket.tscn" id="5_i3tof"]
+[ext_resource type="PackedScene" uid="uid://dp32pvxcaoih1" path="res://Scenes/UI/Win/fireworks0.tscn" id="6_pughb"]
+[ext_resource type="PackedScene" uid="uid://bjb1luoo6odev" path="res://Scenes/UI/Win/fireworks1.tscn" id="7_fdu34"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m1ifn"]
+shader = ExtResource("2_gkoo6")
+shader_parameter/scroll_speed = 0.003
+shader_parameter/star_amount = 0.32
+shader_parameter/star_brightness = 1.25
+shader_parameter/cloud_strength = 0.12
+shader_parameter/background_colour = Color(0.05098, 0.12941, 0.27843, 1)
+shader_parameter/star_colour_1 = Color(0.80784, 0.47451, 0.82353, 1)
+shader_parameter/star_colour_2 = Color(0.95686, 0.87451, 0.7451, 1)
+shader_parameter/star_colour_3 = Color(1, 0.5098, 0.74118, 1)
+shader_parameter/star_colour_4 = Color(0.7451, 0.79608, 0.92157, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i3tof"]
+shader = ExtResource("4_m1ifn")
+shader_parameter/alpha = 1.0
+shader_parameter/inner_radius = 0.0
+shader_parameter/outer_radius = 0.0
+
+[sub_resource type="Animation" id="Animation_m1ifn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRectVignette:material:shader_parameter/alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ColorRectVignette:material:shader_parameter/inner_radius")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ColorRectVignette:material:shader_parameter/outer_radius")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_i3tof"]
+resource_name = "vignette_transition"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRectVignette:material:shader_parameter/alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ColorRectVignette:material:shader_parameter/inner_radius")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ColorRectVignette:material:shader_parameter/outer_radius")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_318p8"]
+_data = {
+&"RESET": SubResource("Animation_m1ifn"),
+&"vignette_transition": SubResource("Animation_i3tof")
+}
 
 [node name="WinScreen" type="Control" unique_id=355279895]
 z_index = 120
@@ -13,41 +121,94 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dwgyp")
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1732584059]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=126643258]
+z_index = -100
+material = SubResource("ShaderMaterial_m1ifn")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.12591085, 0.12591085, 0.12591082, 1)
+
+[node name="Rocket" parent="." unique_id=267751923 instance=ExtResource("5_i3tof")]
+position = Vector2(140, 299)
+rocket_speed = 100.0
+
+[node name="Rocket2" parent="." unique_id=112629695 instance=ExtResource("5_i3tof")]
+position = Vector2(335, 352)
+rocket_speed = 150.0
+
+[node name="Rocket3" parent="." unique_id=780208304 instance=ExtResource("5_i3tof")]
+position = Vector2(236, 435)
+rocket_speed = 200.0
+
+[node name="Fireworks" parent="." unique_id=1540646596 instance=ExtResource("6_pughb")]
+position = Vector2(47, 194)
+
+[node name="Fireworks2" parent="." unique_id=546961624 instance=ExtResource("7_fdu34")]
+position = Vector2(426, 72)
+
+[node name="ColorRectVignette" type="ColorRect" parent="." unique_id=260281573]
+visible = false
+material = SubResource("ShaderMaterial_i3tof")
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 270.0
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayerVignette" type="AnimationPlayer" parent="." unique_id=1561351349]
+libraries/ = SubResource("AnimationLibrary_318p8")
+
+[node name="MainMargin" type="MarginContainer" parent="." unique_id=28965078]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -80.0
+offset_right = 63.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMargin" unique_id=1732584059]
+layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1528118905]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMargin/MarginContainer" unique_id=1528118905]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=453607391]
+[node name="Label" type="Label" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=453607391]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.29000002, 0.29000002, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("2_hwpyl")
 text = "YOU WIN"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MainMenuButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1493167629]
+[node name="MainMenuButton" type="Button" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=1493167629]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Main Menu"
 
-[node name="RetryButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=122173869]
+[node name="RetryButton" type="Button" parent="MainMargin/MarginContainer/VBoxContainer" unique_id=122173869]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Retry"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="MainMargin/MarginContainer/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="pressed" from="MainMargin/MarginContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
