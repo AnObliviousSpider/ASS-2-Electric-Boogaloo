@@ -266,7 +266,7 @@ func _ready() -> void:
 	
 	for level in peg_levels:
 		for child in level.get_children():
-			child.connect("claim_changed", animate_progress_bars)
+			child.connect("claim_changed", just_animate_progress_bar)
 
 	setup_ball_counter()
 
@@ -296,6 +296,7 @@ func _on_story_dialogue_started(
 
 
 func _on_story_dialogue_finished() -> void:
+	print("STORY_FINISHED")
 	cannon.unlock_cannon()
 
 
@@ -691,6 +692,51 @@ func get_progress_values() -> Vector2:
 		)
 	)
 
+func just_animate_progress_bar() -> void:
+	if game_ended:
+		return
+
+	var progress_values: Vector2 = (
+		get_progress_values()
+	)
+
+	if progress_tween != null:
+		progress_tween.kill()
+
+	progress_tween = create_tween()
+
+	progress_tween.set_parallel(
+		true
+	)
+
+	progress_tween.tween_property(
+		player_progress_bar,
+		"value",
+		progress_values.x,
+		progress_bar_duration
+	).set_trans(
+		Tween.TRANS_QUAD
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+	progress_tween.tween_property(
+		ai_progress_bar,
+		"value",
+		progress_values.y,
+		progress_bar_duration
+	).set_trans(
+		Tween.TRANS_QUAD
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+	if meter_fill != null:
+		SfxPlayer.play(
+			meter_fill
+		)
+
+	await progress_tween.finished
 
 func animate_progress_bars() -> void:
 	if game_ended:

@@ -285,6 +285,10 @@ func _draw() -> void:
 				- segment_length
 		)
 
+#func _physics_process(delta: float) -> void:
+#	print(barrel.visible)
+#	print(barrel.modulate)
+#	print(barrel.self_modulate)
 
 func aim_at(
 	target_position: Vector2,
