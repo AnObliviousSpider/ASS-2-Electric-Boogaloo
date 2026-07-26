@@ -213,6 +213,7 @@ func _ready() -> void:
 		cannon.lock_cannon()
 	else:
 		cannon.unlock_cannon()
+		cannon.visible = true
 
 	if not EventBus.dialogue_level_triggered.is_connected(
 		_on_story_dialogue_started
@@ -298,6 +299,7 @@ func _on_story_dialogue_started(
 func _on_story_dialogue_finished() -> void:
 	print("STORY_FINISHED")
 	cannon.unlock_cannon()
+	cannon.visible = true
 
 
 func _apply_power_up() -> void:
@@ -868,6 +870,7 @@ func play_final_win_sequence() -> void:
 	)
 
 
+
 func advance_to_next_peg_level() -> void:
 	if game_ended:
 		return
@@ -886,7 +889,9 @@ func advance_to_next_peg_level() -> void:
 
 	reset_current_round()
 
-	cannon.lock_cannon()
+	cannon.unlock_cannon()
+	cannon.visible = true
+	cannon.get_child(0).modulate.a = 255
 
 	game_ended = false
 
