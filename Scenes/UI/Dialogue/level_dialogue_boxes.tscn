@@ -30,7 +30,7 @@ on_partner_audio = SubResource("AudioStreamRandomizer_xvwqh")
 dialogue_boxes = [NodePath("DialogueVBox/DialogueBox1"), NodePath("DialogueVBox/DialogueBox2"), NodePath("DialogueVBox/DialogueBox3"), NodePath("DialogueVBox/DialogueBox4"), NodePath("DialogueVBox/DialogueBox5")]
 
 [node name="DialogueVBox" type="VBoxContainer" parent="." unique_id=1605336348]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

@@ -48,7 +48,6 @@ scale = Vector2(0.7, 0.7)
 [node name="UIlayer" type="CanvasLayer" parent="." unique_id=2058014531]
 
 [node name="LevelDialogueBoxes" parent="UIlayer" unique_id=397841832 instance=ExtResource("4_2a143")]
-visible = false
 
 [node name="PauseMenu" parent="UIlayer" unique_id=624797746 instance=ExtResource("2_76geb")]
 visible = false
