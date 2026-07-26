@@ -1,5 +1,6 @@
 extends RigidBody2D
 
+const cieling : float = 70
 
 # SCENES
 
@@ -43,7 +44,9 @@ func _physics_process(
 	_delta: float
 ) -> void:
 	if global_position.y > 1500.0:
-		queue_free()
+		EventBus.reset_button_pressed.emit()
+	if global_position.y < cieling:
+		EventBus.reset_button_pressed.emit()
 
 
 func _integrate_forces(
