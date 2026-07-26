@@ -18,6 +18,25 @@ extends Control
 @export var menu_loading_duration: float = 2.0
 
 
+# CHILD NODES
+@onready var main_margin: MarginContainer = $MainMargin
+@onready var color_rect_vignette: ColorRect = $ColorRectVignette
+@onready var animation_player_vignette: AnimationPlayer = $AnimationPlayerVignette
+
+func _ready() -> void:
+	main_margin.visible = false
+	color_rect_vignette.visible = false
+	await get_tree().create_timer(3).timeout
+	vignette_transition()
+
+## Play the vignette transition
+func vignette_transition() ->void:
+	color_rect_vignette.visible = true
+	animation_player_vignette.speed_scale = 0.8
+	animation_player_vignette.play("vignette_transition")
+	await animation_player_vignette.animation_finished
+	main_margin.visible = true
+
 # Replay the level the player just won.
 func _on_retry_button_pressed() -> void:
 	var level_scene: String = get_retry_level_scene()
