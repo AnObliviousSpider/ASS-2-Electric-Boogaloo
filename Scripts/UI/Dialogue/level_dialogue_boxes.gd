@@ -3,6 +3,8 @@ extends Control
 
 @export var on_display_audio: AudioStream
 @export var on_text_audio: AudioStream
+@export var on_player_audio: AudioStream
+@export var on_partner_audio: AudioStream
 
 @export_subgroup("Child Nodes")
 @export var dialogue_boxes: Array[DialogueBox]
@@ -63,9 +65,10 @@ func display_level_dialogue(level: int) -> void:
 		var message: Dictionary = messages[index]
 		if message.align == "left":
 			dialogue_boxes[index].size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			dialogue_boxes[index].display_dialogue(message["text"], on_player_audio)
 		if message.align == "right":
 			dialogue_boxes[index].size_flags_horizontal = Control.SIZE_SHRINK_END
-		dialogue_boxes[index].display_dialogue(message["text"])
+			dialogue_boxes[index].display_dialogue(message["text"], on_partner_audio)
 		
 		await EventBus.dialogue_next
 
