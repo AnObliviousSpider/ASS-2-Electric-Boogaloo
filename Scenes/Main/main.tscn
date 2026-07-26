@@ -30,11 +30,10 @@ script = ExtResource("2_2a143")
 [node name="Background" parent="World2D" unique_id=179009874 instance=ExtResource("2_5yls4")]
 z_index = -2
 
-[node name="PeggleBoard" parent="World2D" unique_id=1037463456 node_paths=PackedStringArray("peg_levels") instance=ExtResource("2_qw60k")]
+[node name="PeggleBoard" parent="World2D" unique_id=1037463456 instance=ExtResource("2_qw60k")]
 unique_name_in_owner = true
 position = Vector2(10, 0)
 scale = Vector2(0.8, 0.8)
-peg_levels = []
 
 [node name="Li" parent="World2D" unique_id=476922062 instance=ExtResource("5_y3v7k")]
 z_index = -2
