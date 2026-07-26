@@ -25,6 +25,7 @@ extends Control
 func _ready() -> void:
 	init_components()
 
+# TEMPORARY
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("action_primary"):
 		vignette_transition()
@@ -34,6 +35,7 @@ func init_components() -> void:
 	main_margin.visible = false
 	color_rect_vignette.visible = false
 
+## Play the vignette transition
 func vignette_transition() ->void:
 	color_rect_vignette.visible = true
 	animation_player_vignette.speed_scale = 0.8
