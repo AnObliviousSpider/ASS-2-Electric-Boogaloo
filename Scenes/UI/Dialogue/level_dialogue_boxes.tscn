@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cna3ryn6ec0ms" path="res://Scripts/UI/Dialogue/level_dialogue_boxes.gd" id="1_wplp3"]
 [ext_resource type="PackedScene" uid="uid://dolco1fwrh34t" path="res://Scenes/UI/Dialogue/dialogue_box.tscn" id="2_rlpcs"]
 [ext_resource type="AudioStream" uid="uid://b0aqrnmih1sf3" path="res://Assets/Audio/SFX/GAME/Player Talking_Pitched_up_1.wav" id="2_xvwqh"]
-[ext_resource type="AudioStream" uid="uid://dpebg42r1mxvk" path="res://Assets/Audio/SFX/GAME/partner talking.wav" id="3_bll3t"]
+[ext_resource type="AudioStream" uid="uid://bsgsv0i7wjptq" path="res://Assets/Audio/SFX/GAME/entitiy_sound.wav" id="3_xvwqh"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_egt4u"]
 random_pitch = 1.3348398
@@ -13,7 +13,7 @@ stream_0/stream = ExtResource("2_xvwqh")
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_xvwqh"]
 random_pitch = 1.7817973
 streams_count = 1
-stream_0/stream = ExtResource("3_bll3t")
+stream_0/stream = ExtResource("3_xvwqh")
 
 [node name="LevelDialogueBoxes" type="Control" unique_id=1661028365 node_paths=PackedStringArray("dialogue_boxes")]
 layout_mode = 3
