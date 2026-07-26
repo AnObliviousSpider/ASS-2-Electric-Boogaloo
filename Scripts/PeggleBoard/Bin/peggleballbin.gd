@@ -207,25 +207,47 @@ func _on_body_entered(
 		) == true
 	):
 		return
-		
-	if bin_active:
-		# Give power-up.
-		if what_emotion_to_respond_with == 0:
-			#	"Happy",
-			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[1]) # split ball
-		if what_emotion_to_respond_with == 1:
-			# 	"Dejected",
-			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[0]) # ghost ball
-		if what_emotion_to_respond_with == 2:
-			# 	"Flirty",
-			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[3]) # bounce ball
-		if what_emotion_to_respond_with == 3:
-			# 	"Angry"
-			PowerUpManager.set_triggered_power_up(PowerUpManager.power_ups.values()[2]) # blast ball
-		
 
-	# The board decides whether this hit should
-	# produce dialogue based on who fired the ball.
+	if bin_active:
+		match what_emotion_to_respond_with:
+			0:
+				PowerUpManager.set_triggered_power_up(
+					PowerUpManager.power_ups.values()[1]
+				)
+
+			1:
+				PowerUpManager.set_triggered_power_up(
+					PowerUpManager.power_ups.values()[0]
+				)
+
+			2:
+				PowerUpManager.set_triggered_power_up(
+					PowerUpManager.power_ups.values()[3]
+				)
+
+			3:
+				PowerUpManager.set_triggered_power_up(
+					PowerUpManager.power_ups.values()[2]
+				)
+
+	var ball_owner: String = str(
+		body.get_meta(
+			"ball_owner",
+			""
+		)
+	)
+
+	# Only the player's ball changes the visible
+	# character emotion.
+	if ball_owner == "player":
+		GameData.current_emotion = (
+			what_emotion_to_respond_with
+		)
+
+		EventBus.bin_emotion_triggered.emit(
+			what_emotion_to_respond_with
+		)
+
 	ball_caught.emit(
 		body,
 		what_emotion_to_respond_with
@@ -238,12 +260,4 @@ func _on_body_entered(
 
 	animation_player.play(
 		"ball_caught"
-	)
-
-	if bin_active:
-		# Give power-up here.
-		pass
-
-	GameData.current_emotion = (
-		what_emotion_to_respond_with
 	)
