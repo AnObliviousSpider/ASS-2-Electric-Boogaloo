@@ -134,7 +134,7 @@ bin_emotion_sfx = Array[AudioStream]([ExtResource("4_1uqbv"), ExtResource("5_iot
 explosion_scene = ExtResource("11_yni01")
 
 [node name="PeggleBallShooter" parent="." unique_id=345197782 instance=ExtResource("3_s3sbd")]
-z_index = 1
+z_index = 2
 position = Vector2(287, 70)
 scale = Vector2(0.7, 0.7)
 minimum_turn_angle = -55.0
@@ -240,7 +240,7 @@ texture_under = ExtResource("16_7pgve")
 texture_progress = ExtResource("17_82xy0")
 
 [node name="ProgressBar2" type="TextureProgressBar" parent="." unique_id=2092003658]
-z_index = -1
+z_index = 1
 offset_left = 384.0
 offset_top = 22.999994
 offset_right = 756.0
@@ -263,6 +263,7 @@ texture = ExtResource("26_w34gu")
 expand_mode = 1
 
 [node name="Frame" type="AnimatedSprite2D" parent="." unique_id=1632152543]
+z_index = 1
 position = Vector2(286.99997, 180)
 scale = Vector2(0.7, 0.7)
 sprite_frames = SubResource("SpriteFrames_715ky")
