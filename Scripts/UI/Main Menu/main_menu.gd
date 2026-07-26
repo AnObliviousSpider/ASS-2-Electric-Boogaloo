@@ -5,12 +5,15 @@ extends Control
 # the neon logo animation, and the clickable arcade.
 
 
+const NEW_GAME_INTRO_SCENE: String = (
+	"inbetween_scene"
+)
+
+
 @export_group("Scenes")
 
-@export var new_game_scene: String = "main"
 @export var settings_scene: String = "settings"
 @export var credits_scene: String = "credits"
-
 
 
 @export_group("Scene Transitions")
@@ -117,11 +120,18 @@ var logo_flicker_speed: float = 1.0
 @export var neon_sound_tail_duration: float = 0.5
 
 
-@onready var rock: Sprite2D = $Island/Rock
-@onready var arcade: Sprite2D = $Island/Arcade
+@onready var rock: Sprite2D = (
+	$Island/Rock
+)
+
+@onready var arcade: Sprite2D = (
+	$Island/Arcade
+)
+
 @onready var arcade_outline: Sprite2D = (
 	$Island/Arcade/HoverOutline
 )
+
 @onready var disco_overlay: ColorRect = (
 	$DiscoLayer/DiscoOverlay
 )
@@ -138,20 +148,29 @@ var logo_flicker_speed: float = 1.0
 	%SettingsButton
 )
 
-@onready var logo: Sprite2D = $Logo
-@onready var neon_light: PointLight2D = %NeonLight
-@onready var neon_light_2: PointLight2D = %NeonLight2
+@onready var logo: Sprite2D = (
+	$Logo
+)
+
+@onready var neon_light: PointLight2D = (
+	%NeonLight
+)
+
+@onready var neon_light_2: PointLight2D = (
+	%NeonLight2
+)
 
 
 # Stores active button tweens so new animations
 # can cancel old ones.
-var button_tweens: Dictionary[TextureButton, Tween] = {}
+var button_tweens: Dictionary = {}
 
 var logo_tween: Tween
 
 var arcade_base_position: Vector2
 var arcade_base_scale: Vector2
 var arcade_base_rotation: float
+
 var arcade_idle_time: float = 0.0
 var arcade_party_time: float = 0.0
 var arcade_party_blend: float = 0.0
@@ -167,11 +186,20 @@ func _ready() -> void:
 	# size, position, and scale.
 	await get_tree().process_frame
 
-	arcade_base_position = arcade.position
-	arcade_base_scale = arcade.scale
-	arcade_base_rotation = arcade.rotation
+	arcade_base_position = (
+		arcade.position
+	)
+
+	arcade_base_scale = (
+		arcade.scale
+	)
+
+	arcade_base_rotation = (
+		arcade.rotation
+	)
 
 	_setup_buttons()
+
 	arcade_outline.hide()
 
 	var starting_disco_colour: Color = (
@@ -179,7 +207,10 @@ func _ready() -> void:
 	)
 
 	starting_disco_colour.a = 0.0
-	disco_overlay.color = starting_disco_colour
+
+	disco_overlay.color = (
+		starting_disco_colour
+	)
 
 	_blink_logo_in()
 
@@ -228,9 +259,17 @@ func _exit_tree() -> void:
 	if is_instance_valid(
 		arcade
 	):
-		arcade.position = arcade_base_position
-		arcade.scale = arcade_base_scale
-		arcade.rotation = arcade_base_rotation
+		arcade.position = (
+			arcade_base_position
+		)
+
+		arcade.scale = (
+			arcade_base_scale
+		)
+
+		arcade.rotation = (
+			arcade_base_rotation
+		)
 
 	if is_instance_valid(
 		disco_overlay
@@ -240,7 +279,10 @@ func _exit_tree() -> void:
 		)
 
 		ending_disco_colour.a = 0.0
-		disco_overlay.color = ending_disco_colour
+
+		disco_overlay.color = (
+			ending_disco_colour
+		)
 
 
 func _on_new_game_button_pressed() -> void:
@@ -248,16 +290,8 @@ func _on_new_game_button_pressed() -> void:
 		new_game_sound
 	)
 
-	GameData.start_new_game(
-		50
-	)
-
-	LevelManager.set_level(
-		0
-	)
-
 	SceneManager.go(
-		new_game_scene,
+		NEW_GAME_INTRO_SCENE,
 		new_game_transition_duration
 	)
 
@@ -273,7 +307,7 @@ func _on_settings_button_pressed() -> void:
 	)
 
 
-# This is still named "load" so existing editor
+# This is still named load so existing editor
 # signal connections do not break.
 func _on_load_pressed() -> void:
 	play_sfx(
@@ -351,8 +385,8 @@ func _update_arcade_visuals(
 
 	var beat_wave: float = 0.0
 
-	# Reach the top of the bop 20% into the beat,
-	# then land again halfway through the beat.
+	# Reach the top of the bop 20 percent into
+	# the beat, then land halfway through it.
 	if beat_phase < 0.2:
 		beat_wave = smoothstep(
 			0.0,
@@ -482,7 +516,9 @@ func _update_disco_filter(
 		* arcade_party_blend
 	)
 
-	disco_overlay.color = disco_colour
+	disco_overlay.color = (
+		disco_colour
+	)
 
 
 func _update_arcade_hover() -> void:
@@ -805,7 +841,9 @@ func _blink_logo_in() -> void:
 	]
 
 	for flicker: Vector2 in flicker_sequence:
-		var brightness: float = flicker.x
+		var brightness: float = (
+			flicker.x
+		)
 
 		var duration: float = (
 			flicker.y
