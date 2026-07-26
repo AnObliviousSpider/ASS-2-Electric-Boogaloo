@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://bgekqgu4x8em8" path="res://Assets/Art/UI/charge_bar_monster_under (1).png" id="18_7btb8"]
 [ext_resource type="Texture2D" uid="uid://dep3ch4an16qi" path="res://Assets/Art/UI/charge_bar_monster_fill.png" id="19_np4uh"]
 [ext_resource type="Texture2D" uid="uid://n7agj84fq07g" path="res://Scenes/PeggleBoard/PeggleBin/Wide-Pixel_Frame.png" id="22_pr6su"]
+[ext_resource type="Texture2D" uid="uid://0aoao3srdbhk" path="res://Assets/peggle_board_background2.png" id="26_w34gu"]
 [ext_resource type="PackedScene" uid="uid://bamr2pxmxajr0" path="res://Scenes/CountingBall/counting_label.tscn" id="31_7pgve"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s3sbd"]
@@ -248,14 +249,16 @@ fill_mode = 3
 texture_under = ExtResource("18_7btb8")
 texture_progress = ExtResource("19_np4uh")
 
-[node name="TextureRect" type="ColorRect" parent="." unique_id=254345196]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1624074807]
+modulate = Color(0.099985994, 0.099985994, 0.099985994, 1)
 z_index = -1
 offset_left = 176.0
 offset_top = 281.0
 offset_right = 239.24258
 offset_bottom = 320.99997
 scale = Vector2(3.4628568, -5.1028585)
-color = Color(0, 0, 0, 0.67058825)
+texture = ExtResource("26_w34gu")
+expand_mode = 1
 
 [node name="Frame" type="AnimatedSprite2D" parent="." unique_id=1632152543]
 position = Vector2(286.99997, 180)
