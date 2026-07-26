@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://bjb1luoo6odev"]
 
 [ext_resource type="Texture2D" uid="uid://bkhyid4btiubq" path="res://Assets/Art/Background/RocketFireworks/firework0.png" id="1_k6ytw"]
+[ext_resource type="Script" uid="uid://cahgnbpkvw1d3" path="res://Scripts/UI/Win/fireworks.gd" id="2_veyxe"]
+[ext_resource type="AudioStream" uid="uid://bkvukfuf7krqv" path="res://Assets/Audio/SFX/UI/WIN/Firework sample.mp3" id="3_0im40"]
+[ext_resource type="AudioStream" uid="uid://bc8fokrblnbb6" path="res://Assets/Audio/SFX/UI/WIN/dragon-studio-fireworks-02-419019.mp3" id="4_2bqdl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lxfjs"]
 atlas = ExtResource("1_k6ytw")
@@ -306,7 +309,10 @@ animations = [{
 
 [node name="Fireworks" type="AnimatedSprite2D" unique_id=1540646596]
 sprite_frames = SubResource("SpriteFrames_ddted")
-autoplay = "default"
 speed_scale = 10.0
+script = ExtResource("2_veyxe")
+firework_shot_sound = ExtResource("3_0im40")
+firework_explode_sound = ExtResource("4_2bqdl")
 
 [connection signal="animation_finished" from="." to="." method="queue_free"]
+[connection signal="frame_changed" from="." to="." method="_on_frame_changed"]
