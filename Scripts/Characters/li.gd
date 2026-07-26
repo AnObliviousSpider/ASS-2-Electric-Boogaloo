@@ -13,7 +13,7 @@ const CHIMERA_FORM: StringName = &"chimera"
 )
 
 @export var chimera_position: Vector2 = Vector2(
-	5.0,
+	8.0,
 	-3.0
 )
 
