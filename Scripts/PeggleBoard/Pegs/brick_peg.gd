@@ -54,23 +54,28 @@ func _update_uvs() -> void:
 
 	var tex_size: Vector2 = tex.get_size()
 	var points: PackedVector2Array = visual_polygon.polygon
-
-	var min_p: Vector2 = points[0]
-	var max_p: Vector2 = points[0]
-	for p: Vector2 in points:
-		min_p = min_p.min(p)
-		max_p = max_p.max(p)
-
-	var bounds_size: Vector2 = max_p - min_p
-	if bounds_size.x == 0.0 or bounds_size.y == 0.0:
-		return
-
 	var uvs: PackedVector2Array = PackedVector2Array()
 	uvs.resize(points.size())
 
-	for i: int in points.size():
-		var norm: Vector2 = (points[i] - min_p) / bounds_size
-		uvs[i] = norm * tex_size
+	if points.size() == 4:
+		uvs[0] = Vector2(0.0, 0.0)
+		uvs[1] = Vector2(tex_size.x, 0.0)
+		uvs[2] = Vector2(tex_size.x, tex_size.y)
+		uvs[3] = Vector2(0.0, tex_size.y)
+	else:
+		var min_p: Vector2 = points[0]
+		var max_p: Vector2 = points[0]
+		for p: Vector2 in points:
+			min_p = min_p.min(p)
+			max_p = max_p.max(p)
+
+		var bounds_size: Vector2 = max_p - min_p
+		if bounds_size.x == 0.0 or bounds_size.y == 0.0:
+			return
+
+		for i: int in points.size():
+			var norm: Vector2 = (points[i] - min_p) / bounds_size
+			uvs[i] = norm * tex_size
 
 	visual_polygon.uv = uvs
 
