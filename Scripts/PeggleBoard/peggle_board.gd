@@ -1517,8 +1517,7 @@ func _on_reset_button_pressed():
 	
 	active_balls.clear()
 	ball_in_play = false
+	resolving_ball = false
 	
-	if current_turn == Turn.PLAYER:
-		fire_ball()
-	else:
+	if current_turn == Turn.AI:
 		start_ai_turn()
