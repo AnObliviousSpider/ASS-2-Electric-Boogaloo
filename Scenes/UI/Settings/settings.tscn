@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://7c4lncfnd5v4" path="res://Assets/Art/UI/ResetAudioSettings_Button_Green.png" id="17_54j6f"]
 [ext_resource type="Texture2D" uid="uid://cn0q5yom5jl8" path="res://Assets/Art/UI/ResetControls_Button_Green.png" id="19_f1wh3"]
 [ext_resource type="Script" uid="uid://dlk8u8bfb6trc" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/enhancer.gd" id="20_7nkbm"]
+[ext_resource type="Shader" uid="uid://c4jrkc6ip0ew1" path="res://Shaders/Background/VHS.gdshader" id="21_w47nj"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_btyfq"]
 random_pitch = 1.0293022
@@ -38,6 +39,15 @@ shader_parameter/star_colour_2 = Color(0.95686, 0.87451, 0.7451, 1)
 shader_parameter/star_colour_3 = Color(1, 0.5098, 0.74118, 1)
 shader_parameter/star_colour_4 = Color(0.7451, 0.79608, 0.92157, 1)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l4eim"]
+shader = ExtResource("21_w47nj")
+shader_parameter/grain_strength = 0.010000000475
+shader_parameter/scanline_strength = 0.0
+shader_parameter/horizontal_wobble = 0.00015
+shader_parameter/colour_separation = 8e-05
+shader_parameter/grain_speed = 16.0
+shader_parameter/horizontal_lines = 480.0
+
 [node name="Settings" type="Control" unique_id=933147905]
 layout_mode = 3
 anchors_preset = 15
@@ -52,7 +62,6 @@ panel_land_sound = ExtResource("2_7yuyr")
 click_sound = ExtResource("3_3105r")
 hover_sound = SubResource("AudioStreamRandomizer_btyfq")
 slider_hover_sound = ExtResource("5_3csdn")
-slider_grab_sound = ExtResource("5_3csdn")
 back_button_click_sound = ExtResource("6_54j6f")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=527442295]
@@ -396,3 +405,14 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "Lose Screen"
+
+[node name="VHS" type="ColorRect" parent="." unique_id=2037281951]
+z_index = 12
+material = SubResource("ShaderMaterial_l4eim")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.043137256)

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c313emscp8053" path="res://Scripts/UI/Main Menu/main_menu.gd" id="1_o14dv"]
 [ext_resource type="AudioStream" uid="uid://ku001br8ti4k" path="res://Assets/Audio/SFX/UI/Click.mp3" id="2_lhp0w"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_mrfpk"]
+[ext_resource type="AudioStream" uid="uid://cfxdwshb6ylp0" path="res://Assets/Audio/OST/Final/EgyptianTrapBeat_final.wav" id="4_8d3ud"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_wtern"]
 [ext_resource type="Script" uid="uid://dysgrw1rcoajh" path="res://Scripts/UI/Settings/snake.gd" id="6_1kc1o"]
 [ext_resource type="Texture2D" uid="uid://su82lcvygsc4" path="res://Assets/Art/Snake parts/Part1 (1).png" id="7_6asrm"]
@@ -26,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://bne85p3j7etq0" path="res://Assets/Art/MainMenu/Logo.png" id="18_1kc1o"]
 [ext_resource type="Texture2D" uid="uid://bpgds1tntyqu4" path="res://Assets/Art/IMG_3527.png" id="26_i3q7f"]
 [ext_resource type="PackedScene" uid="uid://ds6xavk3wfrpy" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/hehe.tscn" id="27_lhp0w"]
+[ext_resource type="Shader" uid="uid://c4jrkc6ip0ew1" path="res://Shaders/Background/VHS.gdshader" id="28_lhp0w"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fa2q1"]
 shader = ExtResource("5_wtern")
@@ -50,6 +52,15 @@ height = 258
 fill = 1
 fill_from = Vector2(0.47826087, 0.42608696)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_715ky"]
+shader = ExtResource("28_lhp0w")
+shader_parameter/grain_strength = 0.010000000475
+shader_parameter/scanline_strength = 0.0
+shader_parameter/horizontal_wobble = 0.00015
+shader_parameter/colour_separation = 8e-05
+shader_parameter/grain_speed = 16.0
+shader_parameter/horizontal_lines = 480.0
+
 [node name="MainMenu" type="Control" unique_id=1266202951]
 layout_mode = 3
 anchors_preset = 15
@@ -60,6 +71,7 @@ grow_vertical = 2
 script = ExtResource("1_o14dv")
 hover_sound = ExtResource("2_mrfpk")
 new_game_sound = ExtResource("2_lhp0w")
+arcade_music = ExtResource("4_8d3ud")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=788947633]
 z_index = -100
@@ -236,6 +248,17 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
+
+[node name="VHS" type="ColorRect" parent="." unique_id=76640617]
+z_index = 10
+material = SubResource("ShaderMaterial_715ky")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.043137256)
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/NewGameButton" to="." method="_on_new_game_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/CreditsButton" to="." method="_on_load_pressed"]
