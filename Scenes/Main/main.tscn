@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://d2yo3ypycjkqu" path="res://Scenes/UI/Dialogue/level_dialogue_boxes.tscn" id="4_2a143"]
 [ext_resource type="PackedScene" uid="uid://djt6fe3di5ucx" path="res://Scenes/Misc/LI.tscn" id="5_y3v7k"]
 [ext_resource type="PackedScene" uid="uid://btvs6nijl4827" path="res://Scenes/Characters/main_character.tscn" id="6_hryqi"]
+[ext_resource type="PackedScene" uid="uid://by5ddsvbd77y1" path="res://Scenes/UI/Reset Button/reset.tscn" id="10_imbg2"]
 
 [node name="main" type="Node" unique_id=1907013364]
 script = ExtResource("1_lixft")
@@ -44,3 +45,5 @@ visible = false
 [node name="PauseMenu" parent="UIlayer" unique_id=624797746 instance=ExtResource("2_76geb")]
 visible = false
 z_index = 100
+
+[node name="Reset" parent="UIlayer" unique_id=1834230713 instance=ExtResource("10_imbg2")]
