@@ -177,6 +177,8 @@ var is_ai_ball_smol: int = 0
 
 
 func _ready() -> void:
+	EventBus.reset_button_pressed.connect(_on_reset_button_pressed)
+	
 	setup_progress_bar_colours()
 
 	cache_original_dialogue()
@@ -1022,6 +1024,9 @@ func fire_ball() -> void:
 
 	ball_in_play = true
 
+	%Reset.hide()
+	%Reset.get_node("Cooldown").start()
+
 	use_ball()
 
 
@@ -1299,6 +1304,9 @@ func resolve_ball(
 		ball_in_play = false
 		resolving_ball = true
 
+		%Reset.get_node("Cooldown").stop()
+		%Reset.hide()
+
 		finish_ball_resolution(
 			finished_turn,
 			pending_shot_was_refunded,
@@ -1535,3 +1543,15 @@ func debug_win_current_level() -> void:
 		advance_to_next_peg_level()
 	else:
 		play_final_win_sequence()
+
+func _on_reset_button_pressed():
+	for ball in active_balls:
+		if is_instance_valid(ball):
+			ball.queue_free()
+	
+	active_balls.clear()
+	ball_in_play = false
+	resolving_ball = false
+	
+	if current_turn == Turn.AI:
+		start_ai_turn()

@@ -23,3 +23,5 @@ signal celestial_body_explosion_triggered(
 )
 
 signal peg_hit_sound_update
+
+signal reset_button_pressed

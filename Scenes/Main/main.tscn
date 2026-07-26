@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://bgb158ti4hrpx" path="res://Assets/Audio/OST/Final/Level_3_Normal.wav" id="5_2ok46"]
 [ext_resource type="PackedScene" uid="uid://djt6fe3di5ucx" path="res://Scenes/Misc/LI.tscn" id="5_y3v7k"]
 [ext_resource type="PackedScene" uid="uid://btvs6nijl4827" path="res://Scenes/Characters/main_character.tscn" id="6_hryqi"]
+[ext_resource type="PackedScene" uid="uid://by5ddsvbd77y1" path="res://Scenes/UI/Reset Button/reset.tscn" id="10_imbg2"]
 [ext_resource type="AudioStream" uid="uid://d0703j4eoruii" path="res://Assets/Audio/Level_3_Glitched.wav" id="6_vk4q2"]
 
 [node name="main" type="Node" unique_id=1907013364]
@@ -52,3 +53,6 @@ visible = false
 [node name="PauseMenu" parent="UIlayer" unique_id=624797746 instance=ExtResource("2_76geb")]
 visible = false
 z_index = 100
+
+[node name="Reset" parent="UIlayer" unique_id=1834230713 instance=ExtResource("10_imbg2")]
+unique_name_in_owner = true

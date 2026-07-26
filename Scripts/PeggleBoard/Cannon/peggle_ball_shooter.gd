@@ -177,7 +177,6 @@ var cannon_locked: bool = false
 
 var last_shoot_direction: Vector2 = Vector2.DOWN
 
-
 # TRAJECTORY DATA
 
 var trajectory_points: Array[Vector2] = []
