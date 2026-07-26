@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://bbdso4uok65q8"]
+
+[ext_resource type="Script" uid="uid://drt6i2bdm0wav" path="res://inbetween_scene.gd" id="1_fofoe"]
+[ext_resource type="AudioStream" uid="uid://c4s6nngj6mxih" path="res://Assets/Audio/SFX/UI/Intro.Slowed.wav" id="2_ias8v"]
+[ext_resource type="FontFile" uid="uid://byjsk47y2itdp" path="res://Assets/Fonts/deception scanline rg.otf" id="2_murwn"]
+[ext_resource type="AudioStream" uid="uid://drv3jjtq1d13a" path="res://Assets/Audio/SFX/u_g0akwz8ml1-sonido-de-luz-de-neon-194458.mp3" id="2_w1anx"]
+
+[node name="InbetweenScene" type="Control" unique_id=1952748917]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fofoe")
+text_show_sound = ExtResource("2_w1anx")
+scene_music = ExtResource("2_ias8v")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1127107157]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="." unique_id=2000281114]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.0
+offset_top = -10.0
+offset_right = 26.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_murwn")
+text = "TEST"
+horizontal_alignment = 1
+vertical_alignment = 1

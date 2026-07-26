@@ -31,6 +31,7 @@ func _ready() -> void:
 	hit_area.body_entered.connect(change_peg_colour)
 	peg_sprite.play("default")
 
+const NODE_OVERTAKE = preload("uid://btoknfj4dceo8")
 
 func change_peg_colour(body: Node2D) -> void:
 	if is_vanished:
@@ -68,7 +69,10 @@ func change_peg_colour(body: Node2D) -> void:
 		play_hit_animation()
 		claim_changed.emit()
 		return
-
+	
+	if claimed_turn == 1 or claimed_turn == 0:
+		SfxPlayer.play(NODE_OVERTAKE, false, false, 0.0, false, 20)
+	
 	claimed_turn = new_claimed_turn
 	hit_count = 1
 
