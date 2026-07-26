@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://ds6xavk3wfrpy"]
+
+[ext_resource type="Script" uid="uid://da7hh53w0kaej" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/hehe.gd" id="1_3gfuc"]
+[ext_resource type="Texture2D" uid="uid://khqjn5o186uj" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/Racoon_32x32.png" id="2_1rugt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1rugt"]
+atlas = ExtResource("2_1rugt")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_weui5"]
+atlas = ExtResource("2_1rugt")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6sk63"]
+atlas = ExtResource("2_1rugt")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1a4ts"]
+atlas = ExtResource("2_1rugt")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qo10s"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1rugt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_weui5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6sk63")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1a4ts")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 2.0
+}]
+
+[node name="Hehe" type="CharacterBody2D" unique_id=623901042]
+modulate = Color(0.7204674, 0.7204675, 0.7204674, 1)
+scale = Vector2(0.4, 0.4)
+motion_mode = 1
+script = ExtResource("1_3gfuc")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1187199632]
+sprite_frames = SubResource("SpriteFrames_qo10s")
+autoplay = "default"
+frame_progress = 0.860381

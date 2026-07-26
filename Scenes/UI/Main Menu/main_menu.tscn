@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://bdydriqtigct" path="res://Assets/Art/Game/PeggleBoard/Rock2.png" id="16_6asrm"]
 [ext_resource type="Texture2D" uid="uid://cg0fquntmsqb4" path="res://Assets/Art/Game/PeggleBoard/Building.png" id="17_lhp0w"]
 [ext_resource type="Texture2D" uid="uid://bne85p3j7etq0" path="res://Assets/Art/MainMenu/Logo.png" id="18_1kc1o"]
+[ext_resource type="PackedScene" uid="uid://ds6xavk3wfrpy" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/hehe.tscn" id="27_lhp0w"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h5u6l"]
 random_pitch = 1.0293022
@@ -215,6 +216,9 @@ show_behind_parent = true
 z_index = -1
 scale = Vector2(1.04, 1.04)
 texture = ExtResource("17_lhp0w")
+
+[node name="Hehe" parent="Island" unique_id=623901042 instance=ExtResource("27_lhp0w")]
+position = Vector2(161, 232)
 
 [node name="Logo" type="Sprite2D" parent="." unique_id=1098353411]
 position = Vector2(243.5, 46)
