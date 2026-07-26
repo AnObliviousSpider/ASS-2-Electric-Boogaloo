@@ -4,6 +4,9 @@
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="2_gkoo6"]
 [ext_resource type="FontFile" uid="uid://c0ti0iouqg1m2" path="res://Assets/Fonts/Ruler 9.ttf" id="2_hwpyl"]
 [ext_resource type="Shader" uid="uid://dfd5ker22kjm0" path="res://Shaders/Background/win_screen_vignette.gdshader" id="4_m1ifn"]
+[ext_resource type="PackedScene" uid="uid://dnhbqo6syh8vy" path="res://Scenes/UI/Win/rocket.tscn" id="5_i3tof"]
+[ext_resource type="PackedScene" uid="uid://dp32pvxcaoih1" path="res://Scenes/UI/Win/fireworks0.tscn" id="6_pughb"]
+[ext_resource type="PackedScene" uid="uid://bjb1luoo6odev" path="res://Scenes/UI/Win/fireworks1.tscn" id="7_fdu34"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m1ifn"]
 shader = ExtResource("2_gkoo6")
@@ -129,7 +132,26 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.12591085, 0.12591085, 0.12591082, 1)
 
+[node name="Rocket" parent="." unique_id=267751923 instance=ExtResource("5_i3tof")]
+position = Vector2(140, 299)
+rocket_speed = 100.0
+
+[node name="Rocket2" parent="." unique_id=112629695 instance=ExtResource("5_i3tof")]
+position = Vector2(335, 352)
+rocket_speed = 150.0
+
+[node name="Rocket3" parent="." unique_id=780208304 instance=ExtResource("5_i3tof")]
+position = Vector2(236, 435)
+rocket_speed = 200.0
+
+[node name="Fireworks" parent="." unique_id=1540646596 instance=ExtResource("6_pughb")]
+position = Vector2(47, 194)
+
+[node name="Fireworks2" parent="." unique_id=546961624 instance=ExtResource("7_fdu34")]
+position = Vector2(426, 72)
+
 [node name="ColorRectVignette" type="ColorRect" parent="." unique_id=260281573]
+visible = false
 material = SubResource("ShaderMaterial_i3tof")
 layout_mode = 0
 offset_right = 480.0
@@ -140,6 +162,7 @@ color = Color(0, 0, 0, 1)
 libraries/ = SubResource("AnimationLibrary_318p8")
 
 [node name="MainMargin" type="MarginContainer" parent="." unique_id=28965078]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

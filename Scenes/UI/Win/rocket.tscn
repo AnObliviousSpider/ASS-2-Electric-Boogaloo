@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://dnhbqo6syh8vy"]
+
+[ext_resource type="Script" uid="uid://ct5yyt1cvxn13" path="res://Scripts/UI/Win/rocket.gd" id="1_4k2em"]
+[ext_resource type="Texture2D" uid="uid://dwt0kwo0olqek" path="res://Assets/Art/Background/RocketFireworks/fireani-frame1.png" id="1_ap3bb"]
+[ext_resource type="Texture2D" uid="uid://ct3wkhqh2y8xc" path="res://Assets/Art/Background/RocketFireworks/fireani-frame2.png" id="2_4k2em"]
+[ext_resource type="Texture2D" uid="uid://drjva8y6n6c4k" path="res://Assets/Art/Background/RocketFireworks/fireani-frame3.png" id="3_o33cm"]
+[ext_resource type="Texture2D" uid="uid://ulkwffvwdnug" path="res://Assets/Art/Background/RocketFireworks/fireani-frame4.png" id="4_qhfxx"]
+[ext_resource type="Texture2D" uid="uid://deyi1ianf5p5m" path="res://Assets/Art/Background/RocketFireworks/fireani-frame5.png" id="5_4ashk"]
+[ext_resource type="Texture2D" uid="uid://dx5kv4mryxkuk" path="res://Assets/Art/Background/RocketFireworks/rocket-small.png" id="6_yfj2f"]
+
+[sub_resource type="Animation" id="Animation_wskax"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("1_ap3bb")]
+}
+
+[sub_resource type="Animation" id="Animation_o2ck2"]
+resource_name = "fire"
+length = 0.5
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("1_ap3bb"), ExtResource("2_4k2em"), ExtResource("3_o33cm"), ExtResource("4_qhfxx"), ExtResource("5_4ashk")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fec4l"]
+_data = {
+&"RESET": SubResource("Animation_wskax"),
+&"fire": SubResource("Animation_o2ck2")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ddted"]
+radius = 4.0
+height = 20.0
+
+[node name="Rocket" type="RigidBody2D" unique_id=112629695]
+gravity_scale = 0.0
+script = ExtResource("1_4k2em")
+
+[node name="SpriteFire" type="Sprite2D" parent="." unique_id=572631173]
+position = Vector2(0, 2)
+texture = ExtResource("1_ap3bb")
+
+[node name="AnimationPlayerFire" type="AnimationPlayer" parent="SpriteFire" unique_id=1532905482]
+libraries/ = SubResource("AnimationLibrary_fec4l")
+autoplay = &"fire"
+
+[node name="SpriteRocket" type="Sprite2D" parent="." unique_id=128514219]
+texture = ExtResource("6_yfj2f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=538469637]
+editor_description = "mostly here to make godot happy not actually used"
+shape = SubResource("CapsuleShape2D_ddted")

@@ -17,23 +17,17 @@ extends Control
 # Loading duration when returning to the main menu.
 @export var menu_loading_duration: float = 2.0
 
+
 # CHILD NODES
 @onready var main_margin: MarginContainer = $MainMargin
 @onready var color_rect_vignette: ColorRect = $ColorRectVignette
 @onready var animation_player_vignette: AnimationPlayer = $AnimationPlayerVignette
 
 func _ready() -> void:
-	init_components()
-
-# TEMPORARY
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("action_primary"):
-		vignette_transition()
-
-## Make all components invisible + other setup features for the transition
-func init_components() -> void:
 	main_margin.visible = false
 	color_rect_vignette.visible = false
+	await get_tree().create_timer(3).timeout
+	vignette_transition()
 
 ## Play the vignette transition
 func vignette_transition() ->void:
