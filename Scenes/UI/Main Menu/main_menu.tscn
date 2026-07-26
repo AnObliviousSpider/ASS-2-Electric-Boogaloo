@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://bdydriqtigct" path="res://Assets/Art/Game/PeggleBoard/Rock2.png" id="16_6asrm"]
 [ext_resource type="Texture2D" uid="uid://cg0fquntmsqb4" path="res://Assets/Art/Game/PeggleBoard/Building.png" id="17_lhp0w"]
 [ext_resource type="Texture2D" uid="uid://bne85p3j7etq0" path="res://Assets/Art/MainMenu/Logo.png" id="18_1kc1o"]
+[ext_resource type="Texture2D" uid="uid://bpgds1tntyqu4" path="res://Assets/Art/IMG_3527.png" id="26_i3q7f"]
 [ext_resource type="PackedScene" uid="uid://ds6xavk3wfrpy" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/hehe.tscn" id="27_lhp0w"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h5u6l"]
@@ -205,15 +206,16 @@ texture = ExtResource("16_6asrm")
 
 [node name="Arcade" type="Sprite2D" parent="Island" unique_id=737847564]
 z_index = 2
-position = Vector2(371, 205.00003)
+position = Vector2(391, 192)
 scale = Vector2(0.19999999, 0.19999999)
-texture = ExtResource("17_lhp0w")
+texture = ExtResource("26_i3q7f")
 
 [node name="HoverOutline" type="Sprite2D" parent="Island/Arcade" unique_id=1929589669]
 visible = false
 modulate = Color(0.16862746, 0.6431373, 0.6509804, 1)
 show_behind_parent = true
 z_index = -1
+position = Vector2(-105.00001, 55.000004)
 scale = Vector2(1.04, 1.04)
 texture = ExtResource("17_lhp0w")
 
