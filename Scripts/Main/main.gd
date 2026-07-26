@@ -1,6 +1,14 @@
 extends Node
 
 
+const MUSIC_STATE_MAIN: StringName = &"main"
+const MUSIC_STATE_EARLY_LOW: StringName = &"early_low"
+const MUSIC_STATE_LEVEL_3_NORMAL: StringName = &"level_3_normal"
+const MUSIC_STATE_LEVEL_3_LOW: StringName = &"level_3_low"
+const MUSIC_STATE_LEVEL_4: StringName = &"level_4"
+const MUSIC_STATE_LEVEL_4_LOW: StringName = &"level_4_low"
+
+
 @export_group("Scenes")
 
 @export var current_level_scene: String = "main"
@@ -9,6 +17,33 @@ extends Node
 @export_group("Game")
 
 @export var starting_ball_count: int = 50
+
+
+@export_group("Level Music")
+
+# Used during levels 1 and 2 below 50%.
+@export var early_levels_low_music: AudioStream
+
+# Used during level 3 at or above 50%.
+@export var level_3_normal_music: AudioStream
+
+# Used during level 3 below 50%.
+@export var level_3_low_music: AudioStream
+
+# Used during level 4 at or above 50%.
+@export var level_4_music: AudioStream
+
+# Used during level 4 below 50%.
+@export var level_4_low_music: AudioStream
+
+@export_range(
+	0.0,
+	1.0,
+	0.01
+)
+var low_ball_threshold: float = 0.5
+
+@export var music_crossfade_duration: float = 1.5
 
 
 @export_group("Peggle Board Transition")
@@ -31,22 +66,24 @@ extends Node
 
 var board_fade_tween: Tween
 
+# SceneMusicManager selects the main track
+# when this scene first loads.
+var current_music_state: StringName = (
+	MUSIC_STATE_MAIN
+)
+
 
 func _enter_tree() -> void:
-	# Create the ball counter only if no game exists.
 	GameData.ensure_ball_counter(
 		starting_ball_count
 	)
 
 
 func _ready() -> void:
-	# Save the current scene.
 	GameData.set_current_level(
 		current_level_scene
 	)
 
-	# Reveal the board only after the complete
-	# level dialogue sequence has finished.
 	if not DialogueManager.level_dialogue_closed.is_connected(
 		fade_in_peggle_board
 	):
@@ -54,29 +91,28 @@ func _ready() -> void:
 			fade_in_peggle_board
 		)
 
-	# Begin with the board hidden.
 	peggle_board.modulate.a = 0.0
 	peggle_board.hide()
 
-	# Do not trigger dialogue here.
-	#
-	# Level 1 dialogue is started by the character
-	# introduction script.
-	#
-	# Later level dialogue is started by PeggleBoard.
+	# Give SceneMusicManager time to apply the
+	# track assigned to the main scene.
+	await get_tree().process_frame
+
+	_update_level_music()
+
+
+func _process(
+	_delta: float
+) -> void:
+	_update_level_music()
 
 
 func _unhandled_input(
 	event: InputEvent
 ) -> void:
-	# The Inspector toggle must be enabled.
 	if not enable_debug_win:
 		return
 
-	# The debug shortcut only works when the game
-	# is being run through the Godot editor.
-	#
-	# It cannot work in exported builds.
 	if not OS.has_feature(
 		"editor"
 	):
@@ -104,15 +140,126 @@ func _unhandled_input(
 	get_viewport().set_input_as_handled()
 
 
+func _update_level_music() -> void:
+	var desired_state: StringName = (
+		_get_desired_music_state()
+	)
+
+	if desired_state == current_music_state:
+		return
+
+	current_music_state = desired_state
+
+	var target_music: AudioStream = (
+		_get_music_for_state(
+			desired_state
+		)
+	)
+
+	if target_music == null:
+		push_warning(
+			"No music assigned for state: %s"
+			% desired_state
+		)
+		return
+
+	if MusicPlayer.is_playing(
+		target_music
+	):
+		return
+
+	MusicPlayer.play(
+		target_music,
+		true,
+		false,
+		music_crossfade_duration,
+		true
+	)
+
+
+func _get_desired_music_state() -> StringName:
+	var current_level: int = (
+		LevelManager.level
+	)
+
+	var below_threshold: bool = (
+		_is_below_ball_threshold()
+	)
+
+	match current_level:
+		1, 2:
+			if below_threshold:
+				return MUSIC_STATE_EARLY_LOW
+
+			return MUSIC_STATE_MAIN
+
+		3:
+			if below_threshold:
+				return MUSIC_STATE_LEVEL_3_LOW
+
+			return MUSIC_STATE_LEVEL_3_NORMAL
+
+		4:
+			if below_threshold:
+				return MUSIC_STATE_LEVEL_4_LOW
+
+			return MUSIC_STATE_LEVEL_4
+
+		_:
+			return MUSIC_STATE_MAIN
+
+
+func _get_music_for_state(
+	music_state: StringName
+) -> AudioStream:
+	match music_state:
+		MUSIC_STATE_MAIN:
+			return SceneMusicManager.get_music_for_scene(
+				current_level_scene
+			)
+
+		MUSIC_STATE_EARLY_LOW:
+			return early_levels_low_music
+
+		MUSIC_STATE_LEVEL_3_NORMAL:
+			return level_3_normal_music
+
+		MUSIC_STATE_LEVEL_3_LOW:
+			return level_3_low_music
+
+		MUSIC_STATE_LEVEL_4:
+			return level_4_music
+
+		MUSIC_STATE_LEVEL_4_LOW:
+			return level_4_low_music
+
+	return null
+
+
+func _is_below_ball_threshold() -> bool:
+	if GameData.maximum_ball_count <= 0:
+		return false
+
+	var remaining_fraction: float = (
+		float(
+			GameData.balls_remaining
+		)
+		/ float(
+			GameData.maximum_ball_count
+		)
+	)
+
+	# Exactly 50% remains part of the normal state.
+	return remaining_fraction < low_ball_threshold
+
+
 func fade_in_peggle_board() -> void:
-	# Stop the previous fade.
 	if board_fade_tween != null:
 		board_fade_tween.kill()
 
 	peggle_board.show()
 	peggle_board.modulate.a = 0.0
 
-	# Fade the board in.
 	board_fade_tween = create_tween()
 
 	board_fade_tween.tween_property(
@@ -128,13 +275,11 @@ func fade_in_peggle_board() -> void:
 
 
 func fade_out_peggle_board() -> void:
-	# Stop the previous fade.
 	if board_fade_tween != null:
 		board_fade_tween.kill()
 
 	peggle_board.show()
 
-	# Fade the board out.
 	board_fade_tween = create_tween()
 
 	board_fade_tween.tween_property(

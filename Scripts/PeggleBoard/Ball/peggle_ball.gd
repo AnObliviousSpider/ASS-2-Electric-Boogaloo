@@ -39,6 +39,13 @@ func _ready() -> void:
 	)
 
 
+func _physics_process(
+	_delta: float
+) -> void:
+	if global_position.y > 1500.0:
+		queue_free()
+
+
 func _integrate_forces(
 	state: PhysicsDirectBodyState2D
 ) -> void:
@@ -67,6 +74,17 @@ func _on_dot_cooldown_timeout() -> void:
 		)
 		return
 
+	if not is_inside_tree():
+		return
+
+	var current_tree: SceneTree = get_tree()
+
+	if current_tree == null:
+		return
+
+	if current_tree.current_scene == null:
+		return
+
 	var dot_instance: Node2D = (
 		ball_dot.instantiate() as Node2D
 	)
@@ -78,7 +96,7 @@ func _on_dot_cooldown_timeout() -> void:
 		)
 		return
 
-	get_tree().current_scene.add_child(
+	current_tree.current_scene.add_child(
 		dot_instance
 	)
 
@@ -86,11 +104,24 @@ func _on_dot_cooldown_timeout() -> void:
 		global_position
 	)
 
-func _physics_process(delta: float) -> void:
-	if global_position.y > 1500:
-		queue_free()
 
 func ghost_ball() -> void:
+	# The cannon may return this ball before its
+	# deferred add_child operation has completed.
+	if not is_inside_tree():
+		await tree_entered
+
+	if not is_instance_valid(self):
+		return
+
+	if not is_inside_tree():
+		return
+
+	var current_tree: SceneTree = get_tree()
+
+	if current_tree == null:
+		return
+
 	# Collide with walls and other balls,
 	# but temporarily ignore pegs.
 	set_collision_mask_value(
@@ -108,11 +139,14 @@ func ghost_ball() -> void:
 		true
 	)
 
-	await get_tree().create_timer(
+	await current_tree.create_timer(
 		1.0
 	).timeout
 
 	if not is_instance_valid(self):
+		return
+
+	if not is_inside_tree():
 		return
 
 	# Restore collisions with walls,
