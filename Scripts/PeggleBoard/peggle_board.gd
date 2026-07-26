@@ -892,6 +892,9 @@ func advance_to_next_peg_level() -> void:
 	cannon.unlock_cannon()
 	cannon.visible = true
 	cannon.get_child(0).modulate.a = 255
+	
+	if LevelManager.level == 4:
+		cannon.unlock_cannon()
 
 	game_ended = false
 
