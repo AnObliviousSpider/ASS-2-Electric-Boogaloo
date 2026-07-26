@@ -172,7 +172,7 @@ var progress_tween: Tween
 
 var is_ghost_ball: bool = false
 var is_split_ball: bool = false
-var is_blast_ball: bool = true
+var is_blast_ball: bool = false
 var is_bounce_once: bool = false
 
 # Number of upcoming AI balls that
