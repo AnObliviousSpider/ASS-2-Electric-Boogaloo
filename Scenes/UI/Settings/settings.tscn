@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://djref4phgcbkv" path="res://Scripts/UI/Settings/settings.gd" id="1_dfq54"]
 [ext_resource type="AudioStream" uid="uid://fy5f6aswgy7c" path="res://Assets/Audio/SFX/UI/settings_land.mp3" id="2_7yuyr"]
-[ext_resource type="AudioStream" uid="uid://brlsii31k4pcw" path="res://Assets/Audio/SFX/UI/menu_click.wav" id="2_n8st6"]
+[ext_resource type="AudioStream" uid="uid://ku001br8ti4k" path="res://Assets/Audio/SFX/UI/Click.mp3" id="3_3105r"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="3_dkbde"]
+[ext_resource type="AudioStream" uid="uid://bbn6cge56i0hp" path="res://Assets/Audio/SFX/UI/Volume Slider.mp3" id="5_3csdn"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_hx2sp"]
+[ext_resource type="AudioStream" uid="uid://ud5eliunhjxf" path="res://Assets/Audio/SFX/UI/Cancel.mp3" id="6_54j6f"]
 [ext_resource type="Script" uid="uid://sytxw8s1a7fi" path="res://Scripts/UI/Settings/key_configuration_panel.gd" id="6_hx2sp"]
 [ext_resource type="Texture2D" uid="uid://djs2f8j13tbkk" path="res://Assets/Art/UI/Sound_Button_Green.png" id="6_whg33"]
 [ext_resource type="Texture2D" uid="uid://b36p7722bxknc" path="res://Assets/Art/UI/Sound_Button_Pink.png" id="7_qpe14"]
@@ -44,8 +46,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dfq54")
 panel_land_sound = ExtResource("2_7yuyr")
-click_sound = ExtResource("2_n8st6")
+click_sound = ExtResource("3_3105r")
 hover_sound = SubResource("AudioStreamRandomizer_btyfq")
+slider_hover_sound = ExtResource("5_3csdn")
+slider_grab_sound = ExtResource("5_3csdn")
+back_button_click_sound = ExtResource("6_54j6f")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=527442295]
 z_index = -100
