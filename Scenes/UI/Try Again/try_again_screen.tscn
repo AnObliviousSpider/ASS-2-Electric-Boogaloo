@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cnvtpab2w8vvj" path="res://Scripts/UI/Try Again/try_again_screen.gd" id="1_j1m55"]
 [ext_resource type="PackedScene" uid="uid://dolco1fwrh34t" path="res://Scenes/UI/Dialogue/dialogue_box.tscn" id="2_6uj0t"]
+[ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_axtcm"]
 
 [node name="TryAgainScreen" type="Control" unique_id=890772856]
 z_index = 121
@@ -14,6 +15,7 @@ grow_vertical = 2
 script = ExtResource("1_j1m55")
 dialogue_to_retry_delay = 2.0
 retry_fade_in_tween_duration = 1.0
+retry_hover_sound = ExtResource("2_axtcm")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=670976092]
 layout_mode = 1
@@ -43,12 +45,14 @@ alignment = 1
 [node name="RetryButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1668103217]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-text = " Retry "
+text = "Yes, Please."
 
 [node name="DialogueBox" parent="." unique_id=1944555503 instance=ExtResource("2_6uj0t")]
 layout_mode = 1
-offset_top = -68.0
-offset_bottom = -18.0
+offset_left = -99.0
+offset_top = -79.0
+offset_right = 99.0
+offset_bottom = -29.0
 fade_in_time = 1.0
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]

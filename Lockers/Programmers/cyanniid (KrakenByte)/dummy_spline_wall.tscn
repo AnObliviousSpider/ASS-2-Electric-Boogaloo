@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bw7tgya3h6tof" path="res://Scenes/Tools/spline_wall.tscn" id="1_s6dlv"]
 [ext_resource type="PackedScene" uid="uid://hxtqjqdwxevl" path="res://Scenes/PeggleBoard/Ball/peggle_ball.tscn" id="1_w2dyt"]
 [ext_resource type="PackedScene" uid="uid://4bxgldxkkafv" path="res://Scenes/PeggleBoard/Pegs/brick_peg.tscn" id="2_txlww"]
-[ext_resource type="Script" uid="uid://be5urohynxkmf" path="res://Scenes/PeggleBoard/Pegs/brick_peg.gd" id="4_aan5u"]
+[ext_resource type="Script" uid="uid://be5urohynxkmf" path="res://Scripts/PeggleBoard/Pegs/brick_peg.gd" id="4_aan5u"]
 [ext_resource type="Texture2D" uid="uid://bvbusyv20jwsn" path="res://Assets/Art/Game/PeggleBoard/unclaimed-brick-24x8.png" id="5_p8m24"]
 [ext_resource type="Texture2D" uid="uid://cr4hdaahgsl0q" path="res://Assets/Art/Game/PeggleBoard/blue-brick-24x8.png" id="6_nsgvx"]
 [ext_resource type="Texture2D" uid="uid://8pm2v5opv788" path="res://Assets/Art/Game/PeggleBoard/blue-brick-hit-24x8.png" id="7_esa31"]
