@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://by5ddsvbd77y1"]
+
+[ext_resource type="Script" uid="uid://dmbvn8amecw1g" path="res://Scripts/UI/Reset/reset.gd" id="1_8p0xj"]
+
+[node name="Reset" type="Control" unique_id=1834230713]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8p0xj")
+
+[node name="ResetBtn" type="Button" parent="." unique_id=1830499546]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_bottom = 18.0
+grow_horizontal = 0
+text = "Reset Peggle"
+
+[node name="Cooldown" type="Timer" parent="." unique_id=1558528957]
+wait_time = 5.0
+
+[connection signal="pressed" from="ResetBtn" to="." method="_on_reset_btn_pressed"]
+[connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]

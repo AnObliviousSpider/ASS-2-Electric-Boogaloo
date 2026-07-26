@@ -1,20 +1,6 @@
 [gd_scene format=3 uid="uid://dv1plvrt7vbkr"]
 
 [ext_resource type="Script" uid="uid://dfdrnfai3pgxc" path="res://Global/Music/SceneMusicManager.gd" id="1_y8736"]
-[ext_resource type="AudioStream" uid="uid://mvv56plbksor" path="res://Assets/Audio/OST/Main_Menu_Music.wav" id="2_ndyxg"]
-[ext_resource type="AudioStream" uid="uid://1oq8k6swtj6j" path="res://Assets/Audio/OST/Level_1_Normal.wav" id="3_ndyxg"]
-[ext_resource type="AudioStream" uid="uid://66sj671vo4dw" path="res://Assets/Audio/OST/something3.mp3" id="4_dbkw4"]
-[ext_resource type="AudioStream" uid="uid://ccfc1qt14pptq" path="res://Assets/Audio/OST/Level_2_Normal.wav" id="4_dtg4g"]
-
-[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_dtg4g"]
-streams_count = 2
-stream_0/stream = ExtResource("3_ndyxg")
-stream_1/stream = ExtResource("4_dtg4g")
 
 [node name="SceneMusicManager" type="Node" unique_id=1527988943]
 script = ExtResource("1_y8736")
-scene_music = {
-"credits": ExtResource("4_dbkw4"),
-"main": SubResource("AudioStreamRandomizer_dtg4g"),
-"main_menu": ExtResource("2_ndyxg")
-}

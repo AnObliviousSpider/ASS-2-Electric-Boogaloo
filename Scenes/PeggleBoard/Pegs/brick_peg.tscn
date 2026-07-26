@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://4bxgldxkkafv"]
 
-[ext_resource type="Script" uid="uid://be5urohynxkmf" path="res://Scenes/PeggleBoard/Pegs/brick_peg.gd" id="1_uhobn"]
+[ext_resource type="Script" uid="uid://be5urohynxkmf" path="res://Scripts/PeggleBoard/Pegs/brick_peg.gd" id="1_uhobn"]
 [ext_resource type="Texture2D" uid="uid://bvbusyv20jwsn" path="res://Assets/Art/Game/PeggleBoard/unclaimed-brick-24x8.png" id="2_kvk4r"]
 [ext_resource type="Texture2D" uid="uid://cr4hdaahgsl0q" path="res://Assets/Art/Game/PeggleBoard/blue-brick-24x8.png" id="2_pbfyx"]
 [ext_resource type="Texture2D" uid="uid://8pm2v5opv788" path="res://Assets/Art/Game/PeggleBoard/blue-brick-hit-24x8.png" id="4_o4pbr"]

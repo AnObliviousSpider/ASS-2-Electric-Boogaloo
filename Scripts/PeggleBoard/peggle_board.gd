@@ -9,10 +9,44 @@ enum Turn {
 
 # Made this lower because it was too hard.
 const FULL_BAR_FRACTION: float = 0.5
-const NO_PENDING_EMOTION: int = -1
 
-const FORCED_DEJECTED_LEVEL: int = 3
+const HAPPY_EMOTION_INDEX: int = 0
 const DEJECTED_EMOTION_INDEX: int = 1
+const FLIRTY_EMOTION_INDEX: int = 2
+const ANGRY_EMOTION_INDEX: int = 3
+
+const LEVEL_BIN_EMOTIONS: Dictionary = {
+	1: [
+		HAPPY_EMOTION_INDEX,
+		FLIRTY_EMOTION_INDEX,
+		HAPPY_EMOTION_INDEX,
+		FLIRTY_EMOTION_INDEX,
+	],
+	2: [
+		HAPPY_EMOTION_INDEX,
+		FLIRTY_EMOTION_INDEX,
+		DEJECTED_EMOTION_INDEX,
+		DEJECTED_EMOTION_INDEX,
+	],
+	3: [
+		ANGRY_EMOTION_INDEX,
+		ANGRY_EMOTION_INDEX,
+		DEJECTED_EMOTION_INDEX,
+		DEJECTED_EMOTION_INDEX,
+	],
+	4: [
+		DEJECTED_EMOTION_INDEX,
+		DEJECTED_EMOTION_INDEX,
+		DEJECTED_EMOTION_INDEX,
+		DEJECTED_EMOTION_INDEX,
+	],
+	5: [
+		FLIRTY_EMOTION_INDEX,
+		FLIRTY_EMOTION_INDEX,
+		FLIRTY_EMOTION_INDEX,
+		FLIRTY_EMOTION_INDEX,
+	],
+}
 
 const WIN_SCENE_KEY: String = "win_screen"
 const LOSS_SCENE_KEY: String = "loss_screen"
@@ -134,21 +168,8 @@ var game_ended: bool = false
 
 var active_balls: Array[RigidBody2D] = []
 
-var pending_dialogue_emotion: int = (
-	NO_PENDING_EMOTION
-)
-
 var pending_shot_was_refunded: bool = false
 var pending_resolution_position: Vector2 = Vector2.ZERO
-
-
-# LEVEL THREE OVERRIDE STATE
-
-var original_dejected_dialogue: Array = []
-var dialogue_overrides_cached: bool = false
-
-# Stores every bin and its original emotion.
-var original_bin_emotions: Dictionary = {}
 
 
 # PEG DATA
@@ -177,10 +198,9 @@ var is_ai_ball_smol: int = 0
 
 
 func _ready() -> void:
-	setup_progress_bar_colours()
+	EventBus.reset_button_pressed.connect(_on_reset_button_pressed)
 
-	cache_original_dialogue()
-	cache_original_bin_emotions()
+	setup_progress_bar_colours()
 
 	# Level 1 always begins with story dialogue.
 	# Later levels are locked manually before their
@@ -378,112 +398,79 @@ func update_ball_counter() -> void:
 	)
 
 
-func cache_original_dialogue() -> void:
-	if dialogue_overrides_cached:
-		return
-
-	if DialogueManager.dialogue_moods.has(
-		"Dejected"
-	):
-		original_dejected_dialogue = (
-			DialogueManager.dialogue_moods[
-				"Dejected"
-			].duplicate(
-				true
-			)
-		)
-
-	dialogue_overrides_cached = true
-
-
-func cache_original_bin_emotions() -> void:
-	if not original_bin_emotions.is_empty():
-		return
-
-	for child: Node in bins.get_children():
-		var emotion_value: Variant = child.get(
-			"what_emotion_to_respond_with"
-		)
-
-		if emotion_value == null:
-			continue
-
-		original_bin_emotions[child] = int(
-			emotion_value
-		)
-
-
 func update_bin_emotion_visuals(
 	level_number: int
 ) -> void:
-	cache_original_bin_emotions()
-
-	for child_variant: Variant in original_bin_emotions.keys():
-		var child: Node = (
-			child_variant as Node
+	var configured_emotions: Array = (
+		LEVEL_BIN_EMOTIONS.get(
+			level_number,
+			[]
 		)
-
-		if not is_instance_valid(
-			child
-		):
-			continue
-
-		var emotion_index: int = int(
-			original_bin_emotions[child]
-		)
-
-		if level_number == FORCED_DEJECTED_LEVEL:
-			emotion_index = (
-				DEJECTED_EMOTION_INDEX
-			)
-
-		child.set(
-			"what_emotion_to_respond_with",
-			emotion_index
-		)
-
-		if child.has_method(
-			"set_emotion"
-		):
-			child.call(
-				"set_emotion"
-			)
-
-
-func update_level_three_override(
-	level_number: int
-) -> void:
-	cache_original_dialogue()
-
-	update_bin_emotion_visuals(
-		level_number
 	)
 
-	if level_number == FORCED_DEJECTED_LEVEL:
-		DialogueManager.dialogue_moods[
-			"Dejected"
-		] = [
-			"...",
-		]
-
-		GameData.current_emotion = (
-			DEJECTED_EMOTION_INDEX
+	if configured_emotions.is_empty():
+		push_warning(
+			"No bin emotion layout exists for level %s."
+			% level_number
 		)
-
 		return
 
-	if not original_dejected_dialogue.is_empty():
-		DialogueManager.dialogue_moods[
-			"Dejected"
-		] = original_dejected_dialogue.duplicate(
-			true
+	var emotion_bins: Array[Node] = []
+
+	for child: Node in bins.get_children():
+		if child.get(
+			"what_emotion_to_respond_with"
+		) == null:
+			continue
+
+		emotion_bins.append(
+			child
 		)
+
+	if emotion_bins.size() < configured_emotions.size():
+		push_warning(
+			(
+				"Level %s needs %s emotion bins, "
+				+ "but only %s were found under $Bins."
+			)
+			% [
+				level_number,
+				configured_emotions.size(),
+				emotion_bins.size(),
+			]
+		)
+
+	var bin_count: int = mini(
+		emotion_bins.size(),
+		configured_emotions.size()
+	)
+
+	for bin_index: int in range(
+		bin_count
+	):
+		var emotion_bin: Node = (
+			emotion_bins[bin_index]
+		)
+
+		emotion_bin.set(
+			"what_emotion_to_respond_with",
+			int(
+				configured_emotions[bin_index]
+			)
+		)
+
+		if emotion_bin.has_method(
+			"set_emotion"
+		):
+			emotion_bin.call(
+				"set_emotion"
+			)
 
 
 func show_peg_level(
 	level_number: int
 ) -> void:
-	update_level_three_override(
+	update_bin_emotion_visuals(
 		level_number
 	)
 
@@ -660,10 +647,6 @@ func reset_current_round() -> void:
 
 	active_balls.clear()
 
-	pending_dialogue_emotion = (
-		NO_PENDING_EMOTION
-	)
-
 	pending_shot_was_refunded = false
 	pending_resolution_position = Vector2.ZERO
 
@@ -825,10 +808,6 @@ func play_final_win_sequence() -> void:
 	resolving_ball = true
 
 	cannon.lock_cannon()
-
-	EventBus.dialogue_mood_hide.emit()
-
-	DialogueManager.force_close_dialogue()
 
 	await DialogueManager.play_post_win_dialogue(
 		LevelManager.level
@@ -1022,6 +1001,9 @@ func fire_ball() -> void:
 
 	ball_in_play = true
 
+	%Reset.hide()
+	%Reset.get_node("Cooldown").start()
+
 	use_ball()
 
 
@@ -1129,26 +1111,6 @@ func catch_ball(
 	):
 		return
 
-	var ball_owner: int = int(
-		body.get_meta(
-			"turn_owner",
-			current_turn
-		)
-	)
-
-	if ball_owner == Turn.PLAYER:
-		if (
-			LevelManager.level
-			== FORCED_DEJECTED_LEVEL
-		):
-			pending_dialogue_emotion = (
-				DEJECTED_EMOTION_INDEX
-			)
-		else:
-			pending_dialogue_emotion = (
-				bin_emotion
-			)
-
 	resolve_ball(
 		body,
 		true
@@ -1182,46 +1144,7 @@ func destroy_ball(
 	)
 
 
-func play_pending_opponent_dialogue() -> void:
-	if (
-		pending_dialogue_emotion
-		== NO_PENDING_EMOTION
-	):
-		return
-
-	var emotion_to_play: int = (
-		pending_dialogue_emotion
-	)
-
-	if (
-		LevelManager.level
-		== FORCED_DEJECTED_LEVEL
-	):
-		emotion_to_play = (
-			DEJECTED_EMOTION_INDEX
-		)
-
-	pending_dialogue_emotion = (
-		NO_PENDING_EMOTION
-	)
-
-	GameData.current_emotion = (
-		emotion_to_play
-	)
-
-	EventBus.dialogue_mood_triggered.emit(
-		emotion_to_play,
-		LevelManager.level
-	)
-
-	DialogueManager.lock_dialogue()
-
-
 func finish_opponent_turn() -> void:
-	EventBus.dialogue_mood_hide.emit()
-
-	DialogueManager.force_close_dialogue()
-
 	current_turn = Turn.PLAYER
 	resolving_ball = false
 
@@ -1299,6 +1222,9 @@ func resolve_ball(
 		ball_in_play = false
 		resolving_ball = true
 
+		%Reset.get_node("Cooldown").stop()
+		%Reset.hide()
+
 		finish_ball_resolution(
 			finished_turn,
 			pending_shot_was_refunded,
@@ -1342,8 +1268,6 @@ func finish_ball_resolution(
 	if finished_turn == Turn.PLAYER:
 		current_turn = Turn.AI
 		resolving_ball = false
-
-		play_pending_opponent_dialogue()
 
 		if game_ended:
 			return
@@ -1513,16 +1437,8 @@ func debug_win_current_level() -> void:
 	ball_in_play = false
 	resolving_ball = false
 
-	pending_dialogue_emotion = (
-		NO_PENDING_EMOTION
-	)
-
 	pending_shot_was_refunded = false
 	pending_resolution_position = Vector2.ZERO
-
-	EventBus.dialogue_mood_hide.emit()
-
-	DialogueManager.force_close_dialogue()
 
 	player_progress_bar.value = (
 		player_progress_bar.max_value
@@ -1535,3 +1451,15 @@ func debug_win_current_level() -> void:
 		advance_to_next_peg_level()
 	else:
 		play_final_win_sequence()
+
+func _on_reset_button_pressed():
+	for ball in active_balls:
+		if is_instance_valid(ball):
+			ball.queue_free()
+
+	active_balls.clear()
+	ball_in_play = false
+	resolving_ball = false
+
+	if current_turn == Turn.AI:
+		start_ai_turn()

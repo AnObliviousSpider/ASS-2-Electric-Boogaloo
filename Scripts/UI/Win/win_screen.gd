@@ -1,67 +1,1416 @@
-extends Control
+extends Node2D
 
-# Win screen. (yes this is mostly the same as the loss screen :P)
-# Lets the player replay the last level or return to the main menu.
+
+enum Turn {
+	PLAYER,
+	AI
+}
+
+
+# Made this lower because it was too hard.
+const FULL_BAR_FRACTION: float = 0.5
+
+const FORCED_DEJECTED_LEVEL: int = 3
+const DEJECTED_EMOTION_INDEX: int = 1
+
+const WIN_SCENE_KEY: String = "win_screen"
+const LOSS_SCENE_KEY: String = "loss_screen"
+const TRY_AGAIN_SCENE_KEY: String = "try_again_screen"
+
+const END_SCREEN_TRANSITION_DURATION: float = 0.2
+
+
+# GAME
+
+# Made this 50 because it was too hard.
+@export var STARTING_BALL_COUNT: int = 50
+
+
+# COLLISION INFORMATION
+# Layer 1: Walls
+# Layer 2: Pegs
+# Layer 3: Ball
+# Layer 4: Bin
+
+
+# RANDOM
+
+var rng: RandomNumberGenerator = (
+	RandomNumberGenerator.new()
+)
+
+
+# PEG LEVELS
+# Assign PegsLevel1 through PegsLevel5 in order.
+
+@export var peg_levels: Array[Node2D] = []
+
+
+# AUDIO
+
+@export_group("Audio")
+
+@export var ai_win_sfx: AudioStream
+@export var meter_fill: AudioStream
+@export var peg_hit_sfx: AudioStream
+
+@export_range(1.0, 4.0, 0.1)
+var sfx_max_scale: float = 2.0
+
+# Emotion indexes:
+# 0: Happy
+# 1: Dejected
+# 2: Flirty
+# 3: Angry
+@export var bin_emotion_sfx: Array[AudioStream] = []
+
+
+# PROGRESS BARS
+
+@export_group("Progress Bars")
+
+@export var progress_bar_duration: float = 0.75
+
+
+# SCENES
 
 @export_group("Scenes")
-# Used if GameData does not know which level was played.
-@export var fallback_level_scene: String = "main"
 
-# SceneManager key for the main menu.
-@export var main_menu_scene: String = "main_menu"
-
-@export_group("Scene Transitions")
-# Loading duration when replaying the level.
-@export var retry_loading_duration: float = 2.0
-
-# Loading duration when returning to the main menu.
-@export var menu_loading_duration: float = 2.0
+@export var explosion_scene: PackedScene
 
 
-# CHILD NODES
-@onready var main_margin: MarginContainer = $MainMargin
-@onready var color_rect_vignette: ColorRect = $ColorRectVignette
-@onready var animation_player_vignette: AnimationPlayer = $AnimationPlayerVignette
-@onready var animation_player_buttons: AnimationPlayer = $AnimationPlayerButtons
+@export_group("")
+
+
+# CANNON
+
+@onready var cannon: PeggleCannon = (
+	$PeggleBallShooter
+)
+
+
+
+
+# BALL REMOVAL NODES
+
+@onready var endzone: Area2D = (
+	$Endzone
+)
+
+@onready var bins: Node2D = (
+	$Bins
+)
+
+
+# INTERFACE NODES
+
+@onready var player_progress_bar: TextureProgressBar = (
+	$ProgressBar
+)
+
+@onready var ai_progress_bar: TextureProgressBar = (
+	$ProgressBar2
+)
+
+@onready var counting_label: CountdownDisplay = (
+	$CountingLabel
+)
+
+
+# POWER-UP NODES
+
+@onready var bounce_once: StaticBody2D = (
+	$BounceOnce
+)
+
+
+# ROUND STATE
+
+var current_turn: int = Turn.PLAYER
+var ball_in_play: bool = false
+var resolving_ball: bool = false
+var game_ended: bool = false
+
+var active_balls: Array[RigidBody2D] = []
+
+var pending_shot_was_refunded: bool = false
+var pending_resolution_position: Vector2 = Vector2.ZERO
+
+
+# LEVEL THREE OVERRIDE STATE
+
+# Stores every bin and its original emotion.
+var original_bin_emotions: Dictionary = {}
+
+
+# PEG DATA
+
+var active_peg_level: Node2D
+var all_pegs: Array[Node] = []
+
+var total_peg_count: int = 0
+var pegs_hit: int = 0
+
+var peg_hit_volume: float = 0.0
+
+var progress_tween: Tween
+
+
+# POWER-UPS
+
+var is_ghost_ball: bool = false
+var is_split_ball: bool = false
+var is_blast_ball: bool = false
+var is_bounce_once: bool = false
+
+# Number of upcoming AI balls that
+# should be made smaller.
+var is_ai_ball_smol: int = 0
+
 
 func _ready() -> void:
-	main_margin.visible = false
-	color_rect_vignette.visible = false
-	await get_tree().create_timer(3).timeout
-	vignette_transition()
+	setup_progress_bar_colours()
 
-## Play the vignette transition
-func vignette_transition() ->void:
-	#color_rect_vignette.visible = true
-	#animation_player_vignette.speed_scale = 0.8
-	#animation_player_vignette.play("vignette_transition")
-	#await animation_player_vignette.animation_finished
-	animation_player_buttons.play("fade_in_text")
-	main_margin.visible = true
+	cache_original_bin_emotions()
 
-# Replay the level the player just won.
-func _on_retry_button_pressed() -> void:
-	var level_scene: String = get_retry_level_scene()
+	# Level 1 always begins with story dialogue.
+	# Later levels are locked manually before their
+	# story dialogue is triggered.
+	if LevelManager.level == LevelManager.MIN_LEVEL:
+		cannon.lock_cannon()
+	else:
+		cannon.unlock_cannon()
 
-	# The true at the end forces the scene to reload,
-	# even if the player is already technically coming from that scene.
-	SceneManager.go(level_scene, retry_loading_duration, true)
+	if not EventBus.dialogue_level_triggered.is_connected(
+		_on_story_dialogue_started
+	):
+		EventBus.dialogue_level_triggered.connect(
+			_on_story_dialogue_started
+		)
+
+	if not DialogueManager.level_dialogue_closed.is_connected(
+		_on_story_dialogue_finished
+	):
+		DialogueManager.level_dialogue_closed.connect(
+			_on_story_dialogue_finished
+		)
+
+	if not endzone.body_entered.is_connected(
+		destroy_ball
+	):
+		endzone.body_entered.connect(
+			destroy_ball
+		)
+
+	if not EventBus.peg_hit_sound_update.is_connected(
+		play_peg_hit_sound
+	):
+		EventBus.peg_hit_sound_update.connect(
+			play_peg_hit_sound
+		)
+
+	if not PowerUpManager.trigger_power_up.is_connected(
+		_apply_power_up
+	):
+		PowerUpManager.trigger_power_up.connect(
+			_apply_power_up
+		)
+
+	for child: Node in bins.get_children():
+		if not child.has_signal(
+			"ball_caught"
+		):
+			continue
+
+		if not child.is_connected(
+			"ball_caught",
+			catch_ball
+		):
+			child.connect(
+				"ball_caught",
+				catch_ball
+			)
+
+	setup_ball_counter()
+
+	show_peg_level(
+		LevelManager.level
+	)
+
+	reset_current_round()
 
 
-# Go back to the main menu.
-func _on_main_menu_button_pressed() -> void:
-	LevelManager.level = 1 # set back to level 1 on loading main menu
-	SceneManager.go(main_menu_scene, menu_loading_duration)
+func setup_progress_bar_colours() -> void:
+	# Tint only the filling texture.
+	# The under and over textures stay unchanged.
+	player_progress_bar.tint_progress = (
+		cannon.player_trajectory_dot_colour
+	)
+
+	ai_progress_bar.tint_progress = (
+		cannon.enemy_trajectory_dot_colour
+	)
 
 
-# Gets the scene the replay button should load.
-func get_retry_level_scene() -> String:
-	if GameData.has_method("get_current_level"):
-		var current_level_scene: String = GameData.get_current_level()
+func _on_story_dialogue_started(
+	_level_number: int
+) -> void:
+	# Every story-dialogue chunk keeps the cannon
+	# locked. It remains locked between chunks.
+	cannon.lock_cannon()
 
-		# strip_edges() makes sure spaces like "   " do not count.
-		if current_level_scene.strip_edges() != "":
-			return current_level_scene
 
-	# If GameData has nothing, use the fallback from the Inspector.
-	return fallback_level_scene
+func _on_story_dialogue_finished() -> void:
+	# This signal is emitted only after every story
+	# chunk for the current level has finished.
+	cannon.unlock_cannon()
+
+
+func _apply_power_up() -> void:
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.ghost_ball
+	):
+		if current_turn == Turn.PLAYER:
+			is_ghost_ball = true
+
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.split_ball
+	):
+		is_split_ball = true
+
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.blast_ball
+	):
+		is_blast_ball = true
+
+	if (
+		PowerUpManager.active_power_up
+		== PowerUpManager.power_ups.bounce_ball
+	):
+		is_bounce_once = true
+
+
+func _process(
+	_delta: float
+) -> void:
+	if game_ended:
+		return
+
+	if resolving_ball:
+		return
+
+	if cannon.is_cannon_locked():
+		return
+
+	if (
+		current_turn == Turn.PLAYER
+		and not ball_in_play
+	):
+		cannon.aim_at(
+			get_global_mouse_position(),
+			true,
+			true
+		)
+
+
+func _input(
+	event: InputEvent
+) -> void:
+	if game_ended:
+		return
+
+	if resolving_ball:
+		return
+
+	if cannon.is_cannon_locked():
+		return
+
+	if current_turn != Turn.PLAYER:
+		return
+
+	if ball_in_play:
+		return
+
+	if DialogueManager._dialogue_box_displayed:
+		return
+
+	if event.is_action_pressed(
+		"action_primary"
+	):
+		fire_ball()
+
+
+func setup_ball_counter() -> void:
+	GameData.ensure_ball_counter(
+		STARTING_BALL_COUNT
+	)
+
+	update_ball_counter()
+
+
+func use_ball() -> void:
+	GameData.use_ball()
+
+
+func refund_ball() -> void:
+	GameData.refund_ball()
+
+
+func update_ball_counter() -> void:
+	# The BallBar progress bar has been removed.
+	# Synchronise the countdown without playing
+	# its dramatic loss animation.
+	counting_label.set_count_immediate(
+		GameData.balls_remaining,
+		GameData.maximum_ball_count
+	)
+
+
+func cache_original_bin_emotions() -> void:
+	if not original_bin_emotions.is_empty():
+		return
+
+	for child: Node in bins.get_children():
+		var emotion_value: Variant = child.get(
+			"what_emotion_to_respond_with"
+		)
+
+		if emotion_value == null:
+			continue
+
+		original_bin_emotions[child] = int(
+			emotion_value
+		)
+
+
+func update_bin_emotion_visuals(
+	level_number: int
+) -> void:
+	cache_original_bin_emotions()
+
+	for child_variant: Variant in original_bin_emotions.keys():
+		var child: Node = (
+			child_variant as Node
+		)
+
+		if not is_instance_valid(
+			child
+		):
+			continue
+
+		var emotion_index: int = int(
+			original_bin_emotions[child]
+		)
+
+		if level_number == FORCED_DEJECTED_LEVEL:
+			emotion_index = (
+				DEJECTED_EMOTION_INDEX
+			)
+
+		child.set(
+			"what_emotion_to_respond_with",
+			emotion_index
+		)
+
+		if child.has_method(
+			"set_emotion"
+		):
+			child.call(
+				"set_emotion"
+			)
+
+
+func update_level_three_override(
+	level_number: int
+) -> void:
+	update_bin_emotion_visuals(
+		level_number
+	)
+
+	if level_number == FORCED_DEJECTED_LEVEL:
+		GameData.current_emotion = (
+			DEJECTED_EMOTION_INDEX
+		)
+
+
+func show_peg_level(
+	level_number: int
+) -> void:
+	update_level_three_override(
+		level_number
+	)
+
+	if peg_levels.is_empty():
+		push_error(
+			"No peg level nodes were assigned."
+		)
+
+		return
+
+	var level_index: int = clampi(
+		level_number - 1,
+		0,
+		peg_levels.size() - 1
+	)
+
+	for index: int in range(
+		peg_levels.size()
+	):
+		var peg_level: Node2D = (
+			peg_levels[index]
+		)
+
+		if peg_level == null:
+			continue
+
+		var is_active: bool = (
+			index == level_index
+		)
+
+		peg_level.visible = is_active
+
+		if is_active:
+			peg_level.process_mode = (
+				Node.PROCESS_MODE_INHERIT
+			)
+		else:
+			peg_level.process_mode = (
+				Node.PROCESS_MODE_DISABLED
+			)
+
+		_set_level_collisions_enabled(
+			peg_level,
+			is_active
+		)
+
+	active_peg_level = (
+		peg_levels[level_index]
+	)
+
+	refresh_pegs()
+
+
+func _set_level_collisions_enabled(
+	node: Node,
+	enabled: bool
+) -> void:
+	for child: Node in node.get_children():
+		if child is CollisionShape2D:
+			child.set_deferred(
+				"disabled",
+				not enabled
+			)
+
+		elif child is CollisionPolygon2D:
+			child.set_deferred(
+				"disabled",
+				not enabled
+			)
+
+		_set_level_collisions_enabled(
+			child,
+			enabled
+		)
+
+
+func refresh_pegs() -> void:
+	all_pegs.clear()
+	total_peg_count = 0
+
+	if active_peg_level == null:
+		return
+
+	_collect_pegs(
+		active_peg_level
+	)
+
+	total_peg_count = all_pegs.size()
+
+	if all_pegs.is_empty():
+		push_warning(
+			"The active peg level contains no pegs."
+		)
+
+
+func _collect_pegs(
+	node: Node
+) -> void:
+	for child: Node in node.get_children():
+		if child.is_in_group(
+			"pegs"
+		):
+			var is_dummy: bool = (
+				child.get(
+					"dummy"
+				) == true
+			)
+
+			if not is_dummy:
+				all_pegs.append(
+					child
+				)
+
+		_collect_pegs(
+			child
+		)
+
+
+func play_peg_hit_sound() -> void:
+	if peg_hit_sfx == null:
+		return
+
+	var sfx_pitch_scale: float = (
+		1.0 + float(pegs_hit) * 0.1
+	)
+
+	sfx_pitch_scale = minf(
+		sfx_pitch_scale,
+		sfx_max_scale
+	)
+
+	SfxPlayer.play(
+		peg_hit_sfx,
+		false,
+		false,
+		0.0,
+		false,
+		peg_hit_volume,
+		0.0,
+		false,
+		null,
+		sfx_pitch_scale
+	)
+
+	pegs_hit += 1
+
+
+func reset_current_round() -> void:
+	if progress_tween != null:
+		progress_tween.kill()
+		progress_tween = null
+
+	refresh_pegs()
+
+	for peg: Node in all_pegs:
+		if peg.has_method(
+			"reset_peg"
+		):
+			peg.call(
+				"reset_peg"
+			)
+
+	player_progress_bar.min_value = 0.0
+	player_progress_bar.max_value = 100.0
+	player_progress_bar.value = 0.0
+
+	ai_progress_bar.min_value = 0.0
+	ai_progress_bar.max_value = 100.0
+	ai_progress_bar.value = 0.0
+
+	current_turn = Turn.PLAYER
+	ball_in_play = false
+	resolving_ball = false
+
+	active_balls.clear()
+
+	pending_shot_was_refunded = false
+	pending_resolution_position = Vector2.ZERO
+
+	update_ball_counter()
+
+
+func get_progress_values() -> Vector2:
+	refresh_pegs()
+
+	var player_peg_count: int = 0
+	var ai_peg_count: int = 0
+
+	for peg: Node in all_pegs:
+		if not is_instance_valid(
+			peg
+		):
+			continue
+
+		if not peg.has_method(
+			"get_claimed_turn"
+		):
+			continue
+
+		var claimed_turn: int = int(
+			peg.call(
+				"get_claimed_turn"
+			)
+		)
+
+		if claimed_turn == Turn.PLAYER:
+			player_peg_count += 1
+
+		elif claimed_turn == Turn.AI:
+			ai_peg_count += 1
+
+	return Vector2(
+		get_progress_percentage(
+			player_peg_count
+		),
+		get_progress_percentage(
+			ai_peg_count
+		)
+	)
+
+
+func animate_progress_bars() -> void:
+	if game_ended:
+		return
+
+	var progress_values: Vector2 = (
+		get_progress_values()
+	)
+
+	if progress_tween != null:
+		progress_tween.kill()
+
+	progress_tween = create_tween()
+
+	progress_tween.set_parallel(
+		true
+	)
+
+	progress_tween.tween_property(
+		player_progress_bar,
+		"value",
+		progress_values.x,
+		progress_bar_duration
+	).set_trans(
+		Tween.TRANS_QUAD
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+	progress_tween.tween_property(
+		ai_progress_bar,
+		"value",
+		progress_values.y,
+		progress_bar_duration
+	).set_trans(
+		Tween.TRANS_QUAD
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+	if meter_fill != null:
+		SfxPlayer.play(
+			meter_fill
+		)
+
+	await progress_tween.finished
+
+	check_for_winner()
+
+
+func get_progress_percentage(
+	claimed_peg_count: int
+) -> float:
+	if total_peg_count <= 0:
+		return 0.0
+
+	var pegs_required_for_full_bar: int = maxi(
+		int(
+			ceil(
+				float(total_peg_count)
+				* FULL_BAR_FRACTION
+			)
+		),
+		1
+	)
+
+	return clampf(
+		float(claimed_peg_count)
+			/ float(
+				pegs_required_for_full_bar
+			)
+			* 100.0,
+		0.0,
+		100.0
+	)
+
+
+func check_for_winner() -> void:
+	if (
+		player_progress_bar.value
+		>= player_progress_bar.max_value
+	):
+		if (
+			LevelManager.level
+			< LevelManager.MAX_LEVEL
+		):
+			advance_to_next_peg_level()
+		else:
+			play_final_win_sequence()
+
+	elif (
+		ai_progress_bar.value
+		>= ai_progress_bar.max_value
+	):
+		if ai_win_sfx != null:
+			SfxPlayer.play(
+				ai_win_sfx
+			)
+
+		if GameData.balls_remaining <= 0:
+			end_game(
+				LOSS_SCENE_KEY
+			)
+		else:
+			end_game(
+				TRY_AGAIN_SCENE_KEY
+			)
+
+
+func play_final_win_sequence() -> void:
+	if game_ended:
+		return
+
+	game_ended = true
+	resolving_ball = true
+
+	cannon.lock_cannon()
+
+	await DialogueManager.play_post_win_dialogue(
+		LevelManager.level
+	)
+
+	await fade_out_board()
+
+	SceneManager.go(
+		WIN_SCENE_KEY,
+		END_SCREEN_TRANSITION_DURATION,
+		true
+	)
+
+
+func advance_to_next_peg_level() -> void:
+	if game_ended:
+		return
+
+	game_ended = true
+
+	await fade_out_board()
+
+	LevelManager.set_level(
+		LevelManager.level + 1
+	)
+
+	show_peg_level(
+		LevelManager.level
+	)
+
+	reset_current_round()
+
+	cannon.lock_cannon()
+
+	game_ended = false
+
+	DialogueManager.play_level_dialogue_sequence(
+		LevelManager.level
+	)
+
+
+func restart_current_peg_level() -> void:
+	if game_ended:
+		return
+
+	game_ended = true
+
+	await fade_out_board()
+
+	show_peg_level(
+		LevelManager.level
+	)
+
+	reset_current_round()
+
+	cannon.lock_cannon()
+
+	game_ended = false
+
+	DialogueManager.play_level_dialogue_sequence(
+		LevelManager.level
+	)
+
+
+func fade_out_board() -> void:
+	var current_level_scene: Node = (
+		get_tree().current_scene
+	)
+
+	if current_level_scene.has_method(
+		"fade_out_peggle_board"
+	):
+		await current_level_scene.call(
+			"fade_out_peggle_board"
+		)
+
+
+func end_game(
+	scene_key: String
+) -> void:
+	if game_ended:
+		return
+
+	game_ended = true
+
+	cannon.lock_cannon()
+
+	await fade_out_board()
+
+	if scene_key == WIN_SCENE_KEY:
+		SceneManager.go(
+			WIN_SCENE_KEY,
+			END_SCREEN_TRANSITION_DURATION,
+			true
+		)
+	else:
+		SceneManager.go(
+			scene_key,
+			END_SCREEN_TRANSITION_DURATION
+		)
+
+
+func fire_ball() -> void:
+	if cannon.is_cannon_locked():
+		return
+
+	if game_ended:
+		return
+
+	if resolving_ball:
+		return
+
+	if ball_in_play:
+		return
+
+	if GameData.balls_remaining <= 0:
+		end_game(
+			LOSS_SCENE_KEY
+		)
+
+		return
+
+	var fired_ball: RigidBody2D = (
+		cannon.fire()
+	)
+
+	if fired_ball == null:
+		return
+
+	# Begin one combined resolution for this
+	# shot and any extra balls it creates.
+	pending_shot_was_refunded = false
+	pending_resolution_position = (
+		fired_ball.global_position
+	)
+
+
+	fired_ball.contact_monitor = true
+	fired_ball.max_contacts_reported = 4
+
+	fired_ball.body_entered.connect(
+		func(body: Node) -> void:
+			_on_ball_body_entered(
+				fired_ball,
+				body
+			)
+	)
+
+	if is_ghost_ball:
+		is_ghost_ball = false
+
+		if fired_ball.has_method(
+			"ghost_ball"
+		):
+			fired_ball.call(
+				"ghost_ball"
+			)
+
+	if (
+		current_turn == Turn.AI
+		and is_ai_ball_smol > 0
+	):
+		apply_small_ai_ball(
+			fired_ball
+		)
+
+		is_ai_ball_smol -= 1
+
+	if is_bounce_once:
+		is_bounce_once = false
+
+		if bounce_once.has_method(
+			"bounce_once"
+		):
+			bounce_once.call(
+				"bounce_once"
+			)
+		else:
+			push_warning(
+				"BounceOnce does not have a bounce_once method."
+			)
+
+	configure_ball(
+		fired_ball,
+		current_turn
+	)
+
+	active_balls.append(
+		fired_ball
+	)
+
+	ball_in_play = true
+
+	use_ball()
+
+
+func apply_small_ai_ball(
+	fired_ball: RigidBody2D
+) -> void:
+	var ball_sprite: Sprite2D = (
+		fired_ball.get_node_or_null(
+			"Sprite2D"
+		) as Sprite2D
+	)
+
+	if ball_sprite != null:
+		if is_ai_ball_smol >= 2:
+			ball_sprite.scale = Vector2(
+				0.2,
+				0.2
+			)
+		else:
+			ball_sprite.scale = Vector2(
+				0.1,
+				0.1
+			)
+
+	var ball_collision: CollisionShape2D = (
+		fired_ball.get_node_or_null(
+			"CollisionShape2D"
+		) as CollisionShape2D
+	)
+
+	if (
+		ball_collision == null
+		or ball_collision.shape == null
+	):
+		return
+
+	ball_collision.shape = (
+		ball_collision.shape.duplicate()
+	)
+
+	if ball_collision.shape is CircleShape2D:
+		var circle_shape: CircleShape2D = (
+			ball_collision.shape as CircleShape2D
+		)
+
+		if is_ai_ball_smol >= 2:
+			circle_shape.radius = 3.0
+		else:
+			circle_shape.radius = 1.5
+
+
+func configure_ball(
+	fired_ball: RigidBody2D,
+	turn_owner: int
+) -> void:
+	fired_ball.set_meta(
+		"is_peggle_ball",
+		true
+	)
+
+	fired_ball.set_meta(
+		"ball_resolved",
+		false
+	)
+
+	fired_ball.set_meta(
+		"ball_owner",
+		get_ball_owner(
+			turn_owner
+		)
+	)
+
+	fired_ball.set_meta(
+		"turn_owner",
+		turn_owner
+	)
+
+
+func get_ball_owner(
+	turn_owner: int
+) -> String:
+	if turn_owner == Turn.PLAYER:
+		return "player"
+
+	return "ai"
+
+
+func catch_ball(
+	body: Node2D,
+	bin_emotion: int
+) -> void:
+	if (
+		body.get_meta(
+			"is_peggle_ball",
+			false
+		) != true
+	):
+		return
+
+	if (
+		body.get_meta(
+			"ball_resolved",
+			false
+		) == true
+	):
+		return
+
+	resolve_ball(
+		body,
+		true
+	)
+
+	var sound_index: int = (
+		bin_emotion
+	)
+
+	if (
+		sound_index >= 0
+		and sound_index
+		< bin_emotion_sfx.size()
+	):
+		var emotion_sound: AudioStream = (
+			bin_emotion_sfx[sound_index]
+		)
+
+		if emotion_sound != null:
+			SfxPlayer.play(
+				emotion_sound
+			)
+
+
+func destroy_ball(
+	body: Node2D
+) -> void:
+	resolve_ball(
+		body,
+		false
+	)
+
+
+func finish_opponent_turn() -> void:
+	current_turn = Turn.PLAYER
+	resolving_ball = false
+
+
+func resolve_ball(
+	body: Node2D,
+	should_refund: bool
+) -> void:
+	if (
+		body.get_meta(
+			"is_peggle_ball",
+			false
+		) != true
+	):
+		return
+
+	if (
+		body.get_meta(
+			"ball_resolved",
+			false
+		) == true
+	):
+		return
+
+	body.set_meta(
+		"ball_resolved",
+		true
+	)
+
+	var finished_turn: int = int(
+		body.get_meta(
+			"turn_owner",
+			current_turn
+		)
+	)
+
+	pending_resolution_position = (
+		body.global_position
+	)
+
+	if body is RigidBody2D:
+		active_balls.erase(
+			body as RigidBody2D
+		)
+
+	pegs_hit = 0
+
+	body.queue_free()
+
+	if should_refund:
+		# A split shot still costs only one ball,
+		# so it can only refund that ball once.
+		if not pending_shot_was_refunded:
+			pending_shot_was_refunded = true
+			refund_ball()
+	else:
+		var percentage_left: float = 0.0
+
+		if GameData.maximum_ball_count > 0:
+			percentage_left = (
+				float(
+					GameData.balls_remaining
+				)
+				/ float(
+					GameData.maximum_ball_count
+				)
+				* 100.0
+			)
+
+		EventBus.balls_left_percentage_changed.emit(
+			percentage_left
+		)
+
+	if active_balls.is_empty():
+		ball_in_play = false
+		resolving_ball = true
+
+		finish_ball_resolution(
+			finished_turn,
+			pending_shot_was_refunded,
+			pending_resolution_position
+		)
+
+
+func finish_ball_resolution(
+	finished_turn: int,
+	was_refunded: bool,
+	resolved_ball_position: Vector2
+) -> void:
+	await get_tree().process_frame
+
+	if was_refunded:
+		await counting_label.play_refund_relief()
+	else:
+		await counting_label.play_countdown_loss(
+			GameData.balls_remaining,
+			GameData.maximum_ball_count,
+			resolved_ball_position
+		)
+
+	await animate_progress_bars()
+
+	if game_ended:
+		resolving_ball = false
+		return
+
+	if GameData.balls_remaining <= 0:
+		resolving_ball = false
+
+		end_game(
+			LOSS_SCENE_KEY
+		)
+
+		return
+
+	await cannon.play_turn_swap()
+
+	if finished_turn == Turn.PLAYER:
+		current_turn = Turn.AI
+		resolving_ball = false
+
+		if game_ended:
+			return
+
+		start_ai_turn()
+	else:
+		finish_opponent_turn()
+
+
+func start_ai_turn() -> void:
+	if cannon.is_cannon_locked():
+		return
+
+	if game_ended:
+		return
+
+	if resolving_ball:
+		return
+
+	if current_turn != Turn.AI:
+		return
+
+	refresh_pegs()
+
+	if all_pegs.is_empty():
+		finish_opponent_turn()
+		return
+
+	var target_peg := (
+		all_pegs[
+			rng.randi_range(
+				0,
+				all_pegs.size() - 1
+			)
+		] as Node2D
+	)
+
+	if target_peg == null:
+		finish_opponent_turn()
+		return
+
+	await cannon.think_and_aim_at(
+		target_peg.global_position
+	)
+
+	if cannon.is_cannon_locked():
+		return
+
+	if game_ended:
+		return
+
+	if (
+		current_turn != Turn.AI
+		or ball_in_play
+	):
+		return
+
+	if not is_instance_valid(
+		target_peg
+	):
+		start_ai_turn()
+		return
+
+	fire_ball()
+
+
+func _on_ball_body_entered(
+	current_ball: RigidBody2D,
+	_body: Node
+) -> void:
+	if (
+		is_split_ball
+		and current_turn == Turn.PLAYER
+	):
+		is_split_ball = false
+
+		var turn_owner: int = int(
+			current_ball.get_meta(
+				"turn_owner",
+				current_turn
+			)
+		)
+
+		var spawned_split_ball: RigidBody2D = (
+			cannon.fire_extra_ball(
+				current_ball.global_position,
+				cannon.last_shoot_direction
+			)
+		)
+
+		if spawned_split_ball == null:
+			return
+
+		spawned_split_ball.contact_monitor = true
+		spawned_split_ball.max_contacts_reported = 4
+
+		spawned_split_ball.body_entered.connect(
+			func(hit_body: Node) -> void:
+				_on_ball_body_entered(
+					spawned_split_ball,
+					hit_body
+				)
+		)
+
+		active_balls.append(
+			spawned_split_ball
+		)
+
+		configure_ball(
+			spawned_split_ball,
+			turn_owner
+		)
+
+	if (
+		is_blast_ball
+		and current_turn == Turn.PLAYER
+	):
+		is_blast_ball = false
+
+		if explosion_scene == null:
+			push_warning(
+				"No explosion scene was assigned."
+			)
+			return
+
+		var explosion: Node = (
+			explosion_scene.instantiate()
+		)
+
+		get_tree().root.add_child(
+			explosion
+		)
+
+		if explosion is Node2D:
+			(
+				explosion as Node2D
+			).global_position = (
+				current_ball.global_position
+			)
+
+		explosion.set(
+			"ball",
+			current_ball
+		)
+
+
+func debug_win_current_level() -> void:
+	if not OS.has_feature(
+		"editor"
+	):
+		return
+
+	if game_ended:
+		return
+
+	if cannon.is_cannon_locked():
+		return
+
+	for active_ball: RigidBody2D in active_balls:
+		if is_instance_valid(
+			active_ball
+		):
+			active_ball.queue_free()
+
+	active_balls.clear()
+
+	ball_in_play = false
+	resolving_ball = false
+
+	pending_shot_was_refunded = false
+	pending_resolution_position = Vector2.ZERO
+
+	player_progress_bar.value = (
+		player_progress_bar.max_value
+	)
+
+	if (
+		LevelManager.level
+		< LevelManager.MAX_LEVEL
+	):
+		advance_to_next_peg_level()
+	else:
+		play_final_win_sequence()

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d2clrebmnqq3x"]
 
 [ext_resource type="Texture2D" uid="uid://dfr50ew5ksk84" path="res://Assets/Art/Game/PeggleBoard/Peg.png" id="1_pvyxf"]
-[ext_resource type="Script" uid="uid://dcp08yf44lqcn" path="res://Scripts/PeggleBoard/Ball/ball_dot.gd" id="2_o8yiq"]
+[ext_resource type="Script" uid="uid://dyuor8srl82kf" path="res://Scripts/PeggleBoard/Ball/ball_dot.gd" id="2_o8yiq"]
 
 [sub_resource type="Animation" id="Animation_o8yiq"]
 resource_name = "FADE"
@@ -49,5 +49,6 @@ script = ExtResource("2_o8yiq")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=675366652]
 libraries/ = SubResource("AnimationLibrary_la0i2")
+speed_scale = 2.0
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
