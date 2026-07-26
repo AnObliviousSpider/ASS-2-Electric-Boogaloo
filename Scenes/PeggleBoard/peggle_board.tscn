@@ -18,7 +18,6 @@
 [ext_resource type="PackedScene" uid="uid://bnlnffrdc3nty" path="res://Scenes/PeggleBoard/pegs_level_2.tscn" id="10_e0blb"]
 [ext_resource type="PackedScene" uid="uid://dkqis7ifjpop7" path="res://Scenes/PeggleBoard/pegs_level_3.tscn" id="11_w34gu"]
 [ext_resource type="PackedScene" uid="uid://b05yad54fqqov" path="res://Scenes/PeggleBoard/Ball/ball_explosion.tscn" id="11_yni01"]
-[ext_resource type="Texture2D" uid="uid://cif045ofkufr2" path="res://Assets/Art/Frame/Peggle_Frame_5.png" id="12_p3c4q"]
 [ext_resource type="PackedScene" uid="uid://mch263sebn3u" path="res://Scenes/PeggleBoard/pegs_level_4.tscn" id="12_rgciv"]
 [ext_resource type="PackedScene" uid="uid://ckci2sv213ip6" path="res://Scenes/PeggleBoard/pegs_level_5.tscn" id="13_7pgve"]
 [ext_resource type="Texture2D" uid="uid://b0o2a614apdko" path="res://Assets/Art/UI/charge_bar_human_under.png" id="16_7pgve"]
@@ -139,6 +138,7 @@ position = Vector2(287, 70)
 scale = Vector2(0.7, 0.7)
 minimum_turn_angle = -55.0
 maximum_turn_angle = 55.0
+trajectory_max_length = 40.0
 cannon_fire_sfx = null
 
 [node name="PeggleBallAnimationPlayer" parent="PeggleBallShooter" index="1" unique_id=336605750]
