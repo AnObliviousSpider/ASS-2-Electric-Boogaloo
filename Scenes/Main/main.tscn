@@ -14,6 +14,16 @@
 [ext_resource type="PackedScene" uid="uid://btvs6nijl4827" path="res://Scenes/Characters/main_character.tscn" id="6_hryqi"]
 [ext_resource type="AudioStream" uid="uid://d0703j4eoruii" path="res://Assets/Audio/Level_3_Glitched.wav" id="6_vk4q2"]
 [ext_resource type="PackedScene" uid="uid://by5ddsvbd77y1" path="res://Scenes/UI/Reset Button/reset.tscn" id="10_imbg2"]
+[ext_resource type="Shader" uid="uid://c4jrkc6ip0ew1" path="res://Shaders/Background/VHS.gdshader" id="15_wliom"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2ok46"]
+shader = ExtResource("15_wliom")
+shader_parameter/grain_strength = 0.010000000475
+shader_parameter/scanline_strength = 0.0
+shader_parameter/horizontal_wobble = 0.00015
+shader_parameter/colour_separation = 8e-05
+shader_parameter/grain_speed = 16.0
+shader_parameter/horizontal_lines = 480.0
 
 [node name="main" type="Node" unique_id=1907013364]
 script = ExtResource("1_lixft")
@@ -57,3 +67,13 @@ z_index = 100
 
 [node name="Reset" parent="UIlayer" unique_id=1834230713 instance=ExtResource("10_imbg2")]
 unique_name_in_owner = true
+
+[node name="VHS" type="ColorRect" parent="." unique_id=1216993639]
+z_index = 12
+material = SubResource("ShaderMaterial_2ok46")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.043137256)
