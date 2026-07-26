@@ -101,7 +101,6 @@ script = ExtResource("1_n5jxk")
 particle_speed = 0.7
 explosion_lifetime = 1.0
 particle_count = 300
-particle_scale_size = Array[float]([1.0, 5.0])
 metadata/_custom_type_script = "uid://bm5tiqnqhboh"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=254014665]

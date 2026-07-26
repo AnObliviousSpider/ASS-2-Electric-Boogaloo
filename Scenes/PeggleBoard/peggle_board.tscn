@@ -26,8 +26,8 @@
 [ext_resource type="Texture2D" uid="uid://7pthl3t8g2yh" path="res://Assets/Art/UI/charge_bar_human_fill.png" id="17_82xy0"]
 [ext_resource type="Texture2D" uid="uid://bgekqgu4x8em8" path="res://Assets/Art/UI/charge_bar_monster_under (1).png" id="18_7btb8"]
 [ext_resource type="Texture2D" uid="uid://n7agj84fq07g" path="res://Scenes/PeggleBoard/PeggleBin/Wide-Pixel_Frame.png" id="22_pr6su"]
-[ext_resource type="Texture2D" uid="uid://0aoao3srdbhk" path="res://Assets/peggle_board_background2.png" id="26_w34gu"]
 [ext_resource type="Texture2D" uid="uid://cgl26qbtth63c" path="res://Assets/Art/UI/charge_bar_monster_under (11).png" id="25_e0blb"]
+[ext_resource type="Texture2D" uid="uid://0aoao3srdbhk" path="res://Assets/peggle_board_background2.png" id="26_w34gu"]
 [ext_resource type="PackedScene" uid="uid://bamr2pxmxajr0" path="res://Scenes/CountingBall/counting_label.tscn" id="31_7pgve"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s3sbd"]

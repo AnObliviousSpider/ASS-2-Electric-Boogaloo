@@ -16,6 +16,8 @@ extends Node2D
 @export var particle_scale_min: float = 1.0
 @export var particle_scale_max: float = 2.0
 
+@export var expolsion_sound: AudioStream = load("res://Assets/Audio/SFX/GAME/cannon_fire.mp3")
+
 var has_exploded: bool = false
 
 
@@ -65,6 +67,6 @@ func explode() -> void:
 	has_exploded = true
 
 	animation_player.play("explode")
-
+	SfxPlayer.play(expolsion_sound)
 	cpu_particles_2d.restart()
 	cpu_particles_2d.emitting = true
