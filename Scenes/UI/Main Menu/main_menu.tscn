@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://w2v1glumgrpf"]
 
 [ext_resource type="Script" uid="uid://c313emscp8053" path="res://Scripts/UI/Main Menu/main_menu.gd" id="1_o14dv"]
-[ext_resource type="AudioStream" uid="uid://brlsii31k4pcw" path="res://Assets/Audio/SFX/UI/menu_click.wav" id="2_4pqbp"]
+[ext_resource type="AudioStream" uid="uid://ku001br8ti4k" path="res://Assets/Audio/SFX/UI/Click.mp3" id="2_lhp0w"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_mrfpk"]
 [ext_resource type="AudioStream" uid="uid://dx08sm30svaqh" path="res://Assets/Audio/SFX/UI/new_game.wav" id="3_4pqbp"]
 [ext_resource type="AudioStream" uid="uid://cfxdwshb6ylp0" path="res://Assets/Audio/OST/Final/EgyptianTrapBeat_final.wav" id="5_8d3ud"]
@@ -65,7 +65,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o14dv")
-click_sound = ExtResource("2_4pqbp")
+click_sound = ExtResource("2_lhp0w")
 hover_sound = SubResource("AudioStreamRandomizer_h5u6l")
 new_game_sound = ExtResource("3_4pqbp")
 arcade_music = ExtResource("5_8d3ud")

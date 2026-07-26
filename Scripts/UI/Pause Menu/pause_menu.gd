@@ -25,6 +25,7 @@ extends Control
 @export var button_click_sound: AudioStream
 @export var slider_hover_sound: AudioStream
 @export var slider_grab_sound: AudioStream
+@export var back_button_click_sound: AudioStream
 
 @export_group("Slider Visual Padding")
 @export_range(0.0, 0.25, 0.01) var slider_visual_edge_padding: float = 0.05
@@ -80,7 +81,7 @@ func _on_retry_button_pressed() -> void:
 
 
 func _on_back_button_pressed() -> void:
-	play_ui_sfx(button_click_sound)
+	play_ui_sfx(back_button_click_sound)
 	resume_game()
 
 

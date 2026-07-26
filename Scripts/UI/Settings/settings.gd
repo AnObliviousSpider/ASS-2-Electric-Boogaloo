@@ -62,6 +62,9 @@ extends Control
 @export_group("UI Sounds")
 @export var click_sound: AudioStream
 @export var hover_sound: AudioStream
+@export var slider_hover_sound: AudioStream
+@export var slider_grab_sound: AudioStream
+@export var back_button_click_sound: AudioStream
 
 @export_group("Button Juice")
 @export var button_hover_scale: Vector2 = Vector2(1.06, 1.06)
@@ -335,6 +338,7 @@ func _setup_sliders() -> void:
 		slider.min_value = 0.0
 		slider.max_value = 1.0
 		slider.step = 0.01
+		
 		slider.value_changed.connect(_on_volume_slider_changed.bind(
 			slider,
 			StringName(String(item["setter"]))
@@ -380,6 +384,8 @@ func _load_saved_values() -> void:
 # Updates a volume setting when one of the sliders changes.
 func _on_volume_slider_changed(value: float, slider: HSlider, setter_method: StringName) -> void:
 	_update_slider_label(slider)
+	
+	SfxPlayer.play(slider_grab_sound)
 
 	if not is_setting_control_values:
 		GameData.call(setter_method, slider_value_to_volume(value))
@@ -437,13 +443,17 @@ func _connect_buttons() -> void:
 		var button: TextureButton = pages[index]["button"] as TextureButton
 		button.pressed.connect(_on_page_button_pressed.bind(index))
 
-	back_button.pressed.connect(_go_to_scene.bind(main_menu_scene))
+	back_button.pressed.connect(go_back)
 	win_button.pressed.connect(_go_to_scene.bind(win_screen_scene))
 	lose_button.pressed.connect(_go_to_scene.bind(lose_screen_scene))
 
 	reset_settings_button.pressed.connect(_reset_audio_settings)
 	delete_save_button.pressed.connect(_reset_all_settings)
 
+
+func go_back() -> void:
+	SfxPlayer.play(back_button_click_sound)
+	_go_to_scene(main_menu_scene)
 
 # Goes to another scene through SceneManager.
 func _go_to_scene(scene_key: String) -> void:
