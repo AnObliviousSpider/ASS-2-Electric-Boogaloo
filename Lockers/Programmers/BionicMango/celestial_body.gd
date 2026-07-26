@@ -59,7 +59,6 @@ func _on_explosion_triggered(
 
 	explode()
 
-
 func explode() -> void:
 	if has_exploded:
 		return
