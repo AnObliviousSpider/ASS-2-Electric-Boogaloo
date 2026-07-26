@@ -3,9 +3,6 @@
 [ext_resource type="Script" uid="uid://c313emscp8053" path="res://Scripts/UI/Main Menu/main_menu.gd" id="1_o14dv"]
 [ext_resource type="AudioStream" uid="uid://ku001br8ti4k" path="res://Assets/Audio/SFX/UI/Click.mp3" id="2_lhp0w"]
 [ext_resource type="AudioStream" uid="uid://bkqfsw2ooppax" path="res://Assets/Audio/SFX/UI/ui_hover.wav" id="2_mrfpk"]
-[ext_resource type="AudioStream" uid="uid://dx08sm30svaqh" path="res://Assets/Audio/SFX/UI/new_game.wav" id="3_4pqbp"]
-[ext_resource type="AudioStream" uid="uid://cfxdwshb6ylp0" path="res://Assets/Audio/OST/Final/EgyptianTrapBeat_final.wav" id="5_8d3ud"]
-[ext_resource type="AudioStream" uid="uid://drv3jjtq1d13a" path="res://Assets/Audio/SFX/u_g0akwz8ml1-sonido-de-luz-de-neon-194458.mp3" id="5_jp6cc"]
 [ext_resource type="Shader" uid="uid://ck5h06pek6dsm" path="res://Shaders/Background/starry.gdshader" id="5_wtern"]
 [ext_resource type="Script" uid="uid://dysgrw1rcoajh" path="res://Scripts/UI/Settings/snake.gd" id="6_1kc1o"]
 [ext_resource type="Texture2D" uid="uid://su82lcvygsc4" path="res://Assets/Art/Snake parts/Part1 (1).png" id="7_6asrm"]
@@ -29,11 +26,6 @@
 [ext_resource type="Texture2D" uid="uid://bne85p3j7etq0" path="res://Assets/Art/MainMenu/Logo.png" id="18_1kc1o"]
 [ext_resource type="Texture2D" uid="uid://bpgds1tntyqu4" path="res://Assets/Art/IMG_3527.png" id="26_i3q7f"]
 [ext_resource type="PackedScene" uid="uid://ds6xavk3wfrpy" path="res://Lockers/Programmers/K with a mouse (ImKrishnaLol)/hehe.tscn" id="27_lhp0w"]
-
-[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h5u6l"]
-random_pitch = 1.0293022
-streams_count = 1
-stream_0/stream = ExtResource("2_mrfpk")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fa2q1"]
 shader = ExtResource("5_wtern")
@@ -66,18 +58,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o14dv")
-click_sound = ExtResource("2_lhp0w")
-hover_sound = SubResource("AudioStreamRandomizer_h5u6l")
-new_game_sound = ExtResource("3_4pqbp")
-arcade_music = ExtResource("5_8d3ud")
-arcade_bop_bpm = 103.0
-button_hover_scale = Vector2(1.06, 1.06)
-button_hover_duration = 0.3
-button_move_distance = 10.0
-button_move_duration = 0.3
-neon_flicker_sound = ExtResource("5_jp6cc")
-neon_flicker_volume_db = -3.0
-neon_sound_tail_duration = 0.3
+hover_sound = ExtResource("2_mrfpk")
+new_game_sound = ExtResource("2_lhp0w")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=788947633]
 z_index = -100
